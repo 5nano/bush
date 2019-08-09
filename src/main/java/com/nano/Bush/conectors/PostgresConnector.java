@@ -2,13 +2,11 @@ package com.nano.Bush.conectors;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-@Repository
 public class PostgresConnector {
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraConnector.class);

@@ -1,16 +1,15 @@
 package com.nano.Bush.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.annotation.JsonProperty;
-
-@JsonIgnoreProperties(ignoreUnknown = true)
 public class DataPoint {
 
-    @JsonProperty("label")
+    public DataPoint(String label, Double y) {
+        this.label = label;
+        this.y = y;
+    }
+
     private String label;
 
-    @JsonProperty("y")
-    private Integer y;
+    private Double y;
 
     public String getLabel() {
         return label;
@@ -20,11 +19,11 @@ public class DataPoint {
         this.label = label;
     }
 
-    public Integer getY() {
+    public Double getY() {
         return y;
     }
 
-    public void setY(Integer y) {
+    public void setY(Double y) {
         this.y = y;
     }
 

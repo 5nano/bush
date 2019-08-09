@@ -1,6 +1,5 @@
 package com.nano.Bush.datasources;
 
-import com.nano.Bush.conectors.MySqlConnector;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,7 +8,7 @@ import java.sql.*;
 
 public class ExperimentDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(MySqlConnector.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExperimentDao.class);
     private Statement statement;
     private ResultSet resultSet;
     private PreparedStatement preparedStatement;

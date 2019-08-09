@@ -11,31 +11,47 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-@Repository
-public class GraphicsDao {
+public class GraphicDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphicsDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphicDao.class);
+    private Statement statement;
 
-    /*
-    public List<Test> getComparativeGraphicInfo(String crop) {
+    public GraphicDao(Connection connector) {
+        try {
+            this.statement = connector.createStatement();
+        } catch (SQLException e) {
+            LOGGER.error("Error al conectarse a Postgress :" + e);
+        }
+    }
+
+    public Map<String, String> getExperimentsIds(String crop) {
 
         ResultSet resultSet;
-        String sqlQuery = "SELECT * FROM PRUEBAS WHERE CULTIVO = '" + crop + "'";
-        List<Test> tests = new ArrayList<>();
+        String idCrop = null;
+        String idExperimentsQuery = "SELECT ID_ENSAYO FROM ENSAYOS WHERE ID_CULTIVO = '";
+        String idCropQuery = "SELECT ID_CULTIVO FROM CULTIVOS WHERE CULTIVO ='" + crop + "'";
 
-        try (PreparedStatement preparedStatement = PostgresConnector.getPreparedStatement(sqlQuery)) {
+        List<String> experimentId = new ArrayList<>();
 
-            resultSet = preparedStatement.executeQuery();
-
+        try {
+            resultSet = statement.executeQuery(idCropQuery);
             while (resultSet.next()) {
-                resultSet = preparedStatement.getResultSet();
-                tests.add(getTest(resultSet));
+                idCrop = resultSet.getString("ID_CULTIVO");
+            }
+            resultSet = statement.executeQuery(idExperimentsQuery+idCrop+"'");
+            while (resultSet.next()){
+                experimentId.add(resultSet.getString("ID_ENSAYO"));
             }
 
         } catch (SQLException sqlException) {
@@ -44,23 +60,20 @@ public class GraphicsDao {
             LOGGER.error("Exception error: %s", exception.getMessage());
         }
 
+        Map<String,String> experimentsToCassandraQuery  = new HashMap<>();
 
-        return tests;
+        String finalIdCrop = idCrop;
+
+        experimentId.forEach(e->experimentsToCassandraQuery.put(e, finalIdCrop));
+
+        return experimentsToCassandraQuery;
     }
 
-    private Test getTest(ResultSet resultSet) throws SQLException {
-        Test test = new Test();
-        test.setLabel(resultSet.getString("DIA"));
-        test.setY(resultSet.getInt("AREA_FOLIAR"));
-        return test;
-    }*/
-
     public List<GraphicDto> getTestsInfo() {
-        LOGGER.info("Me pegaron");
         ObjectMapper mapper = new ObjectMapper();
         HttpClient client = HttpClientBuilder.create().build();
         String url = "https://api.myjson.com/bins/1ejdh9";
-        List graphicDtos = new ArrayList<>();
+        List<GraphicDto> graphicDtos = new ArrayList<>();
 
         try {
             HttpGet request = new HttpGet(url);

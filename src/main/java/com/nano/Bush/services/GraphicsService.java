@@ -1,34 +1,46 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.datasources.GraphicsDao;
+import com.nano.Bush.conectors.PostgresConnector;
+import com.nano.Bush.datasources.GraphicDao;
+import com.nano.Bush.datasources.MeasureDao;
+import com.nano.Bush.model.DataPoint;
 import com.nano.Bush.model.GraphicDto;
+import com.nano.Bush.model.MeasurePlant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GraphicsService {
 
     @Autowired
-    GraphicsDao graphicsDao;
+    private MeasureDao measureDao;
 
-    public List<GraphicDto> getComparativeGraphicInfo() {
-        return graphicsDao.getTestsInfo();
+    public List<GraphicDto> getComparativeGraphicInfo(String crop) {
+        PostgresConnector postgresConnector = new PostgresConnector();
+        GraphicDao graphicDao = new GraphicDao(postgresConnector.getConnection());
 
+        return getDto(graphicDao.getExperimentsIds(crop));
     }
 
-    /*private GraphicDto getInfo(List<DataPoint> tests) {
+    private List<GraphicDto> getDto(Map<String, String> tests) {
+
+        List<MeasurePlant> measures = measureDao.selectMeasuresFrom("1", "1");
 
         GraphicDto graphicInfo = new GraphicDto();
-        DataPoint dataPoint = new DataPoint();
         List<DataPoint> dataPoints = new ArrayList<>();
-        dataPoint.setLabel(tests);
-        dataPoints.add(dataPoint);
+
+        measures.forEach(mp -> dataPoints.add(new DataPoint(mp.getDay().toString(), mp.getLeafArea())));
+
         graphicInfo.setDataPoints(dataPoints);
 
-        return graphicInfo;
-    }*/
+        List<GraphicDto> graphicDtos = new ArrayList<>();
+        graphicDtos.add(graphicInfo);
+        return graphicDtos;
+    }
 
 }
 

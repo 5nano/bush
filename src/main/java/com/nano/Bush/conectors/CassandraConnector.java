@@ -1,39 +1,35 @@
 package com.nano.Bush.conectors;
 
+import com.datastax.driver.core.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+
 public class CassandraConnector {
-    /*
+
     private static final Logger LOG = LoggerFactory.getLogger(CassandraConnector.class);
 
-    private Cluster cluster;
-
-    private Session session;
-
-    public void connect(final String node, final Integer port) {
-
-        Cluster.Builder b = Cluster.builder().addContactPoint(node);
-
-        if (port != null) {
-            b.withPort(port);
-        }
-        cluster = b.build();
-
-        Metadata metadata = cluster.getMetadata();
-        LOG.info("Cluster name: " + metadata.getClusterName());
-
-        for (Host host : metadata.getAllHosts()) {
-            LOG.info("Datacenter: " + host.getDatacenter() + " Host: " + host.getAddress() + " Rack: " + host.getRack());
-        }
-
-        session = cluster.connect();
+    public CassandraConnector() {
     }
 
-    public Session getSession() {
-        return this.session;
+    public static Session getCassandraConection() {
+
+        Cluster cluster = Cluster.builder()
+                .addContactPoint("104.197.222.72")
+                .withQueryOptions(new QueryOptions().setFetchSize(2000))
+                .withoutJMXReporting()
+                .build();
+
+        cluster.getConfiguration().getQueryOptions().setFetchSize(2000);
+
+        Statement statement = new SimpleStatement("USE nano");
+        statement.setFetchSize(2000);
+
+        Session session = cluster.newSession();
+
+        session.execute("USE nano");
+
+        return session;
     }
 
-    public void close() {
-        session.close();
-        cluster.close();
-    }
-*/
 }

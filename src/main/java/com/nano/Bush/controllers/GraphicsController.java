@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.util.List;
@@ -19,11 +20,10 @@ public class GraphicsController {
     @Autowired
     private GraphicsService graphicsService;
 
-
-    @RequestMapping(value = "/comparativeGraphic", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/graficoComparativo/datosExperimentosCultivo", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<GraphicDto>> getComparativeInfoGraphic() {
-        return new ResponseEntity<>(graphicsService.getComparativeGraphicInfo(), HttpStatus.OK);
+    ResponseEntity<List<GraphicDto>> getComparativeInfoGraphic(@RequestParam String crop) {
+        return new ResponseEntity<>(graphicsService.getComparativeGraphicInfo(crop), HttpStatus.OK);
     }
 
 
