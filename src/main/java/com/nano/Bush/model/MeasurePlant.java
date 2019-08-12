@@ -8,14 +8,9 @@ import java.time.LocalDate;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeasurePlant {
 
-    public void setDay(LocalDate day) {
-        this.day = day;
-    }
-
     private LocalDate day;
     @JsonProperty("leafArea")
     private Double leafArea;
-
     public MeasurePlant(Double leafArea) {
         this.leafArea = leafArea;
     }
@@ -26,5 +21,9 @@ public class MeasurePlant {
 
     public LocalDate getDay() {
         return day;
+    }
+
+    public void setDay(LocalDate day) {
+        this.day = day;
     }
 }

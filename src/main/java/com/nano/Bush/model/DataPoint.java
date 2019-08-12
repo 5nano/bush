@@ -2,14 +2,13 @@ package com.nano.Bush.model;
 
 public class DataPoint {
 
+    private String label;
+    private Double y;
+
     public DataPoint(String label, Double y) {
         this.label = label;
         this.y = y;
     }
-
-    private String label;
-
-    private Double y;
 
     public String getLabel() {
         return label;

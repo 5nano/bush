@@ -7,12 +7,14 @@ import org.slf4j.LoggerFactory;
 
 public class CassandraConnector {
 
-    private static final Logger LOG = LoggerFactory.getLogger(CassandraConnector.class);
+    private static final Logger logger = LoggerFactory.getLogger(CassandraConnector.class);
 
     public CassandraConnector() {
     }
 
     public static Session getCassandraConection() {
+
+        logger.info("Connect to Cassandra, host {}" + "104.197.222.72");
 
         Cluster cluster = Cluster.builder()
                 .addContactPoint("104.197.222.72")

@@ -28,7 +28,7 @@ public class GraphicsService {
 
     private List<GraphicDto> getDto(Map<String, String> tests) {
 
-        List<MeasurePlant> measures = measureDao.selectMeasuresFrom("1", "1");
+        List<MeasurePlant> measures = measureDao.selectMeasuresFrom("1", "1");//TODO: poner los IDS del postgres para buscar
 
         GraphicDto graphicInfo = new GraphicDto();
         List<DataPoint> dataPoints = new ArrayList<>();

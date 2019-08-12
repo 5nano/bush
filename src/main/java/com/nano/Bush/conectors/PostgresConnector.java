@@ -10,22 +10,20 @@ import java.sql.SQLException;
 public class PostgresConnector {
 
     private static final Logger logger = LoggerFactory.getLogger(CassandraConnector.class);
-
-    private final String host = "ec2-174-129-226-234.compute-1.amazonaws.com";
-    private final String port = "5432";
-    private final String databasePath = "/d9gojcvt5uikag";
     private static PostgresConnector postgresConnector = new PostgresConnector();
 
     public static PostgresConnector getInstance() {
         return postgresConnector;
     }
 
-
     public Connection getConnection() {
 
         String user = "ylxgnzcpuvjkwr";
         String password = "dfa5fe2f24238710cf1f31b963f899f7137635c59222c0b947e29ad99dd1a15d";
         String ssl = "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";
+        String host = "ec2-174-129-226-234.compute-1.amazonaws.com";
+        String port = "5432";
+        String databasePath = "/d9gojcvt5uikag";
         String dbUrl = "jdbc:postgresql://" + host + ':' + port + databasePath + ssl;
         Connection connection = null;
 

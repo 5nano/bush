@@ -49,8 +49,8 @@ public class GraphicDao {
             while (resultSet.next()) {
                 idCrop = resultSet.getString("ID_CULTIVO");
             }
-            resultSet = statement.executeQuery(idExperimentsQuery+idCrop+"'");
-            while (resultSet.next()){
+            resultSet = statement.executeQuery(idExperimentsQuery + idCrop + "'");
+            while (resultSet.next()) {
                 experimentId.add(resultSet.getString("ID_ENSAYO"));
             }
 
@@ -60,11 +60,11 @@ public class GraphicDao {
             LOGGER.error("Exception error: %s", exception.getMessage());
         }
 
-        Map<String,String> experimentsToCassandraQuery  = new HashMap<>();
+        Map<String, String> experimentsToCassandraQuery = new HashMap<>();
 
         String finalIdCrop = idCrop;
 
-        experimentId.forEach(e->experimentsToCassandraQuery.put(e, finalIdCrop));
+        experimentId.forEach(e -> experimentsToCassandraQuery.put(e, finalIdCrop));
 
         return experimentsToCassandraQuery;
     }

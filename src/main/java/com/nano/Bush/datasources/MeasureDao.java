@@ -1,6 +1,7 @@
 package com.nano.Bush.datasources;
 
 import com.datastax.driver.core.ResultSet;
+import com.datastax.driver.core.Row;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nano.Bush.conectors.CassandraConnector;
 import com.nano.Bush.model.LeafAreaPlantDto;
@@ -17,7 +18,7 @@ import java.util.List;
 @Repository
 public class MeasureDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(MeasureDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(MeasureDao.class);
 
     public List<MeasurePlant> selectMeasuresFrom(String idPlant, String idTest) {
 
@@ -26,23 +27,23 @@ public class MeasureDao {
 
         List<MeasurePlant> measuresPlants = new ArrayList<>();
 
-        rs.forEach(r -> {
-            if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
-                rs.fetchMoreResults(); // this is asynchronous
-            try {
-                measuresPlants.add(new MeasurePlant(new ObjectMapper().readValue(r.getString("measures"), LeafAreaPlantDto.class).getLeafArea()));
-            } catch (IOException e) {
-                throw new RuntimeException("JSON Parse error, exception: " + e);
-            }
-        });
-
-        LocalDate date = LocalDate.now();
+        rs.forEach(r -> putMeasure(rs, measuresPlants, r));
 
         for (long days = 0; days < measuresPlants.size(); days++) {
-            measuresPlants.get(Integer.parseInt(String.valueOf(days))).setDay(date.plusDays(days));
+            measuresPlants.get(Integer.parseInt(String.valueOf(days))).setDay(LocalDate.now().plusDays(days)); //TODO: sacar el plus days cuando se inserte bien la fecha
         }
 
         return measuresPlants;
+    }
+
+    private void putMeasure(ResultSet rs, List<MeasurePlant> measuresPlants, Row r) {
+        if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
+            rs.fetchMoreResults();
+        try {
+            measuresPlants.add(new MeasurePlant(new ObjectMapper().readValue(r.getString("measures"), LeafAreaPlantDto.class).getLeafArea()));
+        } catch (IOException e) {
+            throw new RuntimeException("JSON Parse error, exception: " + e);
+        }
     }
 
 }
