@@ -47,8 +47,7 @@ public class MeasureDao {
 
     public String selectBase64ImageFrom(String idPlant, String idTest) {
 
-        String query = "SELECT image FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";//TODO: el nombre del campo
-        System.out.println(CassandraConnector.getCassandraConection().execute(query).one().getString(0));
+        String query = "SELECT image FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";
 
         return CassandraConnector.getCassandraConection().execute(query).one().getString(0);
     }

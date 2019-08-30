@@ -23,5 +23,3 @@ public class TestsController {
     }
 }
 
-/*testsService.getComparativeGraphicInfo(testId, experimentId)*/
-

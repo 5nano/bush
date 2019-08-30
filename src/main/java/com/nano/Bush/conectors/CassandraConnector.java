@@ -19,6 +19,7 @@ public class CassandraConnector {
         Cluster cluster = Cluster.builder()
                 .addContactPoint("104.197.222.72")
                 .withQueryOptions(new QueryOptions().setFetchSize(2000))
+                .withSocketOptions(new SocketOptions().setConnectTimeoutMillis(90000))
                 .withoutJMXReporting()
                 .build();
 
