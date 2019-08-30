@@ -33,7 +33,7 @@ public class GraphicsService {
         GraphicDto graphicInfo = new GraphicDto();
         List<DataPoint> dataPoints = new ArrayList<>();
 
-        measures.forEach(mp -> dataPoints.add(new DataPoint(mp.getDay().toString(), mp.getLeafArea())));
+        measures.forEach(mp -> dataPoints.add(new DataPoint(mp.getDay().toString(), mp.getObservations().getArea().getValue())));
 
         graphicInfo.setDataPoints(dataPoints);
 

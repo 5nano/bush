@@ -3,8 +3,8 @@ package com.nano.Bush.datasources;
 import com.datastax.driver.core.ResultSet;
 import com.datastax.driver.core.Row;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nano.Bush.Mocks.MeasureResponseMock;
 import com.nano.Bush.conectors.CassandraConnector;
-import com.nano.Bush.model.LeafAreaPlantDto;
 import com.nano.Bush.model.MeasurePlant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,11 +22,10 @@ public class MeasureDao {
 
     public List<MeasurePlant> selectMeasuresFrom(String idPlant, String idTest) {
 
-        String query = "SELECT * FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";
+        String query = "SELECT Measures FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";
         ResultSet rs = CassandraConnector.getCassandraConection().execute(query);
 
         List<MeasurePlant> measuresPlants = new ArrayList<>();
-
         rs.forEach(r -> putMeasure(rs, measuresPlants, r));
 
         for (long days = 0; days < measuresPlants.size(); days++) {
@@ -40,10 +39,17 @@ public class MeasureDao {
         if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
             rs.fetchMoreResults();
         try {
-            measuresPlants.add(new MeasurePlant(new ObjectMapper().readValue(r.getString("measures"), LeafAreaPlantDto.class).getLeafArea()));
+            measuresPlants.add(new ObjectMapper().readValue(MeasureResponseMock.getMeasure(), MeasurePlant.class));
         } catch (IOException e) {
             throw new RuntimeException("JSON Parse error, exception: " + e);
         }
     }
 
+    public String selectBase64ImageFrom(String idPlant, String idTest) {
+
+        String query = "SELECT image FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";//TODO: el nombre del campo
+        System.out.println(CassandraConnector.getCassandraConection().execute(query).one().getString(0));
+
+        return CassandraConnector.getCassandraConection().execute(query).one().getString(0);
+    }
 }

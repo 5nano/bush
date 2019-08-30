@@ -9,15 +9,9 @@ import java.time.LocalDate;
 public class MeasurePlant {
 
     private LocalDate day;
-    @JsonProperty("leafArea")
-    private Double leafArea;
-    public MeasurePlant(Double leafArea) {
-        this.leafArea = leafArea;
-    }
 
-    public Double getLeafArea() {
-        return leafArea;
-    }
+    @JsonProperty("observations")
+    private Observations observations;
 
     public LocalDate getDay() {
         return day;
@@ -25,5 +19,13 @@ public class MeasurePlant {
 
     public void setDay(LocalDate day) {
         this.day = day;
+    }
+
+    public Observations getObservations() {
+        return observations;
+    }
+
+    public void setObservations(Observations observations) {
+        this.observations = observations;
     }
 }

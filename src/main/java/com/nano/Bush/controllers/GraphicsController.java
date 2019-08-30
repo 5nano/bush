@@ -23,6 +23,7 @@ public class GraphicsController {
     @RequestMapping(value = "/graficoComparativo/datosExperimentosCultivo", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<GraphicDto>> getComparativeInfoGraphic(@RequestParam String crop) {
+
         return new ResponseEntity<>(graphicsService.getComparativeGraphicInfo(crop), HttpStatus.OK);
     }
 

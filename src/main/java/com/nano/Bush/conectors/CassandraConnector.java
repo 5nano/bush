@@ -14,7 +14,7 @@ public class CassandraConnector {
 
     public static Session getCassandraConection() {
 
-        logger.info("Connect to Cassandra, host {}" + "104.197.222.72");
+        logger.info("Connect to Cassandra, host {}", "104.197.222.72");
 
         Cluster cluster = Cluster.builder()
                 .addContactPoint("104.197.222.72")
