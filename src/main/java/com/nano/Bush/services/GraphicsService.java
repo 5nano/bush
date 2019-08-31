@@ -28,18 +28,37 @@ public class GraphicsService {
 
     private List<GraphicDto> getDto(Map<String, String> tests) {
 
-        List<MeasurePlant> measures = measureDao.selectMeasuresFrom("1", "1");//TODO: poner los IDS del postgres para buscar
+        tests.put("1", "2");//TODO: poner los IDS del postgres para buscar
+        tests.put("2", "2");
+        List<List<MeasurePlant>> measures = new ArrayList<>();
 
-        GraphicDto graphicInfo = new GraphicDto();
-        List<DataPoint> dataPoints = new ArrayList<>();
-
-        measures.forEach(mp -> dataPoints.add(new DataPoint(mp.getDay().toString(), mp.getObservations().getArea().getValue())));
-
-        graphicInfo.setDataPoints(dataPoints);
+        tests.forEach((expId, assId) -> measures.add(measureDao.selectMeasuresFrom(assId, expId)));
 
         List<GraphicDto> graphicDtos = new ArrayList<>();
-        graphicDtos.add(graphicInfo);
+
+        getDatapointsFrom(measures).forEach(m -> {
+            GraphicDto graphicInfo = new GraphicDto();
+            getDatapointsFrom(measures).forEach(graphicInfo::setDataPoints);
+            graphicDtos.add(graphicInfo);
+        });
+
         return graphicDtos;
+    }
+
+    private static List<List<DataPoint>> getDatapointsFrom(List<List<MeasurePlant>> measures) {
+
+        List<List<DataPoint>> dataPoints = new ArrayList<>();
+
+        List<DataPoint> dataPointList = new ArrayList<>();
+
+        for (List<MeasurePlant> measurePlants : measures) {
+            dataPointList.clear();
+            measurePlants.forEach(mp -> dataPointList.add(new DataPoint(mp.getDay().toString(), mp.getObservations().getArea().getValue())));
+            dataPoints.add(dataPointList);
+        }
+
+        return dataPoints;
+
     }
 
 }

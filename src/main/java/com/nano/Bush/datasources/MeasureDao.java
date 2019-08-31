@@ -1,7 +1,6 @@
 package com.nano.Bush.datasources;
 
 import com.datastax.driver.core.ResultSet;
-import com.datastax.driver.core.Row;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nano.Bush.Mocks.MeasureResponseMock;
 import com.nano.Bush.conectors.CassandraConnector;
@@ -20,13 +19,13 @@ public class MeasureDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MeasureDao.class);
 
-    public List<MeasurePlant> selectMeasuresFrom(String idPlant, String idTest) {
+    public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 
-        String query = "SELECT Measures FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";
+        String query = "SELECT Measures FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
         ResultSet rs = CassandraConnector.getCassandraConection().execute(query);
 
         List<MeasurePlant> measuresPlants = new ArrayList<>();
-        rs.forEach(r -> putMeasure(rs, measuresPlants, r));
+        rs.forEach(r -> putMeasure(rs, measuresPlants));
 
         for (long days = 0; days < measuresPlants.size(); days++) {
             measuresPlants.get(Integer.parseInt(String.valueOf(days))).setDay(LocalDate.now().plusDays(days)); //TODO: sacar el plus days cuando se inserte bien la fecha
@@ -35,7 +34,7 @@ public class MeasureDao {
         return measuresPlants;
     }
 
-    private void putMeasure(ResultSet rs, List<MeasurePlant> measuresPlants, Row r) {
+    private void putMeasure(ResultSet rs, List<MeasurePlant> measuresPlants) {
         if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
             rs.fetchMoreResults();
         try {
@@ -45,10 +44,20 @@ public class MeasureDao {
         }
     }
 
-    public String selectBase64ImageFrom(String idPlant, String idTest) {
+    public List<String> selectBase64ImageFrom(String experimentId, String assayId) {
 
-        String query = "SELECT image FROM measures WHERE id_plant = " + idPlant + " AND id_test = " + idTest + "";
+        String query = "SELECT image FROM images WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId +
+                " ALLOW FILTERING";
 
-        return CassandraConnector.getCassandraConection().execute(query).one().getString(0);
+        ResultSet rs = CassandraConnector.getCassandraConection().execute(query);
+
+
+        List<String> images = new ArrayList<>();
+
+        if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
+            rs.fetchMoreResults();
+        rs.forEach(r -> images.add(r.getString(0)));
+
+        return images;
     }
 }

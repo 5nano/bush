@@ -8,6 +8,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.List;
+
 @Controller
 @RequestMapping("/bush")
 public class TestsController {
@@ -16,10 +18,10 @@ public class TestsController {
     @Autowired
     private TestsService testsService;
 
-    @RequestMapping(value = "/prueba/imagenBase64", method = RequestMethod.GET, produces = "text/plain")
+    @RequestMapping(value = "/prueba/imagenBase64", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    String getComparativeInfoGraphic(@RequestParam String testId, @RequestParam String experimentId) {
-        return testsService.getComparativeGraphicInfo(testId, experimentId);
+    List<String> getComparativeInfoGraphic(@RequestParam String testId, @RequestParam String experimentId) {
+        return testsService.getBase64Image(testId, experimentId);
     }
 }
 
