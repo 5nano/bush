@@ -23,27 +23,27 @@ public class GraphicsService {
         PostgresConnector postgresConnector = new PostgresConnector();
         GraphicDao graphicDao = new GraphicDao(postgresConnector.getConnection());
 
-        return getDto(graphicDao.getExperimentsIds(crop));
-    }
+        Map<String, String> assays = graphicDao.getExperimentsIds(crop);
 
-    private List<GraphicDto> getDto(Map<String, String> tests) {
-
-        tests.put("1", "2");//TODO: poner los IDS del postgres para buscar
-        tests.put("2", "2");
+        assays.put("1", "2");//TODO: poner los IDS del postgres para buscar
+        assays.put("2", "2");
         List<List<MeasurePlant>> measures = new ArrayList<>();
 
-        tests.forEach((expId, assId) -> measures.add(measureDao.selectMeasuresFrom(assId, expId)));
+        assays.forEach((expId, assId) -> measures.add(measureDao.selectMeasuresFrom(assId, expId)));
 
         List<GraphicDto> graphicDtos = new ArrayList<>();
 
-        getDatapointsFrom(measures).forEach(m -> {
-            GraphicDto graphicInfo = new GraphicDto();
-            getDatapointsFrom(measures).forEach(graphicInfo::setDataPoints);
-            graphicDtos.add(graphicInfo);
-        });
+        getDatapointsFrom(measures).forEach(m -> putGraphic(measures, graphicDtos));
 
         return graphicDtos;
     }
+
+    private void putGraphic(List<List<MeasurePlant>> measures, List<GraphicDto> graphicDtos) {
+        GraphicDto graphicInfo = new GraphicDto();
+        getDatapointsFrom(measures).forEach(graphicInfo::setDataPoints);
+        graphicDtos.add(graphicInfo);
+    }
+
 
     private static List<List<DataPoint>> getDatapointsFrom(List<List<MeasurePlant>> measures) {
 
