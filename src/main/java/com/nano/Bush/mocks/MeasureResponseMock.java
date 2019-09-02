@@ -1,4 +1,4 @@
-package com.nano.Bush.Mocks;
+package com.nano.Bush.mocks;
 
 public class MeasureResponseMock {
 

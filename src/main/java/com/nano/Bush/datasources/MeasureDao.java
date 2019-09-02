@@ -2,7 +2,7 @@ package com.nano.Bush.datasources;
 
 import com.datastax.driver.core.ResultSet;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nano.Bush.Mocks.MeasureResponseMock;
+import com.nano.Bush.mocks.MeasureResponseMock;
 import com.nano.Bush.conectors.CassandraConnector;
 import com.nano.Bush.model.MeasurePlant;
 import org.slf4j.Logger;
@@ -22,7 +22,7 @@ public class MeasureDao {
     public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 
         String query = "SELECT Measures FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
-        ResultSet rs = CassandraConnector.getCassandraConection().execute(query);
+        ResultSet rs = CassandraConnector.getConnection().execute(query);
 
         List<MeasurePlant> measuresPlants = new ArrayList<>();
         rs.forEach(r -> putMeasure(rs, measuresPlants));
@@ -49,7 +49,7 @@ public class MeasureDao {
         String query = "SELECT image FROM images WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId +
                 " ALLOW FILTERING";
 
-        ResultSet rs = CassandraConnector.getCassandraConection().execute(query);
+        ResultSet rs = CassandraConnector.getConnection().execute(query);
 
 
         List<String> images = new ArrayList<>();
