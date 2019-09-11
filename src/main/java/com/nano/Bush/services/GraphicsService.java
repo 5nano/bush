@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -19,11 +20,28 @@ public class GraphicsService {
     @Autowired
     private MeasureDao measureDao;
 
+    private static List<List<DataPoint>> getDatapointsFrom(List<List<MeasurePlant>> measures) {
+
+        List<List<DataPoint>> dataPoints = new ArrayList<>();
+
+        List<DataPoint> dataPointList = new ArrayList<>();
+
+        for (List<MeasurePlant> measurePlants : measures) {
+            dataPointList.clear();
+            measurePlants.forEach(mp -> dataPointList.add(new DataPoint(mp.getDay().toString(), mp.getObservations().getArea().getValue())));
+            dataPoints.add(dataPointList);
+        }
+
+        return dataPoints;
+
+    }
+
     public List<GraphicDto> getComparativeGraphicInfo(String crop) {
         PostgresConnector postgresConnector = new PostgresConnector();
         GraphicDao graphicDao = new GraphicDao(postgresConnector.getConnection());
 
-        Map<String, String> assays = graphicDao.getExperimentsIds(crop);
+        Map<String, String> assays = new HashMap<>();
+        //graphicDao.getExperimentsIds(crop);
 
         assays.put("1", "2");//TODO: poner los IDS del postgres para buscar
         assays.put("2", "2");
@@ -42,23 +60,6 @@ public class GraphicsService {
         GraphicDto graphicInfo = new GraphicDto();
         getDatapointsFrom(measures).forEach(graphicInfo::setDataPoints);
         graphicDtos.add(graphicInfo);
-    }
-
-
-    private static List<List<DataPoint>> getDatapointsFrom(List<List<MeasurePlant>> measures) {
-
-        List<List<DataPoint>> dataPoints = new ArrayList<>();
-
-        List<DataPoint> dataPointList = new ArrayList<>();
-
-        for (List<MeasurePlant> measurePlants : measures) {
-            dataPointList.clear();
-            measurePlants.forEach(mp -> dataPointList.add(new DataPoint(mp.getDay().toString(), mp.getObservations().getArea().getValue())));
-            dataPoints.add(dataPointList);
-        }
-
-        return dataPoints;
-
     }
 
 }

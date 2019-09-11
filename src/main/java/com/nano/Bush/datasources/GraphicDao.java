@@ -39,25 +39,27 @@ public class GraphicDao {
 
         ResultSet resultSet;
         String idCrop = null;
-        String idExperimentsQuery = "SELECT ID_ENSAYO FROM ENSAYOS WHERE ID_CULTIVO = '";
-        String idCropQuery = "SELECT ID_CULTIVO FROM CULTIVOS WHERE CULTIVO ='" + crop + "'";
+        String idExperimentsQuery = "SELECT IDENSAYO FROM ENSAYO WHERE IDCULTIVO = 1";
+        String idCropQuery = "SELECT IDCULTIVO FROM CULTIVO WHERE NOMBRE ='" + crop + "'";
 
         List<String> experimentId = new ArrayList<>();
 
         try {
             resultSet = statement.executeQuery(idCropQuery);
             while (resultSet.next()) {
-                idCrop = resultSet.getString("ID_CULTIVO");
+                idCrop = resultSet.getString("IDCULTIVO");
             }
             resultSet = statement.executeQuery(idExperimentsQuery + idCrop + "'");
             while (resultSet.next()) {
-                experimentId.add(resultSet.getString("ID_ENSAYO"));
+                experimentId.add(resultSet.getString("IDENSAYO"));
             }
 
         } catch (SQLException sqlException) {
-            LOGGER.error("SQL State: %s\n%s", sqlException.getSQLState(), sqlException.getMessage());
+            LOGGER.error("SQL State: "+ sqlException.getSQLState()+" Message: "+ sqlException.getMessage());
+            throw new RuntimeException(sqlException);
         } catch (Exception exception) {
             LOGGER.error("Exception error: %s", exception.getMessage());
+            throw new RuntimeException(exception);
         }
 
         Map<String, String> experimentsToCassandraQuery = new HashMap<>();

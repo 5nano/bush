@@ -27,15 +27,15 @@ public class CropDao {
         this.connector = connector;
     }
 
-    public void insertCrop(Crop crop) throws SQLException {
-        preparedStatement = connector.prepareStatement("INSERT INTO  cultivos VALUES (default, ?, ?)");
-        preparedStatement.setString(1, crop.getName());
-        preparedStatement.setString(2, crop.getDescription());
+    public void insertCrop(String cropName, String cropDescription) throws SQLException {
+        preparedStatement = connector.prepareStatement("INSERT INTO  cultivo VALUES (default, ?, ?)");
+        preparedStatement.setString(1, cropName);
+        preparedStatement.setString(2, cropDescription);
         preparedStatement.executeUpdate();
     }
 
     public List<String> getCrops() throws SQLException {
-        resultSet = statement.executeQuery("SELECT USER FROM USER");
+        resultSet = statement.executeQuery("SELECT * FROM cultivo");
         List<String> crops = new ArrayList<>();
         while (resultSet.next()) {
             crops.add(resultSet.getString("user"));
@@ -44,11 +44,11 @@ public class CropDao {
     }
 
     public void getCrop(Crop crop) throws SQLException {
-        resultSet = statement.executeQuery("SELECT Nombre,Descripcion FROM cultivos WHERE nombre = '" + crop.getName() + "'");
+        resultSet = statement.executeQuery("SELECT Nombre,Descripcion FROM cultivo WHERE nombre = '" + crop.getName() + "'");
     }
 
     public void deleteCrop(Crop crop) throws SQLException {
-        preparedStatement = connector.prepareStatement("DELETE FROM cultivos WHERE nombre ='" + crop.getName() + "'");
+        preparedStatement = connector.prepareStatement("DELETE FROM cultivo WHERE nombre ='" + crop.getName() + "'");
         preparedStatement.executeUpdate();
     }
 

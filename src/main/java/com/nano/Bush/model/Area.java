@@ -7,6 +7,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Area {
 
+    @JsonProperty("value")
+    private Double value;
+
     public Double getValue() {
         return value;
     }
@@ -14,7 +17,4 @@ public class Area {
     public void setValue(Double value) {
         this.value = value;
     }
-
-    @JsonProperty("value")
-    private Double value;
 }
