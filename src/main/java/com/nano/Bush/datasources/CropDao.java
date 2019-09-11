@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CropDao {
 
-    private static final Logger LOG = LoggerFactory.getLogger(MySqlConnector.class);
+    private static final Logger logger = LoggerFactory.getLogger(MySqlConnector.class);
     private PreparedStatement preparedStatement;
     private Statement statement;
     private Connection connector;
@@ -20,25 +20,26 @@ public class CropDao {
 
     public CropDao(Connection connector) {
         try {
-            this.statement = connector.createStatement();
+            setStatement(connector.createStatement());
         } catch (SQLException e) {
-            LOG.error("Error al conectarse a Postgress :" + e);
+            logger.error("Error al conectarse a Postgress :" + e);
         }
         this.connector = connector;
+
     }
 
-    public void insertCrop(String cropName, String cropDescription) throws SQLException {
+    public void insertCrop(Crop crop) throws SQLException {
         preparedStatement = connector.prepareStatement("INSERT INTO  cultivo VALUES (default, ?, ?)");
-        preparedStatement.setString(1, cropName);
-        preparedStatement.setString(2, cropDescription);
+        preparedStatement.setString(1, crop.getName());
+        preparedStatement.setString(2, crop.getDescription());
         preparedStatement.executeUpdate();
     }
 
-    public List<String> getCrops() throws SQLException {
+    public List<Crop> getCrops() throws SQLException {
         resultSet = statement.executeQuery("SELECT * FROM cultivo");
-        List<String> crops = new ArrayList<>();
+        List<Crop> crops = new ArrayList<>();
         while (resultSet.next()) {
-            crops.add(resultSet.getString("user"));
+            crops.add(new Crop(resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return crops;
     }
@@ -50,6 +51,10 @@ public class CropDao {
     public void deleteCrop(Crop crop) throws SQLException {
         preparedStatement = connector.prepareStatement("DELETE FROM cultivo WHERE nombre ='" + crop.getName() + "'");
         preparedStatement.executeUpdate();
+    }
+
+    public void setStatement(Statement statement) {
+        this.statement = statement;
     }
 
 }

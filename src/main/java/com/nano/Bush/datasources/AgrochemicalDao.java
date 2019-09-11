@@ -1,5 +1,6 @@
 package com.nano.Bush.datasources;
 
+import com.nano.Bush.model.Agrochemical;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,21 +25,20 @@ public class AgrochemicalDao {
         this.connector = connector;
     }
 
-    public void insertAgrochemical(String agrochemicalName, String agrochemicalDescription) throws SQLException {
+    public void insertAgrochemical(Agrochemical agrochemical) throws SQLException {
         preparedStatement = connector.prepareStatement("INSERT INTO  agroquimico VALUES (default, ?, ?)");
-        preparedStatement.setString(1, agrochemicalName);
-        preparedStatement.setString(2, agrochemicalDescription);
+        preparedStatement.setString(1, agrochemical.getName());
+        preparedStatement.setString(2, agrochemical.getDescription());
         preparedStatement.executeUpdate();
     }
 
-    public List<String> getAgrochemicals() throws SQLException {
+    public List<Agrochemical> getAgrochemicals() throws SQLException {
         ResultSet resultSet = statement.executeQuery("SELECT * FROM agroquimico");
-        List<String> crops = new ArrayList<>();
+        List<Agrochemical> agrochemicals = new ArrayList<>();
         while (resultSet.next()) {
-            System.out.println(resultSet.getString("nombre"));
-            crops.add(resultSet.getString("nombre"));
+            agrochemicals.add(new Agrochemical(resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
-        return crops;
+        return agrochemicals;
     }
 
     public void deleteAgrochemical(String agrochemicalName) throws SQLException {
