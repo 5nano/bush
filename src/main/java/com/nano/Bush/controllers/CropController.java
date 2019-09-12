@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.CropDao;
 import com.nano.Bush.model.Crop;
+import com.nano.Bush.model.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -20,13 +21,13 @@ public class CropController {
 
     @RequestMapping(value = "/cultivo/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<String> saveCrop(@RequestBody Crop crop) throws SQLException {
+    ResponseEntity<Response> saveCrop(@RequestBody Crop crop) throws SQLException {
 
         CropDao cropDao = new CropDao(PostgresConnector.getInstance().getConnection());
 
         cropDao.insertCrop(crop);
 
-        return new ResponseEntity<>("Cultivo Creado", HttpStatus.OK);
+        return new ResponseEntity<>(new Response("Cultivo Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/cultivos", method = RequestMethod.GET, produces = "application/json")

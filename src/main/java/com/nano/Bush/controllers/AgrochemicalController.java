@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.AgrochemicalDao;
 import com.nano.Bush.model.Agrochemical;
+import com.nano.Bush.model.Response;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -18,12 +19,12 @@ import java.util.List;
 public class AgrochemicalController {
 
     @RequestMapping(value = "/agroquimico/insertar", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<String> saveAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
+    public ResponseEntity<Response> saveAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
         AgrochemicalDao agrochemicalDao = new AgrochemicalDao(PostgresConnector.getInstance().getConnection());
 
         agrochemicalDao.insertAgrochemical(agrochemical);
 
-        return new ResponseEntity<>("Agroquimico Creado", HttpStatus.OK);
+        return new ResponseEntity<>(new Response("Agroquimico Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/agroquimicos", method = RequestMethod.GET, produces = "application/json")
