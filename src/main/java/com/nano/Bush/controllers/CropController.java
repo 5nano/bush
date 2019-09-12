@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping("/bush")
 public class CropController {
 
-    @RequestMapping(value = "/cultivo/insertar", method = RequestMethod.POST)
+    @RequestMapping(value = "/cultivo/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<String> saveCrop(@RequestBody Crop crop) throws SQLException {
 

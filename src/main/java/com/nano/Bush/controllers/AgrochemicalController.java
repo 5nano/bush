@@ -17,7 +17,7 @@ import java.util.List;
 @RequestMapping("/bush")
 public class AgrochemicalController {
 
-    @RequestMapping(value = "/agroquimico/insertar", method = RequestMethod.POST)
+    @RequestMapping(value = "/agroquimico/insertar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<String> saveAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
         AgrochemicalDao agrochemicalDao = new AgrochemicalDao(PostgresConnector.getInstance().getConnection());
 
