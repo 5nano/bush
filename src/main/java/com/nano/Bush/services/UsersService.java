@@ -1,6 +1,5 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.User;
 import org.slf4j.Logger;
@@ -19,18 +18,18 @@ public class UsersService {
 
     public List<User> getUsers() throws SQLException {
 
-        UsersDao usersDao = new UsersDao(PostgresConnector.getInstance().getConnection());
+        UsersDao usersDao = new UsersDao();
 
         return usersDao.getUsers();
     }
 
     public void insertUser(User user) throws SQLException {
 
-        UsersDao usersDao = new UsersDao(PostgresConnector.getInstance().getConnection());
+        UsersDao usersDao = new UsersDao();
 
         user.setPassword(generateMD5HashPass(user));
 
-        usersDao.insertUser(user);
+        usersDao.insert(user);
 
     }
 

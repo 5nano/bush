@@ -1,6 +1,5 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.ExperimentsDao;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
@@ -14,9 +13,9 @@ public class ExperimentService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExperimentService.class);
 
-    public Experiment getExperimentNameFrom(String experimentId) {
+    public Experiment getExperimentNameFrom(String experimentId) throws SQLException {
 
-        ExperimentsDao experimentsDao = new ExperimentsDao(PostgresConnector.getInstance().getConnection());
+        ExperimentsDao experimentsDao = new ExperimentsDao();
 
         Experiment experiment;
 

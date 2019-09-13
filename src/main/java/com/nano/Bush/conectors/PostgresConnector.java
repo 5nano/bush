@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class PostgresConnector {
@@ -42,6 +43,10 @@ public class PostgresConnector {
 
         }
         return connection;
+    }
+
+    public PreparedStatement getPreparedStatementFor(String query) throws SQLException {
+        return connection.prepareStatement(query);
     }
 
 }

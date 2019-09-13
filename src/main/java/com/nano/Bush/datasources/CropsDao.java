@@ -1,11 +1,14 @@
 package com.nano.Bush.datasources;
 
-import com.nano.Bush.conectors.MySqlConnector;
+import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Crop;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,23 +16,15 @@ import java.util.List;
 public class CropsDao {
 
     private static final Logger logger = LoggerFactory.getLogger(CropsDao.class);
-    private PreparedStatement preparedStatement;
     private Statement statement;
-    private Connection connector;
     private ResultSet resultSet;
 
-    public CropsDao(Connection connector) {
-        try {
-            setStatement(connector.createStatement());
-        } catch (SQLException e) {
-            logger.error("Error al conectarse a Postgress :" + e);
-        }
-        this.connector = connector;
-
+    public CropsDao() throws SQLException {
+        statement = PostgresConnector.getInstance().getConnection().createStatement();
     }
 
-    public void insertCrop(Crop crop) throws SQLException {
-        preparedStatement = connector.prepareStatement("INSERT INTO  cultivo VALUES (default, ?, ?)");
+    public void insert(Crop crop) throws SQLException {
+        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor("INSERT INTO  cultivo VALUES (default, ?, ?)");
         preparedStatement.setString(1, crop.getName());
         preparedStatement.setString(2, crop.getDescription());
         preparedStatement.executeUpdate();
@@ -49,12 +44,8 @@ public class CropsDao {
     }
 
     public void deleteCrop(Crop crop) throws SQLException {
-        preparedStatement = connector.prepareStatement("DELETE FROM cultivo WHERE nombre ='" + crop.getName() + "'");
+        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor("DELETE FROM cultivo WHERE nombre ='" + crop.getName() + "'");
         preparedStatement.executeUpdate();
-    }
-
-    public void setStatement(Statement statement) {
-        this.statement = statement;
     }
 
 }

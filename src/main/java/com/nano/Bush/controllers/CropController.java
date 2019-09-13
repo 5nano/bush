@@ -1,6 +1,5 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.CropsDao;
 import com.nano.Bush.model.Crop;
 import com.nano.Bush.model.Response;
@@ -21,16 +20,16 @@ public class CropController {
     public @ResponseBody
     ResponseEntity<Response> saveCrop(@RequestBody Crop crop) throws SQLException {
 
-        CropsDao cropsDao = new CropsDao(PostgresConnector.getInstance().getConnection());
+        CropsDao cropsDao = new CropsDao();
 
-        cropsDao.insertCrop(crop);
+        cropsDao.insert(crop);
 
         return new ResponseEntity<>(new Response("Cultivo Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/cultivos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Crop>> showCrops() throws SQLException {
-        CropsDao cropsDao = new CropsDao(PostgresConnector.getInstance().getConnection());
+        CropsDao cropsDao = new CropsDao();
 
         return new ResponseEntity<>(cropsDao.getCrops(), HttpStatus.OK);
     }

@@ -1,4 +1,4 @@
-package com.nano.Bush.model;
+package com.nano.Bush.model.measuresGraphics;
 
 public class DataPoint {
 

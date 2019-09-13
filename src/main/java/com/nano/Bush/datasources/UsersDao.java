@@ -1,6 +1,6 @@
 package com.nano.Bush.datasources;
 
-import com.nano.Bush.conectors.MySqlConnector;
+import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,21 +11,16 @@ import java.util.List;
 
 public class UsersDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(MySqlConnector.class);
+    private static final Logger logger = LoggerFactory.getLogger(UsersDao.class);
     private Statement statement;
-    private Connection connector;
 
-    public UsersDao(Connection connector) {
-        try {
-            setStatement(connector.createStatement());
-        } catch (SQLException e) {
-            logger.error("Error al conectarse a Postgress :" + e);
-        }
-        this.connector = connector;
+    public UsersDao() throws SQLException {
+        statement = PostgresConnector.getInstance().getConnection().createStatement();
     }
 
-    public void insertUser(User user) throws SQLException {
-        PreparedStatement preparedStatement = connector.prepareStatement("INSERT INTO  usuario VALUES (default,1, ?, ?,?,?,?,?,?)");
+    public void insert(User user) throws SQLException {
+        PreparedStatement preparedStatement = PostgresConnector.getInstance()
+                .getPreparedStatementFor("INSERT INTO  usuario VALUES (default,1, ?, ?,?,?,?,?,?)");
         preparedStatement.setString(1, user.getFirstName());
         preparedStatement.setString(2, user.getLastName());
         preparedStatement.setString(3, user.getUsername());
@@ -45,10 +40,5 @@ public class UsersDao {
                     resultSet.getString("Apellido"), resultSet.getString("Password")));
         }
         return users;
-    }
-
-
-    private void setStatement(Statement statement) {
-        this.statement = statement;
     }
 }

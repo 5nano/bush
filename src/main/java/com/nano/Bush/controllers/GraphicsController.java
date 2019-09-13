@@ -1,6 +1,6 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.model.GraphicDto;
+import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import com.nano.Bush.services.GraphicsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

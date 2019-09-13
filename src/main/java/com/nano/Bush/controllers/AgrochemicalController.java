@@ -1,6 +1,5 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.AgrochemicalsDao;
 import com.nano.Bush.model.Agrochemical;
 import com.nano.Bush.model.Response;
@@ -22,16 +21,16 @@ public class AgrochemicalController {
 
     @RequestMapping(value = "/agroquimico/insertar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> saveAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
-        AgrochemicalsDao agrochemicalsDao = new AgrochemicalsDao(PostgresConnector.getInstance().getConnection());
+        AgrochemicalsDao agrochemicalsDao = new AgrochemicalsDao();
 
-        agrochemicalsDao.insertAgrochemical(agrochemical);
+        agrochemicalsDao.insert(agrochemical);
 
         return new ResponseEntity<>(new Response("Agroquimico Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/agroquimicos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Agrochemical>> showAgrochemicals() throws SQLException {
-        AgrochemicalsDao agrochemicalsDao = new AgrochemicalsDao(PostgresConnector.getInstance().getConnection());
+        AgrochemicalsDao agrochemicalsDao = new AgrochemicalsDao();
 
         return new ResponseEntity<>(agrochemicalsDao.getAgrochemicals(), HttpStatus.OK);
     }

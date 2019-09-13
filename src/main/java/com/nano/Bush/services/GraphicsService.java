@@ -3,9 +3,9 @@ package com.nano.Bush.services;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.GraphicsDao;
 import com.nano.Bush.datasources.MeasuresDao;
-import com.nano.Bush.model.DataPoint;
-import com.nano.Bush.model.GraphicDto;
-import com.nano.Bush.model.MeasurePlant;
+import com.nano.Bush.model.measuresGraphics.DataPoint;
+import com.nano.Bush.model.measuresGraphics.GraphicDto;
+import com.nano.Bush.model.measuresGraphics.MeasurePlant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,7 +38,7 @@ public class GraphicsService {
 
     public List<GraphicDto> getComparativeGraphicInfo(String crop) {
         PostgresConnector postgresConnector = new PostgresConnector();
-        GraphicsDao graphicsDao = new GraphicsDao(postgresConnector.getConnection());
+        GraphicsDao graphicsDao = new GraphicsDao();
 
         Map<String, String> assays = new HashMap<>();
         //graphicDao.getExperimentsIds(crop);

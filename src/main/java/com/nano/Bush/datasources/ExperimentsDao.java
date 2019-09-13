@@ -1,5 +1,6 @@
 package com.nano.Bush.datasources;
 
+import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -11,20 +12,14 @@ public class ExperimentsDao {
     private static final Logger logger = LoggerFactory.getLogger(ExperimentsDao.class);
     private Statement statement;
     private PreparedStatement preparedStatement;
-    private Connection connection;
 
-    public ExperimentsDao(Connection connection) {
-        try {
-            this.statement = connection.createStatement();
-        } catch (SQLException e) {
-            logger.error("Error al conectarse a Postgress :" + e);
-        }
-        this.connection = connection;
+    public ExperimentsDao() throws SQLException {
+        statement = PostgresConnector.getInstance().getConnection().createStatement();
     }
 
 
-    public void insertExperiment(Experiment experiment) throws SQLException {
-        preparedStatement = connection.prepareStatement("INSERT INTO experimento VALUES (default, ?, ?)");
+    public void insert(Experiment experiment) throws SQLException {
+        preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor("INSERT INTO experimento VALUES (default, ?, ?)");
         preparedStatement.setString(1, experiment.getName());
         preparedStatement.setString(2, experiment.getDescription());
         preparedStatement.executeUpdate();
@@ -36,7 +31,8 @@ public class ExperimentsDao {
     }
 
     public Experiment getExperiment(String experimentId) throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT nombre,descripcion FROM experimento WHERE idExperimento = '" + experimentId + "'");
+        String query = "SELECT nombre,descripcion FROM experimento WHERE idExperimento = '" + experimentId + "'";
+        ResultSet resultSet = statement.executeQuery(query);
         if (resultSet.next()) {
             return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"));
         }
@@ -44,7 +40,8 @@ public class ExperimentsDao {
     }
 
     public void deleteExperiment(Experiment experiment) throws SQLException {
-        preparedStatement = connection.prepareStatement("DELETE FROM ensayos WHERE nombre ='" + experiment.getName() + "'");
+        String query = "DELETE FROM ensayos WHERE nombre ='" + experiment.getName() + "'";
+        preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
