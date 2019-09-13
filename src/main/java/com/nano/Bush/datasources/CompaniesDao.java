@@ -5,7 +5,10 @@ import com.nano.Bush.model.Company;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -19,15 +22,12 @@ public class CompaniesDao {
         statement = PostgresConnector.getInstance().getConnection().createStatement();
     }
 
-    public void insert(Company Company) throws SQLException {
+    public void insert(Company company) throws SQLException {
         PreparedStatement preparedStatement = PostgresConnector.getInstance()
-                .getPreparedStatementFor("INSERT INTO compania VALUES (default, ?,?,?,?,?)");
+                .getPreparedStatementFor("INSERT INTO compania VALUES (default, ?,?)");
 
-        preparedStatement.setString(1, Company.getName());
-        preparedStatement.setString(2, Company.getDescription());
-        preparedStatement.setTimestamp(3, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setBoolean(5, true);
+        preparedStatement.setString(1, company.getName());
+        preparedStatement.setString(2, company.getDescription());
 
         preparedStatement.executeUpdate();
     }

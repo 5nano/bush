@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.User;
 import com.nano.Bush.services.UsersService;
+import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +24,17 @@ public class UsersController {
     @RequestMapping(value = "/usuarios/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> insertUser(@RequestBody User user) throws SQLException {
-        usersService.insertUser(user);
-        return new ResponseEntity<>(new Response("Usuario Creado", HttpStatus.OK.value()), HttpStatus.OK);
+
+        ValidationsService validationsService = new ValidationsService();
+
+        if (validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
+            return new ResponseEntity<>(new Response("El nombre de usuario ya existe", HttpStatus.UNAUTHORIZED.value()),
+                    HttpStatus.UNAUTHORIZED);
+        } else {
+            usersService.insertUser(user);
+            return new ResponseEntity<>(new Response("Usuario Creado", HttpStatus.OK.value()), HttpStatus.OK);
+        }
+
     }
 
     @RequestMapping(value = "/usuarios", method = RequestMethod.GET, produces = "application/json")

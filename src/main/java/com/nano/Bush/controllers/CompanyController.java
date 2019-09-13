@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.datasources.CompaniesDao;
 import com.nano.Bush.model.Company;
 import com.nano.Bush.model.Response;
+import com.nano.Bush.services.ValidationsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -23,9 +24,16 @@ public class CompanyController {
     public ResponseEntity<Response> insertCompany(@RequestBody Company company) throws SQLException {
         CompaniesDao companiesDao = new CompaniesDao();
 
-        companiesDao.insert(company);
+        ValidationsService validationsService = new ValidationsService();
 
-        return new ResponseEntity<>(new Response("Compañía Creada", HttpStatus.OK.value()), HttpStatus.OK);
+        if (validationsService.isRepetead("nombre", "compania", company.getName())) {
+            return new ResponseEntity<>(new Response("El nombre de la compania ya existe", HttpStatus.UNAUTHORIZED.value()),
+                    HttpStatus.UNAUTHORIZED);
+        } else {
+            companiesDao.insert(company);
+            return new ResponseEntity<>(new Response("Compañía Creada", HttpStatus.OK.value()), HttpStatus.OK);
+        }
+
     }
 
     @RequestMapping(value = "/companias", method = RequestMethod.GET, produces = "application/json")

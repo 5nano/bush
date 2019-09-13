@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.datasources.AgrochemicalsDao;
 import com.nano.Bush.model.Agrochemical;
 import com.nano.Bush.model.Response;
+import com.nano.Bush.services.ValidationsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -19,13 +20,20 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class AgrochemicalController {
 
-    @RequestMapping(value = "/agroquimico/insertar", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Response> saveAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
+
+    @RequestMapping(value = "/agroquimicos/insertar", method = RequestMethod.POST, produces = "application/json")
+    public ResponseEntity<Response> insertAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
+
         AgrochemicalsDao agrochemicalsDao = new AgrochemicalsDao();
+        ValidationsService validationsService = new ValidationsService();
 
-        agrochemicalsDao.insert(agrochemical);
-
-        return new ResponseEntity<>(new Response("Agroquimico Creado", HttpStatus.OK.value()), HttpStatus.OK);
+        if (validationsService.isRepetead("nombre", "agroquimico", agrochemical.getName())) {
+            return new ResponseEntity<>(new Response("El nombre del agroquimico ya existe", HttpStatus.UNAUTHORIZED.value()),
+                    HttpStatus.UNAUTHORIZED);
+        } else {
+            agrochemicalsDao.insert(agrochemical);
+            return new ResponseEntity<>(new Response("Agroquimico Creado", HttpStatus.OK.value()), HttpStatus.OK);
+        }
     }
 
     @RequestMapping(value = "/agroquimicos", method = RequestMethod.GET, produces = "application/json")

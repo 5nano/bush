@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.datasources.CropsDao;
 import com.nano.Bush.model.Crop;
 import com.nano.Bush.model.Response;
+import com.nano.Bush.services.ValidationsService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,15 +17,21 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class CropController {
 
-    @RequestMapping(value = "/cultivo/insertar", method = RequestMethod.POST, produces = "application/json")
+    @RequestMapping(value = "/cultivos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> saveCrop(@RequestBody Crop crop) throws SQLException {
 
         CropsDao cropsDao = new CropsDao();
+        ValidationsService validationsService = new ValidationsService();
 
-        cropsDao.insert(crop);
+        if (validationsService.isRepetead("nombre", "cultivo", crop.getName())) {
+            return new ResponseEntity<>(new Response("El nombre del Cultivo ya existe", HttpStatus.UNAUTHORIZED.value()),
+                    HttpStatus.UNAUTHORIZED);
+        } else {
+            cropsDao.insert(crop);
+            return new ResponseEntity<>(new Response("Cultivo Creado", HttpStatus.OK.value()), HttpStatus.OK);
+        }
 
-        return new ResponseEntity<>(new Response("Cultivo Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/cultivos", method = RequestMethod.GET, produces = "application/json")
