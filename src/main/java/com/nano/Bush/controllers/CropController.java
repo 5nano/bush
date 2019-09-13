@@ -1,7 +1,7 @@
 package com.nano.Bush.controllers;
 
 import com.nano.Bush.conectors.PostgresConnector;
-import com.nano.Bush.datasources.CropDao;
+import com.nano.Bush.datasources.CropsDao;
 import com.nano.Bush.model.Crop;
 import com.nano.Bush.model.Response;
 import org.springframework.http.HttpStatus;
@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.util.List;
 
 @Controller
-@RequestMapping("/bush")
+@RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class CropController {
 
@@ -21,17 +21,17 @@ public class CropController {
     public @ResponseBody
     ResponseEntity<Response> saveCrop(@RequestBody Crop crop) throws SQLException {
 
-        CropDao cropDao = new CropDao(PostgresConnector.getInstance().getConnection());
+        CropsDao cropsDao = new CropsDao(PostgresConnector.getInstance().getConnection());
 
-        cropDao.insertCrop(crop);
+        cropsDao.insertCrop(crop);
 
         return new ResponseEntity<>(new Response("Cultivo Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/cultivos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Crop>> showCrops() throws SQLException {
-        CropDao cropDao = new CropDao(PostgresConnector.getInstance().getConnection());
+        CropsDao cropsDao = new CropsDao(PostgresConnector.getInstance().getConnection());
 
-        return new ResponseEntity<>(cropDao.getCrops(), HttpStatus.OK);
+        return new ResponseEntity<>(cropsDao.getCrops(), HttpStatus.OK);
     }
 }

@@ -8,15 +8,15 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class AgrochemicalDao {
+public class AgrochemicalsDao {
 
 
-    private static final Logger logger = LoggerFactory.getLogger(AgrochemicalDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(AgrochemicalsDao.class);
     private PreparedStatement preparedStatement;
     private Statement statement;
     private Connection connector;
 
-    public AgrochemicalDao(Connection connector) {
+    public AgrochemicalsDao(Connection connector) {
         try {
             this.statement = connector.createStatement();
         } catch (SQLException e) {

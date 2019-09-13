@@ -6,14 +6,14 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 
-public class ExperimentDao {
+public class ExperimentsDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExperimentDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(ExperimentsDao.class);
     private Statement statement;
     private PreparedStatement preparedStatement;
     private Connection connection;
 
-    public ExperimentDao(Connection connection) {
+    public ExperimentsDao(Connection connection) {
         try {
             this.statement = connection.createStatement();
         } catch (SQLException e) {

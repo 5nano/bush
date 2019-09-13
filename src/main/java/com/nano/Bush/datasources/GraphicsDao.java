@@ -22,12 +22,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GraphicDao {
+public class GraphicsDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphicDao.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphicsDao.class);
     private Statement statement;
 
-    public GraphicDao(Connection connector) {
+    public GraphicsDao(Connection connector) {
         try {
             this.statement = connector.createStatement();
         } catch (SQLException e) {

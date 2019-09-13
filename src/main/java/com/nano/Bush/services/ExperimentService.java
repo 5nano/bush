@@ -1,7 +1,7 @@
 package com.nano.Bush.services;
 
 import com.nano.Bush.conectors.PostgresConnector;
-import com.nano.Bush.datasources.ExperimentDao;
+import com.nano.Bush.datasources.ExperimentsDao;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,12 +16,12 @@ public class ExperimentService {
 
     public Experiment getExperimentNameFrom(String experimentId) {
 
-        ExperimentDao experimentDao = new ExperimentDao(PostgresConnector.getInstance().getConnection());
+        ExperimentsDao experimentsDao = new ExperimentsDao(PostgresConnector.getInstance().getConnection());
 
         Experiment experiment;
 
         try {
-            experiment = experimentDao.getExperiment(experimentId);
+            experiment = experimentsDao.getExperiment(experimentId);
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);

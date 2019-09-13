@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class CropDao {
+public class CropsDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(MySqlConnector.class);
+    private static final Logger logger = LoggerFactory.getLogger(CropsDao.class);
     private PreparedStatement preparedStatement;
     private Statement statement;
     private Connection connector;
     private ResultSet resultSet;
 
-    public CropDao(Connection connector) {
+    public CropsDao(Connection connector) {
         try {
             setStatement(connector.createStatement());
         } catch (SQLException e) {

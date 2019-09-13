@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MeasureDao {
+public class MeasuresDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(MeasureDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(MeasuresDao.class);
 
     public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 

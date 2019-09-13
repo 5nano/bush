@@ -1,8 +1,8 @@
 package com.nano.Bush.services;
 
 import com.nano.Bush.conectors.PostgresConnector;
-import com.nano.Bush.datasources.GraphicDao;
-import com.nano.Bush.datasources.MeasureDao;
+import com.nano.Bush.datasources.GraphicsDao;
+import com.nano.Bush.datasources.MeasuresDao;
 import com.nano.Bush.model.DataPoint;
 import com.nano.Bush.model.GraphicDto;
 import com.nano.Bush.model.MeasurePlant;
@@ -18,7 +18,7 @@ import java.util.Map;
 public class GraphicsService {
 
     @Autowired
-    private MeasureDao measureDao;
+    private MeasuresDao measuresDao;
 
     private static List<List<DataPoint>> getDatapointsFrom(List<List<MeasurePlant>> measures) {
 
@@ -38,7 +38,7 @@ public class GraphicsService {
 
     public List<GraphicDto> getComparativeGraphicInfo(String crop) {
         PostgresConnector postgresConnector = new PostgresConnector();
-        GraphicDao graphicDao = new GraphicDao(postgresConnector.getConnection());
+        GraphicsDao graphicsDao = new GraphicsDao(postgresConnector.getConnection());
 
         Map<String, String> assays = new HashMap<>();
         //graphicDao.getExperimentsIds(crop);
@@ -47,7 +47,7 @@ public class GraphicsService {
         assays.put("2", "2");
         List<List<MeasurePlant>> measures = new ArrayList<>();
 
-        assays.forEach((expId, assId) -> measures.add(measureDao.selectMeasuresFrom(assId, expId)));
+        assays.forEach((expId, assId) -> measures.add(measuresDao.selectMeasuresFrom(assId, expId)));
 
         List<GraphicDto> graphicDtos = new ArrayList<>();
 
