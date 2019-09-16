@@ -1,4 +1,4 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import com.nano.Bush.services.GraphicsService;

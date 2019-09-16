@@ -1,6 +1,6 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.datasources.AssaysDao;
+import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

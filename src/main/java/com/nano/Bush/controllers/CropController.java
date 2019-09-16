@@ -25,8 +25,8 @@ public class CropController {
         ValidationsService validationsService = new ValidationsService();
 
         if (validationsService.isRepetead("nombre", "cultivo", crop.getName())) {
-            return new ResponseEntity<>(new Response("El nombre del Cultivo ya existe", HttpStatus.UNAUTHORIZED.value()),
-                    HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Response("El nombre del Cultivo ya existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
         } else {
             cropsDao.insert(crop);
             return new ResponseEntity<>(new Response("Cultivo Creado", HttpStatus.OK.value()), HttpStatus.OK);
@@ -39,5 +39,20 @@ public class CropController {
         CropsDao cropsDao = new CropsDao();
 
         return new ResponseEntity<>(cropsDao.getCrops(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/cultivos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<Response> deleteCrop(@RequestBody Crop crop) throws SQLException {
+
+        CropsDao cropsDao = new CropsDao();
+        ValidationsService validationsService = new ValidationsService();
+
+        if (!validationsService.isRepetead("nombre", "cultivo", crop.getName())) {
+            return new ResponseEntity<>(new Response("El cultivo a eliminar no existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
+        } else {
+            cropsDao.delete(crop.getName());
+            return new ResponseEntity<>(new Response("Cultivo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
+        }
     }
 }

@@ -1,4 +1,4 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.services.TestsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +16,11 @@ public class TestsController {
     @Autowired
     private TestsService testsService;
 
-    @RequestMapping(value = "/prueba/imagenBase64", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/pruebas/imagenBase64", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     List<String> getComparativeInfoGraphic(@RequestParam String testId, @RequestParam String experimentId) {
         return testsService.getBase64Image(testId, experimentId);
     }
+
 }
 

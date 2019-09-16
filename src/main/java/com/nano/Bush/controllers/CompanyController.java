@@ -27,8 +27,8 @@ public class CompanyController {
         ValidationsService validationsService = new ValidationsService();
 
         if (validationsService.isRepetead("nombre", "compania", company.getName())) {
-            return new ResponseEntity<>(new Response("El nombre de la compania ya existe", HttpStatus.UNAUTHORIZED.value()),
-                    HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Response("El nombre de la compania ya existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
         } else {
             companiesDao.insert(company);
             return new ResponseEntity<>(new Response("Compañía Creada", HttpStatus.OK.value()), HttpStatus.OK);
@@ -41,6 +41,21 @@ public class CompanyController {
         CompaniesDao companiesDao = new CompaniesDao();
 
         return new ResponseEntity<>(companiesDao.getCompanies(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/companias/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<Response> deleteCompany(@RequestBody Company company) throws SQLException {
+
+        CompaniesDao companiesDao = new CompaniesDao();
+        ValidationsService validationsService = new ValidationsService();
+
+        if (!validationsService.isRepetead("nombre", "compania", company.getName())) {
+            return new ResponseEntity<>(new Response("La compania a eliminar no existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
+        } else {
+            companiesDao.deleteCompany(company.getName());
+            return new ResponseEntity<>(new Response("Compania Eliminada", HttpStatus.OK.value()), HttpStatus.OK);
+        }
     }
 }
 

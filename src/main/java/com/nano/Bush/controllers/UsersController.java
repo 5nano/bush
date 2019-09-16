@@ -1,5 +1,6 @@
 package com.nano.Bush.controllers;
 
+import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.User;
 import com.nano.Bush.services.UsersService;
@@ -28,8 +29,8 @@ public class UsersController {
         ValidationsService validationsService = new ValidationsService();
 
         if (validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
-            return new ResponseEntity<>(new Response("El nombre de usuario ya existe", HttpStatus.UNAUTHORIZED.value()),
-                    HttpStatus.UNAUTHORIZED);
+            return new ResponseEntity<>(new Response("El nombre de usuario ya existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
         } else {
             usersService.insertUser(user);
             return new ResponseEntity<>(new Response("Usuario Creado", HttpStatus.OK.value()), HttpStatus.OK);
@@ -41,6 +42,21 @@ public class UsersController {
     public ResponseEntity<List<User>> showCrops() throws SQLException {
 
         return new ResponseEntity<>(usersService.getUsers(), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/usuarios/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<Response> deleteCrop(@RequestBody User user) throws SQLException {
+
+        UsersDao usersDao = new UsersDao();
+        ValidationsService validationsService = new ValidationsService();
+
+        if (!validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
+            return new ResponseEntity<>(new Response("El usuario a eliminar no existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
+        } else {
+            usersDao.delete(user.getUsername());
+            return new ResponseEntity<>(new Response("Usuario Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
+        }
     }
 
 }

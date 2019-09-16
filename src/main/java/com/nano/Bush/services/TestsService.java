@@ -1,6 +1,6 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.datasources.MeasuresDao;
+import com.nano.Bush.datasources.measures.MeasuresDao;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

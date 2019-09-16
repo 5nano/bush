@@ -1,4 +1,4 @@
-package com.nano.Bush.datasources;
+package com.nano.Bush.datasources.measures;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Assay;
@@ -48,9 +48,9 @@ public class AssaysDao {
         resultSet = statement.executeQuery(query);
     }
 
-    public void deleteAssay(Assay Assay) throws SQLException {
+    public void delete(String assayName) throws SQLException {
         PreparedStatement preparedStatement = PostgresConnector.getInstance()
-                .getPreparedStatementFor("DELETE FROM ensayo WHERE nombre ='" + Assay.getName() + "'");
+                .getPreparedStatementFor("DELETE FROM ensayo WHERE nombre ='" + assayName + "'");
         preparedStatement.executeUpdate();
     }
 

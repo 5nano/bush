@@ -24,7 +24,8 @@ public class CropsDao {
     }
 
     public void insert(Crop crop) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor("INSERT INTO  cultivo VALUES (default, ?, ?)");
+        String query = "INSERT INTO  cultivo VALUES (default, ?, ?)";
+        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
         preparedStatement.setString(1, crop.getName());
         preparedStatement.setString(2, crop.getDescription());
         preparedStatement.executeUpdate();
@@ -43,8 +44,9 @@ public class CropsDao {
         resultSet = statement.executeQuery("SELECT Nombre,Descripcion FROM cultivo WHERE nombre = '" + crop.getName() + "'");
     }
 
-    public void deleteCrop(Crop crop) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor("DELETE FROM cultivo WHERE nombre ='" + crop.getName() + "'");
+    public void delete(String cropName) throws SQLException {
+        String query = "DELETE FROM cultivo WHERE nombre ='" + cropName + "'";
+        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 

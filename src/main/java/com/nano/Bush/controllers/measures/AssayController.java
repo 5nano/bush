@@ -1,5 +1,6 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.measures;
 
+import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.services.AssayService;
@@ -28,9 +29,8 @@ public class AssayController {
         ValidationsService validationsService = new ValidationsService();
 
         if (validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
-            return new ResponseEntity<>(new Response("El nombre del ensayo ya existe", HttpStatus.UNAUTHORIZED.value()),
-                    HttpStatus.UNAUTHORIZED);
-            //TODO: averiguar que status code hay que poner en estos casos.
+            return new ResponseEntity<>(new Response("El nombre del ensayo ya existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
         } else {
             assayService.insert(assay);
             return new ResponseEntity<>(new Response("Ensayo Creado", HttpStatus.OK.value()), HttpStatus.OK);
@@ -41,5 +41,21 @@ public class AssayController {
     public ResponseEntity<List<Assay>> showAssays() throws SQLException {
         return new ResponseEntity<>(assayService.getAssays(), HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
+
+        AssaysDao assaysDao = new AssaysDao();
+        ValidationsService validationsService = new ValidationsService();
+
+        if (!validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
+            return new ResponseEntity<>(new Response("El ensayo a eliminar no existe", HttpStatus.CONFLICT.value()),
+                    HttpStatus.CONFLICT);
+        } else {
+            assaysDao.delete(assay.getName());
+            return new ResponseEntity<>(new Response("Ensayo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
+        }
+    }
+
 
 }

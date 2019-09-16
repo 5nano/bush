@@ -1,4 +1,4 @@
-package com.nano.Bush.datasources;
+package com.nano.Bush.datasources.measures;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;

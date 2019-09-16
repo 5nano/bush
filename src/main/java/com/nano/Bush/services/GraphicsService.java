@@ -1,8 +1,8 @@
 package com.nano.Bush.services;
 
 import com.nano.Bush.conectors.PostgresConnector;
-import com.nano.Bush.datasources.GraphicsDao;
-import com.nano.Bush.datasources.MeasuresDao;
+import com.nano.Bush.datasources.measures.GraphicsDao;
+import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.model.measuresGraphics.DataPoint;
 import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import com.nano.Bush.model.measuresGraphics.MeasurePlant;

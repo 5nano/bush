@@ -46,9 +46,9 @@ public class CompaniesDao {
         resultSet = statement.executeQuery(query);
     }
 
-    public void deleteCompany(Company Company) throws SQLException {
+    public void deleteCompany(String companyName) throws SQLException {
         PreparedStatement preparedStatement = PostgresConnector.getInstance()
-                .getPreparedStatementFor("DELETE FROM compania WHERE nombre ='" + Company.getName() + "'");
+                .getPreparedStatementFor("DELETE FROM compania WHERE nombre ='" + companyName + "'");
         preparedStatement.executeUpdate();
     }
 

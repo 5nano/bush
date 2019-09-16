@@ -1,11 +1,16 @@
-package com.nano.Bush.datasources;
+package com.nano.Bush.datasources.measures;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.sql.*;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ExperimentsDao {
 
@@ -25,31 +30,31 @@ public class ExperimentsDao {
         preparedStatement.executeUpdate();
     }
 
-    public ResultSet getExperiments() throws SQLException {
-        return statement.executeQuery("SELECT Nombre,Descripcion FROM experimento");
+    public List<Experiment> getExperiments() throws SQLException {
 
+        ResultSet resultSet = statement.executeQuery("SELECT Nombre,Descripcion,idEnsayo,idMezcla FROM experimento");
+        List<Experiment> experiments = new ArrayList<>();
+        while (resultSet.next()) {
+            experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idMezcla")));
+        }
+        return experiments;
     }
 
     public Experiment getExperiment(String experimentId) throws SQLException {
-        String query = "SELECT nombre,descripcion FROM experimento WHERE idExperimento = '" + experimentId + "'";
+        String query = "SELECT nombre,descripcion,idEnsayo,idMezcla FROM experimento WHERE idExperimento = '" + experimentId + "'";
         ResultSet resultSet = statement.executeQuery(query);
         if (resultSet.next()) {
-            return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"));
+            return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idMezcla"));
         }
         return null;
     }
 
-    public void deleteExperiment(Experiment experiment) throws SQLException {
-        String query = "DELETE FROM ensayos WHERE nombre ='" + experiment.getName() + "'";
+    public void delete(String experimentName) throws SQLException {
+        String query = "DELETE FROM experimento WHERE nombre ='" + experimentName + "'";
         preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
-    private void writeResultSet(ResultSet resultSet) throws SQLException {
-        while (resultSet.next()) {
-            String name = resultSet.getString("Nombre");
-            String description = resultSet.getString("Descripcion");
-            logger.info(name + description);
-        }
-    }
 }

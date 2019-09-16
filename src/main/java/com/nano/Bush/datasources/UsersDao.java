@@ -41,4 +41,10 @@ public class UsersDao {
         }
         return users;
     }
+
+    public void delete(String username) throws SQLException {
+        String query = "DELETE FROM usuario WHERE usuario ='" + username + "'";
+        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
+        preparedStatement.executeUpdate();
+    }
 }

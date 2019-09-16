@@ -1,4 +1,4 @@
-package com.nano.Bush.datasources;
+package com.nano.Bush.datasources.measures;
 
 import com.datastax.driver.core.ResultSet;
 import com.fasterxml.jackson.databind.ObjectMapper;
