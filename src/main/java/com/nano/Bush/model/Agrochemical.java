@@ -2,8 +2,8 @@ package com.nano.Bush.model;
 
 public class Agrochemical {
 
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
 
     public Agrochemical(String name, String description) {
         this.name = name;

@@ -2,9 +2,9 @@ package com.nano.Bush.model;
 
 public class User {
 
-    private String username;
-    private String firstName;
-    private String lastName;
+    private final String username;
+    private final String firstName;
+    private final String lastName;
     private String password;
 
     public User(String username, String firstName, String lastName, String password) {

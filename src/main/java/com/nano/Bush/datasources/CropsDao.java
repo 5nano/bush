@@ -2,8 +2,6 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Crop;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +13,6 @@ import java.util.List;
 
 public class CropsDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(CropsDao.class);
     private Statement statement;
     private ResultSet resultSet;
 
@@ -50,4 +47,8 @@ public class CropsDao {
         preparedStatement.executeUpdate();
     }
 
+    public void modify(Crop crop) throws SQLException {
+        this.delete(crop.getName());
+        this.insert(crop);
+    }
 }

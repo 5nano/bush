@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class AgrochemicalController {
 
 
@@ -53,9 +53,20 @@ public class AgrochemicalController {
             return new ResponseEntity<>(new Response("El agroquimico a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            agrochemicalsDao.deleteAgrochemical(agrochemical.getName());
+            agrochemicalsDao.delete(agrochemical.getName());
             return new ResponseEntity<>(new Response("Agroquimico Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
+
+    @RequestMapping(value = "/agroquimicos/modificar", method = RequestMethod.PATCH, produces = "application/json")
+    public ResponseEntity<Response> modifyAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
+
+        AgrochemicalsDao agrochemicalsDao = new AgrochemicalsDao();
+        agrochemicalsDao.modify(agrochemical);
+        return new ResponseEntity<>(new Response("Agroquimico Modificado", HttpStatus.OK.value()), HttpStatus.OK);
+
+    }
+
+
 }
 

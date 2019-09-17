@@ -54,5 +54,8 @@ public class AssaysDao {
         preparedStatement.executeUpdate();
     }
 
-
+    public void modify(Assay assay) throws SQLException {
+        this.delete(assay.getName());
+        this.insert(assay);
+    }
 }

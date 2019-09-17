@@ -2,10 +2,10 @@ package com.nano.Bush.model;
 
 public class Assay {
 
-    private int idCrop;
-    private String name;
-    private String description;
-    private int idUserCreator;
+    private final int idCrop;
+    private final String name;
+    private final String description;
+    private final int idUserCreator;
 
     public Assay(int idCrop, String name, String description, int idUserCreator) {
         this.idCrop = idCrop;

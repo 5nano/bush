@@ -14,7 +14,6 @@ import java.util.List;
 
 public class CompaniesDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(CompaniesDao.class);
     private Statement statement;
     private ResultSet resultSet;
 
@@ -46,11 +45,14 @@ public class CompaniesDao {
         resultSet = statement.executeQuery(query);
     }
 
-    public void deleteCompany(String companyName) throws SQLException {
+    public void delete(String companyName) throws SQLException {
         PreparedStatement preparedStatement = PostgresConnector.getInstance()
                 .getPreparedStatementFor("DELETE FROM compania WHERE nombre ='" + companyName + "'");
         preparedStatement.executeUpdate();
     }
 
-
+    public void modify(Company company) throws SQLException {
+        this.delete(company.getName());
+        this.insert(company);
+    }
 }

@@ -14,7 +14,6 @@ import java.util.List;
 
 public class ExperimentsDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(ExperimentsDao.class);
     private Statement statement;
     private PreparedStatement preparedStatement;
 
@@ -57,4 +56,8 @@ public class ExperimentsDao {
         preparedStatement.executeUpdate();
     }
 
+    public void modify(Experiment experiment) throws SQLException {
+        this.delete(experiment.getName());
+        this.insert(experiment);
+    }
 }

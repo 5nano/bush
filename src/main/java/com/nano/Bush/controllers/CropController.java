@@ -14,7 +14,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class CropController {
 
     @RequestMapping(value = "/cultivos/insertar", method = RequestMethod.POST, produces = "application/json")
@@ -54,5 +54,14 @@ public class CropController {
             cropsDao.delete(crop.getName());
             return new ResponseEntity<>(new Response("Cultivo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/cultivos/modificar", method = RequestMethod.PATCH, produces = "application/json")
+    public ResponseEntity<Response> modifyCrop(@RequestBody Crop crop) throws SQLException {
+
+        CropsDao cropsDao = new CropsDao();
+        cropsDao.modify(crop);
+        return new ResponseEntity<>(new Response("Cultivo Modificado", HttpStatus.OK.value()), HttpStatus.OK);
+
     }
 }

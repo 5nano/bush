@@ -16,12 +16,12 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class ExperimentController {
 
     //TODO: hacer el get de pruebas
-    //TODO: hacer un enum con los campos por las dudas que cambien asi queda mas prolijo
     //TODO: definir que pasa cuando se borra un ensayo o un experimento o algo que tenga foreign key
+    //TODO: definir como hacer el modificar
 
     @Autowired
     private ExperimentService experimentService;
@@ -67,6 +67,14 @@ public class ExperimentController {
             experimentsDao.delete(experiment.getName());
             return new ResponseEntity<>(new Response("Experimento Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/experimentos/modificar", method = RequestMethod.PATCH, produces = "application/json")
+    public ResponseEntity<Response> modifyExperiment(@RequestBody Experiment experiment) throws SQLException {
+
+        ExperimentsDao experimentsDao = new ExperimentsDao();
+        experimentsDao.modify(experiment);
+        return new ResponseEntity<>(new Response("Experimento Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
 }

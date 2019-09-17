@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class UsersController {
 
     @Autowired
@@ -57,6 +57,15 @@ public class UsersController {
             usersDao.delete(user.getUsername());
             return new ResponseEntity<>(new Response("Usuario Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/usuarios/modificar", method = RequestMethod.PATCH, produces = "application/json")
+    public ResponseEntity<Response> modifyUser(@RequestBody User user) throws SQLException {
+
+        UsersDao usersDao = new UsersDao();
+        usersDao.modify(user);
+        return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
+
     }
 
 }

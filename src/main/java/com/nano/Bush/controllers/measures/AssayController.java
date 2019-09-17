@@ -16,7 +16,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class AssayController {
 
 
@@ -55,6 +55,14 @@ public class AssayController {
             assaysDao.delete(assay.getName());
             return new ResponseEntity<>(new Response("Ensayo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/ensayos/modificar", method = RequestMethod.PATCH, produces = "application/json")
+    public ResponseEntity<Response> modifyAssay(@RequestBody Assay assay) throws SQLException {
+
+        AssaysDao assaysDao = new AssaysDao();
+        assaysDao.modify(assay);
+        return new ResponseEntity<>(new Response("Ensayo Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
 

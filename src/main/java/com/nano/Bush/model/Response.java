@@ -2,8 +2,8 @@ package com.nano.Bush.model;
 
 public class Response {
 
-    private String message;
-    private Integer statusCode;
+    private final String message;
+    private final Integer statusCode;
 
     public Response(String message, Integer statusCode) {
         this.message = message;

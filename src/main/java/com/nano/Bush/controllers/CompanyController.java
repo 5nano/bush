@@ -17,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class CompanyController {
 
     @RequestMapping(value = "/companias/insertar", method = RequestMethod.POST, produces = "application/json")
@@ -53,9 +53,18 @@ public class CompanyController {
             return new ResponseEntity<>(new Response("La compania a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            companiesDao.deleteCompany(company.getName());
+            companiesDao.delete(company.getName());
             return new ResponseEntity<>(new Response("Compania Eliminada", HttpStatus.OK.value()), HttpStatus.OK);
         }
+    }
+
+    @RequestMapping(value = "/companias/modificar", method = RequestMethod.PATCH, produces = "application/json")
+    public ResponseEntity<Response> modifyCompany(@RequestBody Company company) throws SQLException {
+
+        CompaniesDao companiesDao = new CompaniesDao();
+        companiesDao.modify(company);
+        return new ResponseEntity<>(new Response("Compania Modificada", HttpStatus.OK.value()), HttpStatus.OK);
+
     }
 }
 

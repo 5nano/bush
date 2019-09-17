@@ -11,7 +11,6 @@ import java.util.List;
 
 public class UsersDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(UsersDao.class);
     private Statement statement;
 
     public UsersDao() throws SQLException {
@@ -46,5 +45,10 @@ public class UsersDao {
         String query = "DELETE FROM usuario WHERE usuario ='" + username + "'";
         PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
+    }
+
+    public void modify(User user) throws SQLException {
+        this.delete(user.getUsername());
+        this.insert(user);
     }
 }

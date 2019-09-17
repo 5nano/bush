@@ -12,13 +12,13 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MixturesDao {
+class MixturesDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MixturesDao.class);
     private Statement statement;
     private ResultSet resultSet;
 
-    public MixturesDao() throws SQLException {
+    private MixturesDao() throws SQLException {
         statement = PostgresConnector.getInstance().getConnection().createStatement();
     }
 
