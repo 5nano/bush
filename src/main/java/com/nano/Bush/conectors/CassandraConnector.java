@@ -10,7 +10,7 @@ public class CassandraConnector {
     private static final Logger logger = LoggerFactory.getLogger(CassandraConnector.class);
     private static Session session;
 
-    public CassandraConnector() {
+    private CassandraConnector() {
     }
 
     public static Session getConnection() {

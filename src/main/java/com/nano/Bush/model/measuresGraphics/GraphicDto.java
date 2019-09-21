@@ -1,4 +1,4 @@
-package com.nano.Bush.model;
+package com.nano.Bush.model.measuresGraphics;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

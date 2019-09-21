@@ -10,24 +10,29 @@ public class Experiment {
     private String name;
     @JsonProperty("descripcion")
     private String description;
-    public Experiment(String name, String description) {
+    private final Integer assayId;
+    private final Integer cropId;
+
+    public Experiment(String name, String description, Integer assayId, Integer cropId) {
         this.name = name;
         this.description = description;
+        this.assayId = assayId;
+        this.cropId = cropId;
     }
 
     public String getName() {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
+    public Integer getAssayId() {
+        return assayId;
+    }
+
+    public Integer getCropId() {
+        return cropId;
     }
 }

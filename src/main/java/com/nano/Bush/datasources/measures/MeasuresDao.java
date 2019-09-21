@@ -1,10 +1,10 @@
-package com.nano.Bush.datasources;
+package com.nano.Bush.datasources.measures;
 
 import com.datastax.driver.core.ResultSet;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nano.Bush.conectors.CassandraConnector;
 import com.nano.Bush.mocks.MeasureResponseMock;
-import com.nano.Bush.model.MeasurePlant;
+import com.nano.Bush.model.measuresGraphics.MeasurePlant;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
@@ -15,9 +15,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class MeasureDao {
+public class MeasuresDao {
 
-    private static final Logger logger = LoggerFactory.getLogger(MeasureDao.class);
+    private static final Logger logger = LoggerFactory.getLogger(MeasuresDao.class);
 
     public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 

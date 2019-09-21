@@ -5,6 +5,7 @@ import org.slf4j.LoggerFactory;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 public class PostgresConnector {
@@ -44,22 +45,26 @@ public class PostgresConnector {
         return connection;
     }
 
+    public PreparedStatement getPreparedStatementFor(String query) throws SQLException {
+        return connection.prepareStatement(query);
+    }
+
 }
 
 
-/**
- * Host
- * ec2-174-129-226-234.compute-1.amazonaws.com
- * Database
- * d9gojcvt5uikag
- * User
- * ylxgnzcpuvjkwr
- * Port
- * 5432
- * Password
- * dfa5fe2f24238710cf1f31b963f899f7137635c59222c0b947e29ad99dd1a15d
- * URI
- * postgres://ylxgnzcpuvjkwr:dfa5fe2f24238710cf1f31b963f899f7137635c59222c0b947e29ad99dd1a15d@ec2-174-129-226-234.compute-1.amazonaws.com:5432/d9gojcvt5uikag
- * Heroku CLI
- * heroku pg:psql postgresql-lively-25299 --app relational5nano
+/*
+  Host
+  ec2-174-129-226-234.compute-1.amazonaws.com
+  Database
+  d9gojcvt5uikag
+  User
+  ylxgnzcpuvjkwr
+  Port
+  5432
+  Password
+  dfa5fe2f24238710cf1f31b963f899f7137635c59222c0b947e29ad99dd1a15d
+  URI
+  postgres://ylxgnzcpuvjkwr:dfa5fe2f24238710cf1f31b963f899f7137635c59222c0b947e29ad99dd1a15d@ec2-174-129-226-234.compute-1.amazonaws.com:5432/d9gojcvt5uikag
+  Heroku CLI
+  heroku pg:psql postgresql-lively-25299 --app relational5nano
  */

@@ -1,9 +1,10 @@
-package com.nano.Bush.datasources;
+package com.nano.Bush.datasources.measures;
 
 import com.fasterxml.jackson.core.JsonParseException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nano.Bush.model.GraphicDto;
+import com.nano.Bush.conectors.PostgresConnector;
+import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
@@ -13,26 +14,19 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
-import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class GraphicDao {
+public class GraphicsDao {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(GraphicDao.class);
-    private Statement statement;
+    private static final Logger LOGGER = LoggerFactory.getLogger(GraphicsDao.class);
 
-    public GraphicDao(Connection connector) {
-        try {
-            this.statement = connector.createStatement();
-        } catch (SQLException e) {
-            LOGGER.error("Error al conectarse a Postgress :" + e);
-        }
+    public GraphicsDao() {
     }
 
     public Map<String, String> getExperimentsIds(String crop) {
@@ -45,17 +39,19 @@ public class GraphicDao {
         List<String> experimentId = new ArrayList<>();
 
         try {
-            resultSet = statement.executeQuery(idCropQuery);
+            PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(idCropQuery);
+            resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 idCrop = resultSet.getString("IDCULTIVO");
             }
-            resultSet = statement.executeQuery(idExperimentsQuery + idCrop + "'");
+            preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(idExperimentsQuery + idCrop + "'");
+            resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 experimentId.add(resultSet.getString("IDENSAYO"));
             }
 
         } catch (SQLException sqlException) {
-            LOGGER.error("SQL State: "+ sqlException.getSQLState()+" Message: "+ sqlException.getMessage());
+            LOGGER.error("SQL State: " + sqlException.getSQLState() + " Message: " + sqlException.getMessage());
             throw new RuntimeException(sqlException);
         } catch (Exception exception) {
             LOGGER.error("Exception error: %s", exception.getMessage());

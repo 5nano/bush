@@ -2,8 +2,8 @@ package com.nano.Bush.model;
 
 public class Crop {
 
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
 
     public Crop(String name, String description) {
         this.name = name;

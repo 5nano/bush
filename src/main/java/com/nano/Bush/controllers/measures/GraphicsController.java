@@ -1,6 +1,6 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.measures;
 
-import com.nano.Bush.model.GraphicDto;
+import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import com.nano.Bush.services.GraphicsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @Controller
-@RequestMapping("/bush")
+@RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class GraphicsController {
 

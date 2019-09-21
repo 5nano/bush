@@ -1,11 +1,11 @@
 package com.nano.Bush.model;
 
-public class Agrochemical {
+public class Company {
 
     private final String name;
     private final String description;
 
-    public Agrochemical(String name, String description) {
+    public Company(String name, String description) {
         this.name = name;
         this.description = description;
     }
@@ -17,5 +17,5 @@ public class Agrochemical {
     public String getDescription() {
         return description;
     }
-
 }
+
