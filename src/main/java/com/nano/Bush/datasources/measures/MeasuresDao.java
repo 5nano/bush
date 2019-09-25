@@ -1,6 +1,7 @@
 package com.nano.Bush.datasources.measures;
 
 import com.datastax.driver.core.ResultSet;
+import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nano.Bush.conectors.CassandraConnector;
 import com.nano.Bush.mocks.MeasureResponseMock;
@@ -35,10 +36,13 @@ public class MeasuresDao {
     }
 
     private void putMeasure(ResultSet rs, List<MeasurePlant> measuresPlants) {
+        ObjectMapper mapper = new ObjectMapper();
+        mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
+
         if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
             rs.fetchMoreResults();
         try {
-            measuresPlants.add(new ObjectMapper().readValue(MeasureResponseMock.getMeasure(), MeasurePlant.class));
+            measuresPlants.add(mapper.readValue(MeasureResponseMock.getMeasure(), MeasurePlant.class));
         } catch (IOException e) {
             throw new RuntimeException("JSON Parse error, exception: " + e);
         }
