@@ -39,7 +39,7 @@ public class StadisticsService {
             List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
 
 
-            boxDiagramValues = new BoxDiagramValues(0.0,0.0,0.0,0.0,0.0)
+            boxDiagramValues = new BoxDiagramValues(0.0, 0.0, 0.0, 0.0, 0.0);
 
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
@@ -47,3 +47,4 @@ public class StadisticsService {
         }
         return boxDiagramValues;
     }
+}
