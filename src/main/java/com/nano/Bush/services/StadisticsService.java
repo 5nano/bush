@@ -35,10 +35,11 @@ public class StadisticsService {
             experiment = experimentsDao.getExperiment(experimentId);
             List<List<Double>> frequencies = measuresDao.selectMeasuresFrom(experiment.getAssayId().toString(), experimentId)
                     .stream()
-                    .map(measure -> measure.getObservations().getYellowFrequencies().getValue())
+                    .map(measure -> measure.getYellowFrequencies().getValue())
                     .collect(Collectors.toList());
             List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
             yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
+            yellowFrequencies.remove(new Double(0));
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
