@@ -9,9 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -39,6 +37,14 @@ public class StadisticsService {
                     .collect(Collectors.toList());
             List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
             yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
+            Set<Double> sorted = new TreeSet<Double>(new Comparator<Double>() {
+                @Override
+                public int compare(Double o1, Double o2) {
+                    return o2.compareTo(o1);
+                }
+            });
+            sorted.addAll(yellowFrequencies);
+            yellowFrequencies = sorted;
             yellowFrequencies.remove(new Double(0));
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
