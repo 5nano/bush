@@ -32,18 +32,16 @@ public class MeasuresDao {
 
         for (Row row : rs) {
             try {
-                String transformedText = row.getString("measures").replace(", 'datatype': \"<class 'list'>\",", ",")
-                        .replace(", 'datatype': \"<class 'bool'>\",", ",")
-                        .replace(", 'datatype': \"<class 'int'>\",", ",")
-                        .replace(", 'datatype': \"<class 'float'>\",", ",")
-                        .replace(", 'datatype': \"<class 'tuple'>\",", ",")//TODO ver si hay una regez para esto
+
+                String transformedText = row.getString("measures")
+                        .replaceAll(", 'datatype': \"<class '.*.'>\",", ",")
                         .replace("False", "false")
                         .replace("True", "true")
                         .replace("(", "\"")
                         .replace(")", "\"")
-                        .replace(", 'datatype': \"<class 'float'>\",", ",")
                         .replaceAll("'", "\"");
-                measuresPlants.add(mapper.readValue(transformedText,MeasurePlant.class));
+
+                measuresPlants.add(mapper.readValue(transformedText, MeasurePlant.class));
             } catch (IOException e) {
                 e.printStackTrace();
             }
