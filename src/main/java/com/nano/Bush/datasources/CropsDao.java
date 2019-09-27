@@ -2,7 +2,10 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Crop;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -10,19 +13,21 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@Service
 public class CropsDao {
 
+    @Autowired PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
 
-    public CropsDao() throws SQLException {
-        statement = PostgresConnector.getInstance().getConnection().createStatement();
+    @PostConstruct
+    public void init() throws SQLException {
+        statement = postgresConnector.getConnection().createStatement();
     }
 
     public void insert(Crop crop) throws SQLException {
         String query = "INSERT INTO  cultivo VALUES (default, ?, ?)";
-        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.setString(1, crop.getName());
         preparedStatement.setString(2, crop.getDescription());
         preparedStatement.executeUpdate();
@@ -43,7 +48,7 @@ public class CropsDao {
 
     public void delete(String cropName) throws SQLException {
         String query = "DELETE FROM cultivo WHERE nombre ='" + cropName + "'";
-        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 

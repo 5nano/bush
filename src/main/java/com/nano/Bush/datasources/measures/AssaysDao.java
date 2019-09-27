@@ -4,26 +4,32 @@ import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Assay;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class AssaysDao {
 
     private static final Logger logger = LoggerFactory.getLogger(AssaysDao.class);
+    @Autowired
+    PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
 
-    public AssaysDao() throws SQLException {
-        statement = PostgresConnector.getInstance().getConnection().createStatement();
+    @PostConstruct
+    public void init() throws SQLException {
+        statement = postgresConnector.getConnection().createStatement();
     }
 
     public void insert(Assay Assay) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance()
+        PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("INSERT INTO ensayo VALUES (default, ?, ?,?,?)");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
@@ -49,7 +55,7 @@ public class AssaysDao {
     }
 
     public void delete(String assayName) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance()
+        PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM ensayo WHERE nombre ='" + assayName + "'");
         preparedStatement.executeUpdate();
     }

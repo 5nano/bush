@@ -4,6 +4,7 @@ import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.security.MessageDigest;
@@ -15,18 +16,13 @@ import java.util.List;
 public class UsersService {
 
     private static final Logger logger = LoggerFactory.getLogger(UsersService.class);
+    @Autowired UsersDao usersDao;
 
     public List<User> getUsers() throws SQLException {
-
-        UsersDao usersDao = new UsersDao();
-
         return usersDao.getUsers();
     }
 
     public void insertUser(User user) throws SQLException {
-
-        UsersDao usersDao = new UsersDao();
-
         user.setPassword(generateMD5HashPass(user));
 
         usersDao.insert(user);

@@ -20,14 +20,13 @@ import java.util.List;
 public class AssayController {
 
 
-    @Autowired
-    AssayService assayService;
+    @Autowired AssayService assayService;
+    @Autowired AssaysDao assaysDao;
+    @Autowired ValidationsService validationsService;
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> insertAssay(@RequestBody Assay assay) throws SQLException {
-        ValidationsService validationsService = new ValidationsService();
-
         if (validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
             return new ResponseEntity<>(new Response("El nombre del ensayo ya existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
@@ -45,9 +44,6 @@ public class AssayController {
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
 
-        AssaysDao assaysDao = new AssaysDao();
-        ValidationsService validationsService = new ValidationsService();
-
         if (!validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
             return new ResponseEntity<>(new Response("El ensayo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
@@ -59,8 +55,6 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayos/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyAssay(@RequestBody Assay assay) throws SQLException {
-
-        AssaysDao assaysDao = new AssaysDao();
         assaysDao.modify(assay);
         return new ResponseEntity<>(new Response("Ensayo Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }

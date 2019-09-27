@@ -3,6 +3,7 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.User;
+import com.nano.Bush.model.UserCredentials;
 import com.nano.Bush.services.UsersService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,17 +17,18 @@ import java.util.List;
 
 @Controller
 @RequestMapping("")
-@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
+@CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH,RequestMethod.PUT})
 public class UsersController {
 
-    @Autowired
-    UsersService usersService;
+    @Autowired UsersService usersService;
+
+    @Autowired ValidationsService validationsService;
+
+    @Autowired UsersDao usersDao;
 
     @RequestMapping(value = "/usuarios/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> insertUser(@RequestBody User user) throws SQLException {
-
-        ValidationsService validationsService = new ValidationsService();
 
         if (validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
             return new ResponseEntity<>(new Response("El nombre de usuario ya existe", HttpStatus.CONFLICT.value()),
@@ -47,9 +49,6 @@ public class UsersController {
     @RequestMapping(value = "/usuarios/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Response> deleteCrop(@RequestBody User user) throws SQLException {
 
-        UsersDao usersDao = new UsersDao();
-        ValidationsService validationsService = new ValidationsService();
-
         if (!validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
             return new ResponseEntity<>(new Response("El usuario a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
@@ -62,8 +61,15 @@ public class UsersController {
     @RequestMapping(value = "/usuarios/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyUser(@RequestBody User user) throws SQLException {
 
-        UsersDao usersDao = new UsersDao();
         usersDao.modify(user);
+        return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
+
+    }
+
+    //TODO tal vez mover
+    @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
+    public ResponseEntity<Response> validateUser(@RequestBody UserCredentials userCredentials) throws SQLException {
+
         return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
 
     }

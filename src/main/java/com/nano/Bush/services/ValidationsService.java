@@ -3,18 +3,23 @@ package com.nano.Bush.services;
 import com.nano.Bush.conectors.PostgresConnector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
+@Service
 public class ValidationsService {
 
     private static final Logger logger = LoggerFactory.getLogger(ValidationsService.class);
+    @Autowired PostgresConnector postgresConnector;
     private Statement statement;
 
-    public ValidationsService() throws SQLException {
-        statement = PostgresConnector.getInstance().getConnection().createStatement();
+    @PostConstruct
+    public void init() throws SQLException {
+        statement = postgresConnector.getConnection().createStatement();
     }
 
     public Boolean isRepetead(String field, String table, String value) throws SQLException {

@@ -23,8 +23,10 @@ public class ExperimentController {
     //TODO: definir que pasa cuando se borra un ensayo o un experimento o algo que tenga foreign key
     //TODO: definir como hacer el modificar
 
-    @Autowired
-    private ExperimentService experimentService;
+    @Autowired private ExperimentService experimentService;
+    @Autowired private ExperimentsDao experimentsDao;
+    @Autowired private ValidationsService validationsService;
+
 
     @RequestMapping(value = "/experimentos/nombre", method = RequestMethod.GET, produces = "text/plain")
     public @ResponseBody
@@ -34,10 +36,6 @@ public class ExperimentController {
 
     @RequestMapping(value = "/experimentos/insertar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> insertExperiment(@RequestBody Experiment experiment) throws SQLException {
-
-        ExperimentsDao experimentsDao = new ExperimentsDao();
-        ValidationsService validationsService = new ValidationsService();
-
         if (validationsService.isRepetead("nombre", "experimento", experiment.getName())) {
             return new ResponseEntity<>(new Response("El nombre del experimento ya existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
@@ -49,17 +47,11 @@ public class ExperimentController {
 
     @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Experiment>> showExperiments() throws SQLException {
-        ExperimentsDao experimentsDao = new ExperimentsDao();
-
         return new ResponseEntity<>(experimentsDao.getExperiments(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/experimentos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Response> deleteExperiment(@RequestBody Experiment experiment) throws SQLException {
-
-        ExperimentsDao experimentsDao = new ExperimentsDao();
-        ValidationsService validationsService = new ValidationsService();
-
         if (!validationsService.isRepetead("nombre", "experimento", experiment.getName())) {
             return new ResponseEntity<>(new Response("El experimento a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
@@ -71,8 +63,6 @@ public class ExperimentController {
 
     @RequestMapping(value = "/experimentos/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyExperiment(@RequestBody Experiment experiment) throws SQLException {
-
-        ExperimentsDao experimentsDao = new ExperimentsDao();
         experimentsDao.modify(experiment);
         return new ResponseEntity<>(new Response("Experimento Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }

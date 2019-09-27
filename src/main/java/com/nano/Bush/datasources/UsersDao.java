@@ -4,21 +4,26 @@ import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.User;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class UsersDao {
 
+    @Autowired private PostgresConnector postgresConnector;
     private Statement statement;
 
-    public UsersDao() throws SQLException {
-        statement = PostgresConnector.getInstance().getConnection().createStatement();
+    @PostConstruct
+    public void init()throws SQLException {
+        statement = postgresConnector.getConnection().createStatement();
     }
 
     public void insert(User user) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance()
+        PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("INSERT INTO  usuario VALUES (default,1, ?, ?,?,?,?,?,?)");
         preparedStatement.setString(1, user.getFirstName());
         preparedStatement.setString(2, user.getLastName());
@@ -43,7 +48,7 @@ public class UsersDao {
 
     public void delete(String username) throws SQLException {
         String query = "DELETE FROM usuario WHERE usuario ='" + username + "'";
-        PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 

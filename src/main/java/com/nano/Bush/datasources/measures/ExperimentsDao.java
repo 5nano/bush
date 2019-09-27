@@ -4,26 +4,32 @@ import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class ExperimentsDao {
 
+    @Autowired PostgresConnector postgresConnector;
     private Statement statement;
     private PreparedStatement preparedStatement;
 
-    public ExperimentsDao() throws SQLException {
-        statement = PostgresConnector.getInstance().getConnection().createStatement();
+    @PostConstruct
+    public void init() throws SQLException {
+        statement = postgresConnector.getConnection().createStatement();
     }
 
 
+
     public void insert(Experiment experiment) throws SQLException {
-        preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor("INSERT INTO experimento VALUES (default, ?, ?)");
+        preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento VALUES (default, ?, ?)");
         preparedStatement.setString(1, experiment.getName());
         preparedStatement.setString(2, experiment.getDescription());
         preparedStatement.executeUpdate();
@@ -52,7 +58,7 @@ public class ExperimentsDao {
 
     public void delete(String experimentName) throws SQLException {
         String query = "DELETE FROM experimento WHERE nombre ='" + experimentName + "'";
-        preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(query);
+        preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
