@@ -34,11 +34,16 @@ public class MeasuresDao {
             try {
 
                 String transformedText = row.getString("measures")
-                        .replaceAll(", 'datatype': \"<class '.*.'>\",", ",")
+                        .replace(", 'datatype': \"<class 'list'>\",", ",")
+                        .replace(", 'datatype': \"<class 'bool'>\",", ",")
+                        .replace(", 'datatype': \"<class 'int'>\",", ",")
+                        .replace(", 'datatype': \"<class 'float'>\",", ",")
+                        .replace(", 'datatype': \"<class 'tuple'>\",", ",")
                         .replace("False", "false")
                         .replace("True", "true")
                         .replace("(", "\"")
                         .replace(")", "\"")
+                        .replace(", 'datatype': \"<class 'float'>\",", ",")
                         .replaceAll("'", "\"");
 
                 measuresPlants.add(mapper.readValue(transformedText, MeasurePlant.class));
