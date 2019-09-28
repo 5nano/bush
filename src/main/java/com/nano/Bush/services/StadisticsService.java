@@ -2,6 +2,7 @@ package com.nano.Bush.services;
 
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
+import com.nano.Bush.model.BoxDiagramDto;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +24,7 @@ public class StadisticsService {
 
     private static final Logger logger = LoggerFactory.getLogger(StadisticsService.class);
 
-    public Set<Double>  getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
+    public BoxDiagramDto getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
         ExperimentsDao experimentsDao = new ExperimentsDao();
 
         Set<Double> yellowFrequencies;
@@ -50,6 +51,6 @@ public class StadisticsService {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
         }
-        return yellowFrequencies;
+        return new BoxDiagramDto(yellowFrequencies);
     }
 }
