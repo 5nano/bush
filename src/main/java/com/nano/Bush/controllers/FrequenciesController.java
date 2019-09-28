@@ -1,10 +1,12 @@
 package com.nano.Bush.controllers;
 
+import com.nano.Bush.model.BoxDiagramDto;
 import com.nano.Bush.services.StadisticsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.swing.*;
 import java.sql.SQLException;
 import java.util.Set;
 
@@ -22,7 +24,7 @@ public class FrequenciesController {
 
     @RequestMapping(value = "/frecuencias/yellow", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    Set<Double> getYellowFrequencies(@RequestParam String experimentId) throws SQLException {
+    BoxDiagramDto getYellowFrequencies(@RequestParam String experimentId) throws SQLException {
         return stadisticsService.getYellowFrequenciesValuesExperiment(experimentId);
     }
 }
