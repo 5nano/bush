@@ -7,14 +7,14 @@ import java.util.Set;
  **/
 public class BoxDiagramDto {
 
-    private final Set<StadisticValue> yellowFrequencies;
+    private final Set<Double> yellowFrequencies;
 
-    public BoxDiagramDto(Set<StadisticValue> yellowFrequencies) {
+    public BoxDiagramDto(Set<Double> yellowFrequencies) {
         this.yellowFrequencies = yellowFrequencies;
     }
 
 
-    public Set<StadisticValue> getYellowFrequencies() {
+    public Set<Double> getYellowFrequencies() {
         return yellowFrequencies;
     }
 }
