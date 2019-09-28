@@ -66,12 +66,12 @@ public class UsersController {
 
     }
 
-    //TODO tal vez mover
     @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<Response> validateUser(@RequestBody UserCredentials userCredentials) throws SQLException {
-
-        return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
-
+    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials) {
+        if (usersService.isValidUser(userCredentials))
+            return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
+        else
+            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE) ;
     }
 
 }

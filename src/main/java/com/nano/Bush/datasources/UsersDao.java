@@ -2,6 +2,8 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.User;
+import com.nano.Bush.services.UsersService;
+import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import java.util.List;
 @Service
 public class UsersDao {
 
+    private static final Logger logger = LoggerFactory.getLogger(UsersDao.class);
     @Autowired private PostgresConnector postgresConnector;
     private Statement statement;
 
@@ -44,6 +47,21 @@ public class UsersDao {
                     resultSet.getString("Apellido"), resultSet.getString("Password")));
         }
         return users;
+    }
+
+    public Option<User> getUserByUsername(String username) {
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT Usuario,Nombre,Apellido,Password FROM Usuario where Usuario ='" + username + "'");
+            while (resultSet.next()) {
+                return Option.of(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
+                        resultSet.getString("Apellido"), resultSet.getString("Password")));
+            }
+            resultSet.close();
+        } catch (Exception e) {
+            logger.error("Unexpected error executing query", e);
+        }
+
+        return Option.none();
     }
 
     public void delete(String username) throws SQLException {

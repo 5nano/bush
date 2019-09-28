@@ -18,6 +18,7 @@ import java.util.List;
 public class MeasuresDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MeasuresDao.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 
@@ -38,7 +39,7 @@ public class MeasuresDao {
         if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
             rs.fetchMoreResults();
         try {
-            measuresPlants.add(new ObjectMapper().readValue(MeasureResponseMock.getMeasure(), MeasurePlant.class));
+            measuresPlants.add(mapper.readValue(MeasureResponseMock.getMeasure(), MeasurePlant.class));
         } catch (IOException e) {
             throw new RuntimeException("JSON Parse error, exception: " + e);
         }
