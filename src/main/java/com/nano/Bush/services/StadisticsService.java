@@ -2,8 +2,9 @@ package com.nano.Bush.services;
 
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
-import com.nano.Bush.model.BoxDiagramDto;
+import com.nano.Bush.model.stadistic.BoxDiagramDto;
 import com.nano.Bush.model.Experiment;
+import com.nano.Bush.model.stadistic.StadisticValue;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,6 +52,8 @@ public class StadisticsService {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
         }
-        return new BoxDiagramDto(yellowFrequencies);
+
+        Set<StadisticValue> stadisticValues = yellowFrequencies.stream().map(freq -> new StadisticValue(freq)).collect(Collectors.toSet());
+        return new BoxDiagramDto(stadisticValues);
     }
 }
