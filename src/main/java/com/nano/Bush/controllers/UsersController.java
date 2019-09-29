@@ -61,17 +61,30 @@ public class UsersController {
     @RequestMapping(value = "/usuarios/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyUser(@RequestBody User user) throws SQLException {
 
+      if (!validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
+        return new ResponseEntity<>(new Response("El usuario a modificar no existe", HttpStatus.CONFLICT.value()),
+                HttpStatus.CONFLICT);
+      }
+      else {
         usersDao.modify(user);
         return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
+      }
 
     }
 
     @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials) {
+    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials) throws SQLException {
+      if (!validationsService.isRepetead("usuario", "usuario", userCredentials.username)) {
+        return new ResponseEntity<>(new Response("El usuario a validar no existe", HttpStatus.CONFLICT.value()),
+                HttpStatus.CONFLICT);
+      }
+      else {
         if (usersService.isValidUser(userCredentials))
-            return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
+          return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
         else
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE) ;
+          return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE) ;
+      }
+
     }
 
 }
