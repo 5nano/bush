@@ -43,6 +43,15 @@ public class AssaysDao {
         return Assays;
     }
 
+    public List<Integer> getExperiments(String assayId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idExperimento FROM experimento where idEnsayo = '" + assayId + "'");
+        List<Integer> experiments = new ArrayList<>();
+        while (resultSet.next()) {
+            experiments.add(resultSet.getInt("idExperimento"));
+        }
+        return experiments;
+    }
+
     public void getAssay(Assay Assay) throws SQLException {
         String query = "SELECT Nombre,Descripcion,idCultivo,idUserCreador FROM mezcla WHERE nombre = '" + Assay.getName() + "'";
         resultSet = statement.executeQuery(query);

@@ -1,9 +1,11 @@
 package com.nano.Bush.services;
 
+import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.model.stadistic.BoxDiagramDto;
 import com.nano.Bush.model.Experiment;
+import com.nano.Bush.model.stadistic.BoxDiagramaByExperiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +26,7 @@ public class StadisticsService {
 
     private static final Logger logger = LoggerFactory.getLogger(StadisticsService.class);
 
-    public BoxDiagramDto getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
+    public Set<Double> getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
         ExperimentsDao experimentsDao = new ExperimentsDao();
 
         Set<Double> yellowFrequencies;
@@ -52,6 +54,34 @@ public class StadisticsService {
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
         }
 
-        return new BoxDiagramDto(yellowFrequencies);
+        return yellowFrequencies;
+    }
+
+    public BoxDiagramDto getYellowFrequenciesValuesAssay(String assayId) throws SQLException {
+        AssaysDao assaysDao = new AssaysDao();
+
+        BoxDiagramDto yellowFrequencies;
+
+        try {
+            List<Integer> experiments;
+            experiments = assaysDao.getExperiments(assayId);
+            Set<BoxDiagramaByExperiment> frequenciesByExperiment = experiments.stream()
+                    .map(experimentId -> {
+                        try {
+                            return new BoxDiagramaByExperiment(experimentId,this.getYellowFrequenciesValuesExperiment(experimentId.toString()));
+                        } catch (SQLException e) {
+                            e.printStackTrace();
+                        }
+                        return null;
+                    })
+                    .collect(Collectors.toSet());
+            yellowFrequencies = new BoxDiagramDto(frequenciesByExperiment);
+
+        } catch (SQLException e) {
+            logger.error("Error al obtener el nombre del experimento, exception: " + e);
+            throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
+        }
+
+        return yellowFrequencies;
     }
 }
