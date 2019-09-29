@@ -34,10 +34,10 @@ public class AssaysDao {
     }
 
     public List<Assay> getAssays() throws SQLException {
-        resultSet = statement.executeQuery("SELECT nombre,descripcion,idEnsayo,idUserCreador FROM ensayo");
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
-            Assays.add(new Assay(resultSet.getInt("idEnsayo"), resultSet.getString("nombre"),
+            Assays.add(new Assay(resultSet.getInt("idEnsayo"), resultSet.getInt("idCultivo"),resultSet.getString("nombre"),
                     resultSet.getString("descripcion"), resultSet.getInt("idUserCreador")));
         }
         return Assays;
