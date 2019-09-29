@@ -32,6 +32,12 @@ public class ExperimentController {
         return experimentService.getExperimentNameFrom(experimentId).getName();
     }
 
+
+    @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Experiment>> shoeExperimentsFromAssay(@RequestParam String assayId) throws SQLException {
+        return new ResponseEntity<>(experimentService.getExperimentsFromAssay(assayId), HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/experimentos/insertar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> insertExperiment(@RequestBody Experiment experiment) throws SQLException {
 
@@ -47,7 +53,7 @@ public class ExperimentController {
         }
     }
 
-    @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/experimentosDe", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Experiment>> showExperiments() throws SQLException {
         ExperimentsDao experimentsDao = new ExperimentsDao();
 
