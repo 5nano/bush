@@ -24,8 +24,8 @@ public class FrequenciesController {
 
     @RequestMapping(value = "/frecuencias/yellow", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<BoxDiagramDto> getYellowFrequencies(@RequestParam String experimentId) throws SQLException {
-        return new ResponseEntity<>(stadisticsService.getYellowFrequenciesValuesExperiment(experimentId), HttpStatus.OK);
+    ResponseEntity<BoxDiagramDto> getYellowFrequencies(@RequestParam String assayId) throws SQLException {
+        return new ResponseEntity<>(stadisticsService.getYellowFrequenciesValuesAssay(assayId), HttpStatus.OK);
     }
 
 }
