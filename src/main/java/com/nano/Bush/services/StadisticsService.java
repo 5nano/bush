@@ -57,15 +57,15 @@ public class StadisticsService {
         return yellowFrequencies;
     }
 
-    public BoxDiagramDto getYellowFrequenciesValuesAssay(String assayId) throws SQLException {
+    public List<BoxDiagramaByExperiment> getYellowFrequenciesValuesAssay(String assayId) throws SQLException {
         AssaysDao assaysDao = new AssaysDao();
 
-        BoxDiagramDto yellowFrequencies;
+        List<BoxDiagramaByExperiment> yellowFrequencies;
 
         try {
             List<Integer> experiments;
             experiments = assaysDao.getExperiments(assayId);
-            Set<BoxDiagramaByExperiment> frequenciesByExperiment = experiments.stream()
+            List<BoxDiagramaByExperiment> frequenciesByExperiment = experiments.stream()
                     .map(experimentId -> {
                         try {
                             return new BoxDiagramaByExperiment(experimentId,this.getYellowFrequenciesValuesExperiment(experimentId.toString()));
@@ -74,8 +74,8 @@ public class StadisticsService {
                         }
                         return null;
                     })
-                    .collect(Collectors.toSet());
-            yellowFrequencies = new BoxDiagramDto(frequenciesByExperiment);
+                    .collect(Collectors.toList());
+            yellowFrequencies = frequenciesByExperiment;
 
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
