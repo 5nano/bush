@@ -28,7 +28,7 @@ public class GraphicsService {
 
         for (List<MeasurePlant> measurePlants : measures) {
             dataPointList.clear();
-            measurePlants.forEach(mp -> dataPointList.add(new DataPoint(mp.getDay().toString(), mp.getObservations().getArea().getValue())));
+            measurePlants.forEach(mp -> dataPointList.add(new DataPoint(mp.getDay().toString(), mp.getArea().getValue())));
             dataPoints.add(dataPointList);
         }
 

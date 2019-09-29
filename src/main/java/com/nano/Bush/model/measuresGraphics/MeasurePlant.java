@@ -10,8 +10,27 @@ public class MeasurePlant {
 
     private LocalDate day;
 
-    @JsonProperty("observations")
-    private Observations observations;
+    @JsonProperty("area")
+    private Area area;
+
+    @JsonProperty("blue-yellow_frequencies")
+    private Frequencies yellowFrequencies;
+
+    public Area getArea() {
+        return area;
+    }
+
+    public void setArea(Area area) {
+        this.area = area;
+    }
+
+    public Frequencies getYellowFrequencies() {
+        return yellowFrequencies;
+    }
+
+    public void setYellowFrequencies(Frequencies yellowFrequencies) {
+        this.yellowFrequencies = yellowFrequencies;
+    }
 
     public LocalDate getDay() {
         return day;
@@ -21,11 +40,4 @@ public class MeasurePlant {
         this.day = day;
     }
 
-    public Observations getObservations() {
-        return observations;
-    }
-
-    public void setObservations(Observations observations) {
-        this.observations = observations;
-    }
 }

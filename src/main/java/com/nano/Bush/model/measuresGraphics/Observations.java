@@ -8,11 +8,22 @@ public class Observations {
     @JsonProperty("area")
     private Area area;
 
+    @JsonProperty("blue-yellow_frequencies")
+    private Frequencies yellowFrequencies;
+
     public Area getArea() {
         return area;
     }
 
     public void setArea(Area area) {
         this.area = area;
+    }
+
+    public Frequencies getYellowFrequencies() {
+        return yellowFrequencies;
+    }
+
+    public void setYellowFrequencies(Frequencies yellowFrequencies) {
+        this.yellowFrequencies = yellowFrequencies;
     }
 }
