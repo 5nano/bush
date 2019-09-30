@@ -4,25 +4,30 @@ import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Company;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
+import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-
+@Service
 public class CompaniesDao {
 
+    @Autowired PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
 
-    public CompaniesDao() throws SQLException {
-        statement = PostgresConnector.getInstance().getConnection().createStatement();
+    @PostConstruct
+    public void init() throws SQLException {
+        statement = postgresConnector.getConnection().createStatement();
     }
 
     public void insert(Company company) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance()
+        PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("INSERT INTO compania VALUES (default, ?,?)");
 
         preparedStatement.setString(1, company.getName());
@@ -46,7 +51,7 @@ public class CompaniesDao {
     }
 
     public void delete(String companyName) throws SQLException {
-        PreparedStatement preparedStatement = PostgresConnector.getInstance()
+        PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM compania WHERE nombre ='" + companyName + "'");
         preparedStatement.executeUpdate();
     }

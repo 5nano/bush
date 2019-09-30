@@ -37,9 +37,6 @@ public class GraphicsService {
     }
 
     public List<GraphicDto> getComparativeGraphicInfo(String crop) {
-        PostgresConnector postgresConnector = new PostgresConnector();
-        GraphicsDao graphicsDao = new GraphicsDao();
-
         Map<String, String> assays = new HashMap<>();
         //graphicDao.getExperimentsIds(crop);
 

@@ -5,6 +5,7 @@ import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
@@ -15,10 +16,9 @@ import java.util.stream.Collectors;
 public class ExperimentService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExperimentService.class);
+    @Autowired ExperimentsDao experimentsDao;
 
     public Experiment getExperimentNameFrom(String experimentId) throws SQLException {
-
-        ExperimentsDao experimentsDao = new ExperimentsDao();
 
         Experiment experiment;
 
