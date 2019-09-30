@@ -16,7 +16,12 @@ import java.util.stream.Collectors;
 public class ExperimentService {
 
     private static final Logger logger = LoggerFactory.getLogger(ExperimentService.class);
-    @Autowired ExperimentsDao experimentsDao;
+
+    @Autowired
+    ExperimentsDao experimentsDao;
+
+    @Autowired
+    AssaysDao assaysDao;
 
     public Experiment getExperimentNameFrom(String experimentId) throws SQLException {
 
@@ -32,9 +37,6 @@ public class ExperimentService {
     }
 
     public List<Experiment> getExperimentsFromAssay(String assayId) throws SQLException {
-
-        AssaysDao assaysDao = new AssaysDao();
-        ExperimentsDao experimentsDao = new ExperimentsDao();
 
         List<Experiment>  experiments;
 

@@ -24,11 +24,15 @@ public class StadisticsService {
     @Autowired
     private MeasuresDao measuresDao;
 
+    @Autowired
+    private AssaysDao assaysDao;
+
+    @Autowired
+    private ExperimentsDao experimentsDao;
+
     private static final Logger logger = LoggerFactory.getLogger(StadisticsService.class);
 
     public Set<Double> getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
-        ExperimentsDao experimentsDao = new ExperimentsDao();
-
         Set<Double> yellowFrequencies;
 
         try {
@@ -58,8 +62,6 @@ public class StadisticsService {
     }
 
     public List<BoxDiagramaByExperiment> getYellowFrequenciesValuesAssay(String assayId) throws SQLException {
-        AssaysDao assaysDao = new AssaysDao();
-
         List<BoxDiagramaByExperiment> yellowFrequencies;
 
         try {
