@@ -15,7 +15,8 @@ public class AssayService {
 
     private static final Logger logger = LoggerFactory.getLogger(AssayService.class);
 
-    @Autowired AssaysDao assaysDao;
+    @Autowired
+    AssaysDao assaysDao;
 
     public List<Assay> getAssays() throws SQLException {
         return assaysDao.getAssays();

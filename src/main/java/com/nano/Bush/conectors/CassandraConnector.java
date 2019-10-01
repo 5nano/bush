@@ -3,7 +3,6 @@ package com.nano.Bush.conectors;
 import com.datastax.driver.core.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,8 +13,15 @@ public class CassandraConnector {
     private static final Logger logger = LoggerFactory.getLogger(CassandraConnector.class);
     private static Session session;
 
+    private CassandraConnector() {
+    }
+
+    public static Session getConnection() {
+        return session;
+    }
+
     @PostConstruct
-    synchronized public void init(){
+    synchronized public void init() {
         logger.info("Connect to Cassandra, host {}", "104.197.222.72");
 
         Cluster cluster = Cluster.builder()
@@ -33,13 +39,6 @@ public class CassandraConnector {
         session = cluster.newSession();
         session.execute("USE nano");
 
-    }
-
-    private CassandraConnector() {
-    }
-
-    public static Session getConnection() {
-        return session;
     }
 
 }

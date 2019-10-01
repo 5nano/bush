@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class AssaysDao {
 
@@ -43,14 +44,14 @@ public class AssaysDao {
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
-            Assays.add(new Assay(resultSet.getInt("idEnsayo"), resultSet.getInt("idCultivo"),resultSet.getString("nombre"),
+            Assays.add(new Assay(resultSet.getInt("idEnsayo"), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                     resultSet.getString("descripcion"), resultSet.getInt("idUserCreador")));
         }
         return Assays;
     }
 
     public List<Integer> getExperiments(String assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idExperimento FROM experimento where idEnsayo = '" + assayId + "'");
+        resultSet = statement.executeQuery("SELECT idExperimento FROM experimento WHERE idEnsayo = '" + assayId + "'");
         List<Integer> experiments = new ArrayList<>();
         while (resultSet.next()) {
             experiments.add(resultSet.getInt("idExperimento"));

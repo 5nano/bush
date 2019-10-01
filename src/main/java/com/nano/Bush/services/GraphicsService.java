@@ -1,8 +1,7 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.conectors.PostgresConnector;
-import com.nano.Bush.datasources.measures.GraphicsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
+import com.nano.Bush.model.Experiment;
 import com.nano.Bush.model.measuresGraphics.DataPoint;
 import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import com.nano.Bush.model.measuresGraphics.MeasurePlant;
@@ -19,6 +18,8 @@ public class GraphicsService {
 
     @Autowired
     private MeasuresDao measuresDao;
+    @Autowired
+    private ExperimentService experimentService;
 
     private static List<List<DataPoint>> getDatapointsFrom(List<List<MeasurePlant>> measures) {
 
@@ -36,21 +37,26 @@ public class GraphicsService {
 
     }
 
-    public List<GraphicDto> getComparativeGraphicInfo(String crop) {
-        Map<String, String> assays = new HashMap<>();
-        //graphicDao.getExperimentsIds(crop);
+    public List<GraphicDto> getComparativeExperimentsData(String assayId) {
 
-        assays.put("1", "2");//TODO: poner los IDS del postgres para buscar
-        assays.put("2", "2");
         List<List<MeasurePlant>> measures = new ArrayList<>();
 
-        assays.forEach((expId, assId) -> measures.add(measuresDao.selectMeasuresFrom(assId, expId)));
+        getExperimentsAssaysMap(assayId).forEach((expId, assId) -> measures.add(measuresDao.selectMeasuresFrom(assId, expId)));
 
         List<GraphicDto> graphicDtos = new ArrayList<>();
 
         getDatapointsFrom(measures).forEach(m -> putGraphic(measures, graphicDtos));
 
         return graphicDtos;
+    }
+
+    private Map<String, String> getExperimentsAssaysMap(String assayId) {
+        Map<String, String> assays = new HashMap<>();
+
+        List<Experiment> experiments = experimentService.getExperimentsFrom(assayId);
+
+        experiments.forEach(experiment -> assays.put(experiment.getExperimentId().toString(), assayId));
+        return assays;
     }
 
     private void putGraphic(List<List<MeasurePlant>> measures, List<GraphicDto> graphicDtos) {

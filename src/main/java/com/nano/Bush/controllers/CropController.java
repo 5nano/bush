@@ -18,8 +18,10 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class CropController {
 
-    @Autowired private CropsDao cropsDao;
-    @Autowired private ValidationsService validationsService;
+    @Autowired
+    private CropsDao cropsDao;
+    @Autowired
+    private ValidationsService validationsService;
 
     @RequestMapping(value = "/cultivos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody

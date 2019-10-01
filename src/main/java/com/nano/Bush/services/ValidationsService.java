@@ -10,11 +10,13 @@ import javax.annotation.PostConstruct;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 @Service
 public class ValidationsService {
 
     private static final Logger logger = LoggerFactory.getLogger(ValidationsService.class);
-    @Autowired PostgresConnector postgresConnector;
+    @Autowired
+    PostgresConnector postgresConnector;
     private Statement statement;
 
     @PostConstruct

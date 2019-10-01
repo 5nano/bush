@@ -14,11 +14,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 class MixturesDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MixturesDao.class);
-    @Autowired PostgresConnector postgresConnector;
+    @Autowired
+    PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
 

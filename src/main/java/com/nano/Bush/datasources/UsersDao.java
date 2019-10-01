@@ -2,7 +2,6 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.User;
-import com.nano.Bush.services.UsersService;
 import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,15 +12,17 @@ import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class UsersDao {
 
     private static final Logger logger = LoggerFactory.getLogger(UsersDao.class);
-    @Autowired private PostgresConnector postgresConnector;
+    @Autowired
+    private PostgresConnector postgresConnector;
     private Statement statement;
 
     @PostConstruct
-    public void init()throws SQLException {
+    public void init() throws SQLException {
         statement = postgresConnector.getConnection().createStatement();
     }
 

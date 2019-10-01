@@ -1,6 +1,5 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.model.stadistic.BoxDiagramDto;
 import com.nano.Bush.model.stadistic.BoxDiagramaByExperiment;
 import com.nano.Bush.services.StadisticsService;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -16,7 +16,8 @@ import java.util.List;
 @Service
 public class CropsDao {
 
-    @Autowired PostgresConnector postgresConnector;
+    @Autowired
+    PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
 

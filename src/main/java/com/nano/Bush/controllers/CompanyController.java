@@ -21,8 +21,10 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class CompanyController {
 
-    @Autowired CompaniesDao companiesDao;
-    @Autowired ValidationsService validationsService;
+    @Autowired
+    CompaniesDao companiesDao;
+    @Autowired
+    ValidationsService validationsService;
 
     @RequestMapping(value = "/companias/insertar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> insertCompany(@RequestBody Company company) throws SQLException {

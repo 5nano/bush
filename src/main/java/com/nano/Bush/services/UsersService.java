@@ -1,10 +1,8 @@
 package com.nano.Bush.services;
 
-import com.google.common.collect.Sets;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.User;
 import com.nano.Bush.model.UserCredentials;
-import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +19,12 @@ import static java.util.Objects.isNull;
 public class UsersService {
 
     private static final Logger logger = LoggerFactory.getLogger(UsersService.class);
-    @Autowired UsersDao usersDao;
+    @Autowired
+    UsersDao usersDao;
+
+    private static boolean equalPasswords(String p1, String p2) {
+        return !isNull(p1) && p1.equals(p2);
+    }
 
     public List<User> getUsers() throws SQLException {
         return usersDao.getUsers();
@@ -36,10 +39,6 @@ public class UsersService {
         return usersDao.getUserByUsername(userCredentials.username)
                 .map(user -> equalPasswords(user.getPassword(), generateMD5HashPass(userCredentials.password)))
                 .getOrElse(false);
-    }
-
-    private static boolean equalPasswords(String p1, String p2){
-        return !isNull(p1) && p1.equals(p2);
     }
 
     private String generateMD5HashPass(String password) {

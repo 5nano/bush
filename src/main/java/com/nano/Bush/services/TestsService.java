@@ -12,9 +12,9 @@ public class TestsService {
     @Autowired
     private MeasuresDao measuresDao;
 
-    public List<String> getBase64Image(String idPlant, String idTest) {
+    public List<String> getBase64Image(String experimentId, String assayId) {
 
-        return measuresDao.selectBase64ImageFrom(idPlant, idTest);
+        return measuresDao.selectBase64ImageFrom(experimentId, assayId);
 
     }
 

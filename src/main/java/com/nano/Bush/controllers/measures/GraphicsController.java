@@ -18,11 +18,11 @@ public class GraphicsController {
     @Autowired
     private GraphicsService graphicsService;
 
-    @RequestMapping(value = "/graficoComparativo/datosExperimentosCultivo", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/graficoComparativo/experimentos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<GraphicDto>> getComparativeInfoGraphic(@RequestParam String crop) {
+    ResponseEntity<List<GraphicDto>> getComparativeExperimentsData(@RequestParam String assayId) {
 
-        return new ResponseEntity<>(graphicsService.getComparativeGraphicInfo(crop), HttpStatus.OK);
+        return new ResponseEntity<>(graphicsService.getComparativeExperimentsData(assayId), HttpStatus.OK);
     }
 
 

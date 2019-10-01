@@ -9,6 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
+
 @Service
 public class PostgresConnector {
 
@@ -17,7 +18,7 @@ public class PostgresConnector {
     private static Connection connection;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         String user = "ylxgnzcpuvjkwr";
         String password = "dfa5fe2f24238710cf1f31b963f899f7137635c59222c0b947e29ad99dd1a15d";
         String ssl = "?ssl=true&sslfactory=org.postgresql.ssl.NonValidatingFactory";

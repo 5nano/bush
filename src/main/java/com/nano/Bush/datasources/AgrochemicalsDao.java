@@ -14,11 +14,13 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class AgrochemicalsDao {
 
     private static final Logger logger = LoggerFactory.getLogger(AgrochemicalsDao.class);
-    @Autowired PostgresConnector postgresConnector;
+    @Autowired
+    PostgresConnector postgresConnector;
     private PreparedStatement preparedStatement;
     private Statement statement;
 

@@ -2,8 +2,6 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Company;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +12,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+
 @Service
 public class CompaniesDao {
 
-    @Autowired PostgresConnector postgresConnector;
+    @Autowired
+    PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
 

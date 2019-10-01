@@ -20,9 +20,12 @@ import java.util.List;
 public class AssayController {
 
 
-    @Autowired AssayService assayService;
-    @Autowired AssaysDao assaysDao;
-    @Autowired ValidationsService validationsService;
+    @Autowired
+    AssayService assayService;
+    @Autowired
+    AssaysDao assaysDao;
+    @Autowired
+    ValidationsService validationsService;
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody

@@ -23,7 +23,7 @@ public class ExperimentService {
     @Autowired
     AssaysDao assaysDao;
 
-    public Experiment getExperimentNameFrom(String experimentId) throws SQLException {
+    public Experiment getExperimentNameFrom(String experimentId) {
 
         Experiment experiment;
 
@@ -36,9 +36,9 @@ public class ExperimentService {
         return experiment;
     }
 
-    public List<Experiment> getExperimentsFromAssay(String assayId) throws SQLException {
+    public List<Experiment> getExperimentsFrom(String assayId) {
 
-        List<Experiment>  experiments;
+        List<Experiment> experiments;
 
         try {
             experiments = assaysDao.getExperiments(assayId).stream()

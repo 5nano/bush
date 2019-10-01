@@ -3,7 +3,6 @@ package com.nano.Bush.services;
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
-import com.nano.Bush.model.stadistic.BoxDiagramDto;
 import com.nano.Bush.model.Experiment;
 import com.nano.Bush.model.stadistic.BoxDiagramaByExperiment;
 import org.slf4j.Logger;
@@ -21,16 +20,13 @@ import java.util.stream.Collectors;
 @Service
 public class StadisticsService {
 
+    private static final Logger logger = LoggerFactory.getLogger(StadisticsService.class);
     @Autowired
     private MeasuresDao measuresDao;
-
     @Autowired
     private AssaysDao assaysDao;
-
     @Autowired
     private ExperimentsDao experimentsDao;
-
-    private static final Logger logger = LoggerFactory.getLogger(StadisticsService.class);
 
     public Set<Double> getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
         Set<Double> yellowFrequencies;
@@ -70,7 +66,7 @@ public class StadisticsService {
             List<BoxDiagramaByExperiment> frequenciesByExperiment = experiments.stream()
                     .map(experimentId -> {
                         try {
-                            return new BoxDiagramaByExperiment(experimentId,this.getYellowFrequenciesValuesExperiment(experimentId.toString()));
+                            return new BoxDiagramaByExperiment(experimentId, this.getYellowFrequenciesValuesExperiment(experimentId.toString()));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }
