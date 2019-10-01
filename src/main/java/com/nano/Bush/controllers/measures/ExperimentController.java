@@ -38,8 +38,8 @@ public class ExperimentController {
     }
 
 
-    @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
+    @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json", consumes = "text/plain")
+    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestBody String assayId) {
         return new ResponseEntity<>(experimentService.getExperimentsFrom(assayId), HttpStatus.OK);
     }
 
