@@ -20,6 +20,7 @@ import java.util.List;
 public class MeasuresDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MeasuresDao.class);
+    private static final ObjectMapper mapper = new ObjectMapper();
 
     public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 
@@ -27,7 +28,6 @@ public class MeasuresDao {
         ResultSet rs = CassandraConnector.getConnection().execute(query);
 
         List<MeasurePlant> measuresPlants = new ArrayList<>();
-        ObjectMapper mapper = new ObjectMapper();
         mapper.configure(JsonParser.Feature.ALLOW_UNQUOTED_FIELD_NAMES, true);
 
         for (Row row : rs) {

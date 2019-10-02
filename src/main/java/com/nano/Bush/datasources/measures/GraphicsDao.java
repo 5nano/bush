@@ -12,6 +12,8 @@ import org.apache.http.impl.client.HttpClientBuilder;
 import org.apache.http.util.EntityUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.io.IOException;
 import java.sql.PreparedStatement;
@@ -22,9 +24,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Service
 public class GraphicsDao {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(GraphicsDao.class);
+    @Autowired
+    PostgresConnector postgresConnector;
 
     public GraphicsDao() {
     }
@@ -39,12 +44,12 @@ public class GraphicsDao {
         List<String> experimentId = new ArrayList<>();
 
         try {
-            PreparedStatement preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(idCropQuery);
+            PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(idCropQuery);
             resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 idCrop = resultSet.getString("IDCULTIVO");
             }
-            preparedStatement = PostgresConnector.getInstance().getPreparedStatementFor(idExperimentsQuery + idCrop + "'");
+            preparedStatement = postgresConnector.getPreparedStatementFor(idExperimentsQuery + idCrop + "'");
             resultSet = preparedStatement.getResultSet();
             while (resultSet.next()) {
                 experimentId.add(resultSet.getString("IDENSAYO"));

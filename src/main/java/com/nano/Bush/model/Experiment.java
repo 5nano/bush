@@ -6,18 +6,20 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Experiment {
 
+    private final Integer assayId;
+    private final Integer mixtureId;
+    private final Integer experimentId;
     @JsonProperty("nombre")
     private String name;
     @JsonProperty("descripcion")
     private String description;
-    private final Integer assayId;
-    private final Integer cropId;
 
-    public Experiment(String name, String description, Integer assayId, Integer cropId) {
+    public Experiment(String name, String description, Integer assayId, Integer mixtureId, Integer experimentId) {
         this.name = name;
         this.description = description;
         this.assayId = assayId;
-        this.cropId = cropId;
+        this.mixtureId = mixtureId;
+        this.experimentId = experimentId;
     }
 
     public String getName() {
@@ -32,7 +34,11 @@ public class Experiment {
         return assayId;
     }
 
-    public Integer getCropId() {
-        return cropId;
+    public Integer getMixtureId() {
+        return mixtureId;
+    }
+
+    public Integer getExperimentId() {
+        return experimentId;
     }
 }

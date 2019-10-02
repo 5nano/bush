@@ -18,8 +18,8 @@ public class TestsController {
 
     @RequestMapping(value = "/pruebas/imagenBase64", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    List<String> getComparativeInfoGraphic(@RequestParam String testId, @RequestParam String experimentId) {
-        return testsService.getBase64Image(testId, experimentId);
+    List<String> getBase64ImageFrom(@RequestParam String experimentId, @RequestParam String assayId) {
+        return testsService.getBase64Image(experimentId, experimentId);
     }
 
 }
