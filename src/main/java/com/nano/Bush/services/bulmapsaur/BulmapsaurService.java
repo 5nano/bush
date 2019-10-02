@@ -18,11 +18,11 @@ import java.net.URI;
 @Service
 public class BulmapsaurService {
   private static final Logger logger = LoggerFactory.getLogger(BulmapsaurService.class);
-  private final CloseableHttpClient client = HttpClients.createDefault();
   private static final ObjectMapper mapper = new ObjectMapper();
   private static final String bulmapsaurUrl = "http://35.188.202.169:8443/bulmapsaur/api/images";
 
   public String doPost(BulmapsaurPayload payload) throws Exception {
+    final CloseableHttpClient client = HttpClients.createDefault();
     try {
       HttpPost post = new HttpPost(URI.create(bulmapsaurUrl));
       StringEntity stringEntity = new StringEntity(mapper.writeValueAsString(payload));
