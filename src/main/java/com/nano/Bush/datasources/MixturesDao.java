@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-class MixturesDao {
+public class MixturesDao {
 
     private static final Logger logger = LoggerFactory.getLogger(MixturesDao.class);
     @Autowired
@@ -46,14 +46,15 @@ class MixturesDao {
         return mixtures;
     }
 
-    public void getMixture(Mixture Mixture) throws SQLException {
-        resultSet = statement.executeQuery("SELECT Nombre,Descripcion FROM mezcla WHERE nombre = '" + Mixture.getName() + "'");
-    }
-
-    public void deleteMixture(Mixture Mixture) throws SQLException {
+    public void delete(Mixture Mixture) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM mezcla WHERE nombre ='" + Mixture.getName() + "'");
         preparedStatement.executeUpdate();
+    }
+
+    public void modify(Mixture mixture) throws SQLException {
+        this.delete(mixture);
+        this.insert(mixture);
     }
 
 }
