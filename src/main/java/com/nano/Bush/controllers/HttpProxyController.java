@@ -20,7 +20,7 @@ public class HttpProxyController {
 
   @Autowired  private BulmapsaurService bmsService;
 
-  @RequestMapping(value = "/images", method = RequestMethod.POST, produces = "application/json")
+  @RequestMapping(value = "/images", consumes = "application/json",method = RequestMethod.POST, produces = "application/json")
   public @ResponseBody ResponseEntity<String> handleRequest(@RequestBody BulmapsaurPayload payload) throws Exception {
     logger.info("Received image with idAssay {} and idExperiment {}", payload.idAssay, payload.idExperiment);
     return new ResponseEntity<>( bmsService.doPost(payload), HttpStatus.OK);
