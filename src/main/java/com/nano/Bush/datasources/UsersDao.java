@@ -28,38 +28,37 @@ public class UsersDao {
 
     public void insert(User user) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO usuario VALUES (default,?,?,?,?,?,?,?,?,?");
-        preparedStatement.setString(1, user.getCompanyId());
+                .getPreparedStatementFor("INSERT INTO usuario VALUES (default,?,?,?,?,?,?,?,?)");
+        preparedStatement.setInt(1, user.getCompanyId());
         preparedStatement.setString(2, user.getFirstName());
         preparedStatement.setString(3, user.getLastName());
-        preparedStatement.setString(4, user.getEmail());
-        preparedStatement.setString(5, user.getUsername());
-        preparedStatement.setString(6, user.getPassword());
+        preparedStatement.setString(4, user.getUsername());
+        preparedStatement.setString(5, user.getPassword());
+        preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
         preparedStatement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setBoolean(9, true);
+        preparedStatement.setBoolean(8, true);
 
         preparedStatement.executeUpdate();
     }
 
     public List<User> getUsers() throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Email,Nombre,Apellido,Password FROM Usuario");
+        ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password FROM Usuario");
         List<User> users = new ArrayList<>();
         while (resultSet.next()) {
             users.add(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
                     resultSet.getString("Apellido"), resultSet.getString("Password"),
-                    resultSet.getString("Email"), resultSet.getString("IdCompania")));
+                    "info@nanivo.com", resultSet.getInt("IdCompania")));
         }
         return users;
     }
 
     public Option<User> getUserByUsername(String username) {
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Email,Usuario,Nombre,Apellido,Password FROM Usuario WHERE Usuario ='" + username + "'");
+            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password FROM Usuario WHERE Usuario ='" + username + "'");
             while (resultSet.next()) {
                 return Option.of(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
                         resultSet.getString("Apellido"), resultSet.getString("Password"),
-                        resultSet.getString("Email"), resultSet.getString("IdCompania")));
+                        "info@nanivo.com", resultSet.getInt("IdCompania")));
             }
             resultSet.close();
         } catch (Exception e) {
