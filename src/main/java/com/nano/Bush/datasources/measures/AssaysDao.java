@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AssaysDao {
@@ -29,7 +30,21 @@ public class AssaysDao {
         statement = postgresConnector.getConnection().createStatement();
     }
 
-    public void insert(Assay Assay) throws SQLException {
+    public Integer insert(Assay Assay) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector
+                .getPreparedStatementFor("INSERT INTO ensayo VALUES (default, ?, ?,?,?) RETURNING idEnsayo");
+        preparedStatement.setInt(1, Assay.getIdCrop());
+        preparedStatement.setString(2, Assay.getName());
+        preparedStatement.setString(3, Assay.getDescription());
+        preparedStatement.setInt(4, Assay.getIdUserCreator());
+
+        resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("idEnsayo");
+
+    }
+
+    public void update(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("INSERT INTO ensayo VALUES (default, ?, ?,?,?)");
         preparedStatement.setInt(1, Assay.getIdCrop());
@@ -44,7 +59,7 @@ public class AssaysDao {
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
-            Assays.add(new Assay(resultSet.getInt("idEnsayo"), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
+            Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                     resultSet.getString("descripcion"), resultSet.getInt("idUserCreador")));
         }
         return Assays;
@@ -72,6 +87,6 @@ public class AssaysDao {
 
     public void modify(Assay assay) throws SQLException {
         this.delete(assay.getName());
-        this.insert(assay);
+        this.update(assay);
     }
 }
