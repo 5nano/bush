@@ -38,20 +38,15 @@ public class ExperimentController {
     }
 
 
-    @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json", consumes = "text/plain")
-    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestBody String assayId) {
+    @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
         return new ResponseEntity<>(experimentService.getExperimentsFrom(assayId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/experimentos/insertar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> insertExperiment(@RequestBody Experiment experiment) throws SQLException {
-        if (validationsService.isRepetead("nombre", "experimento", experiment.getName())) {
-            return new ResponseEntity<>(new Response("El nombre del experimento ya existe", HttpStatus.CONFLICT.value()),
-                    HttpStatus.CONFLICT);
-        } else {
-            experimentsDao.insert(experiment);
-            return new ResponseEntity<>(new Response("Experimento Creado", HttpStatus.OK.value()), HttpStatus.OK);
-        }
+        experimentsDao.insert(experiment);
+        return new ResponseEntity<>(new Response("Experimento Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/experimentos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
