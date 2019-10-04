@@ -3,18 +3,20 @@ package com.nano.Bush.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.util.Optional;
+
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Experiment {
 
     private final Integer assayId;
     private final Integer treatmentId;
-    private final Integer experimentId;
+    private final Optional<Integer> experimentId;
     @JsonProperty("nombre")
     private String name;
     @JsonProperty("descripcion")
     private String description;
 
-    public Experiment(String name, String description, Integer assayId, Integer treatmentId, Integer experimentId) {
+    public Experiment(String name, String description, Integer assayId, Integer treatmentId, Optional<Integer> experimentId) {
         this.name = name;
         this.description = description;
         this.assayId = assayId;
@@ -38,7 +40,7 @@ public class Experiment {
         return treatmentId;
     }
 
-    public Integer getExperimentId() {
+    public Optional<Integer> getExperimentId() {
         return experimentId;
     }
 }

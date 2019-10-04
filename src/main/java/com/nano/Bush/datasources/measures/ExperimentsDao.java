@@ -10,6 +10,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Optional;
 
 @Service
 public class ExperimentsDao {
@@ -26,9 +27,11 @@ public class ExperimentsDao {
 
 
     public void insert(Experiment experiment) throws SQLException {
-        preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento VALUES (default, ?, ?)");
-        preparedStatement.setString(1, experiment.getName());
-        preparedStatement.setString(2, experiment.getDescription());
+        preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento (idExperimento,idEnsayo,idTratamiento,nombre,descripcion) VALUES (default,?, ?, ?, ?)");
+        preparedStatement.setInt(1, experiment.getAssayId());
+        preparedStatement.setInt(2, experiment.getTreatmentId());
+        preparedStatement.setString(3, experiment.getName());
+        preparedStatement.setString(4, experiment.getDescription());
         preparedStatement.executeUpdate();
     }
 
@@ -37,7 +40,7 @@ public class ExperimentsDao {
         ResultSet resultSet = statement.executeQuery(query);
         if (resultSet.next()) {
             return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
-                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Integer.parseInt(experimentId));
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(Integer.parseInt(experimentId)));
         }
         return null;
     }
