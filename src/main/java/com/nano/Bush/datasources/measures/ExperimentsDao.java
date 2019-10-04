@@ -26,13 +26,15 @@ public class ExperimentsDao {
     }
 
 
-    public void insert(Experiment experiment) throws SQLException {
-        preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento (idExperimento,idEnsayo,idTratamiento,nombre,descripcion) VALUES (default,?, ?, ?, ?)");
+    public Integer insert(Experiment experiment) throws SQLException {
+        preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento (idExperimento,idEnsayo,idTratamiento,nombre,descripcion) VALUES (default,?, ?, ?, ?) RETURNING idExperimento");
         preparedStatement.setInt(1, experiment.getAssayId());
         preparedStatement.setInt(2, experiment.getTreatmentId());
         preparedStatement.setString(3, experiment.getName());
         preparedStatement.setString(4, experiment.getDescription());
-        preparedStatement.executeUpdate();
+        ResultSet resultSet = preparedStatement.executeQuery();
+        resultSet.next();
+        return resultSet.getInt("idExperimento");
     }
 
     public Experiment getExperiment(String experimentId) throws SQLException {
