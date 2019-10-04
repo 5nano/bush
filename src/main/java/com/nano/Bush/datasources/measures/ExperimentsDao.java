@@ -33,11 +33,11 @@ public class ExperimentsDao {
     }
 
     public Experiment getExperiment(String experimentId) throws SQLException {
-        String query = "SELECT nombre,descripcion,idEnsayo,idMezcla FROM experimento WHERE idExperimento = '" + experimentId + "'";
+        String query = "SELECT nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idExperimento = '" + experimentId + "'";
         ResultSet resultSet = statement.executeQuery(query);
         if (resultSet.next()) {
             return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
-                    resultSet.getInt("idEnsayo"), resultSet.getInt("idMezcla"), Integer.parseInt(experimentId));
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Integer.parseInt(experimentId));
         }
         return null;
     }

@@ -7,18 +7,18 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class Experiment {
 
     private final Integer assayId;
-    private final Integer mixtureId;
+    private final Integer treatmentId;
     private final Integer experimentId;
     @JsonProperty("nombre")
     private String name;
     @JsonProperty("descripcion")
     private String description;
 
-    public Experiment(String name, String description, Integer assayId, Integer mixtureId, Integer experimentId) {
+    public Experiment(String name, String description, Integer assayId, Integer treatmentId, Integer experimentId) {
         this.name = name;
         this.description = description;
         this.assayId = assayId;
-        this.mixtureId = mixtureId;
+        this.treatmentId = treatmentId;
         this.experimentId = experimentId;
     }
 
@@ -34,8 +34,8 @@ public class Experiment {
         return assayId;
     }
 
-    public Integer getMixtureId() {
-        return mixtureId;
+    public Integer getTreatmentId() {
+        return treatmentId;
     }
 
     public Integer getExperimentId() {
