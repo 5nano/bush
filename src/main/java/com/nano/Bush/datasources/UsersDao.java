@@ -28,37 +28,38 @@ public class UsersDao {
 
     public void insert(User user) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO usuario VALUES (default,?,?,?,?,?,?,?,?)");
+                .getPreparedStatementFor("INSERT INTO usuario VALUES (default,?,?,?,?,?,?,?,?,?)");
         preparedStatement.setInt(1, user.getCompanyId());
         preparedStatement.setString(2, user.getFirstName());
         preparedStatement.setString(3, user.getLastName());
         preparedStatement.setString(4, user.getUsername());
         preparedStatement.setString(5, user.getPassword());
-        preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+        preparedStatement.setString(6, user.getEmail());
         preparedStatement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setBoolean(8, true);
+        preparedStatement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
+        preparedStatement.setBoolean(9, true);
 
         preparedStatement.executeUpdate();
     }
 
     public List<User> getUsers() throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password FROM Usuario");
+        ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email FROM Usuario");
         List<User> users = new ArrayList<>();
         while (resultSet.next()) {
             users.add(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
                     resultSet.getString("Apellido"), resultSet.getString("Password"),
-                    "info@nanivo.com", resultSet.getInt("IdCompania")));
+                    resultSet.getString("Email"), resultSet.getInt("IdCompania")));
         }
         return users;
     }
 
     public Option<User> getUserByUsername(String username) {
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password FROM Usuario WHERE Usuario ='" + username + "'");
+            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email FROM Usuario WHERE Usuario ='" + username + "'");
             while (resultSet.next()) {
                 return Option.of(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
                         resultSet.getString("Apellido"), resultSet.getString("Password"),
-                        "info@nanivo.com", resultSet.getInt("IdCompania")));
+                        resultSet.getString("Email"), resultSet.getInt("IdCompania")));
             }
             resultSet.close();
         } catch (Exception e) {
