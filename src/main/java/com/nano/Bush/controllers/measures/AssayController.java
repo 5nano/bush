@@ -2,6 +2,7 @@ package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.AssayInsertResponse;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.services.AssayService;
 import com.nano.Bush.services.ValidationsService;
@@ -29,14 +30,8 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Response> insertAssay(@RequestBody Assay assay) throws SQLException {
-        if (validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
-            return new ResponseEntity<>(new Response("El nombre del ensayo ya existe", HttpStatus.CONFLICT.value()),
-                    HttpStatus.CONFLICT);
-        } else {
-            assayService.insert(assay);
-            return new ResponseEntity<>(new Response("Ensayo Creado", HttpStatus.OK.value()), HttpStatus.OK);
-        }
+    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay) throws SQLException {
+        return new ResponseEntity<>(assayService.insert(assay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
