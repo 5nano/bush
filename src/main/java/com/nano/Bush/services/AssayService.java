@@ -2,6 +2,7 @@ package com.nano.Bush.services;
 
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.AssayInsertResponse;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,8 +23,9 @@ public class AssayService {
         return assaysDao.getAssays();
     }
 
-    public void insert(Assay assay) throws SQLException {
-        assaysDao.insert(assay);
+    public AssayInsertResponse insert(Assay assay) throws SQLException {
+        Integer insertAndReturnIdAssay = assaysDao.insert(assay);
+        return new AssayInsertResponse(insertAndReturnIdAssay);
     }
 
 }

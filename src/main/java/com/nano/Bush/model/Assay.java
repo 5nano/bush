@@ -1,14 +1,16 @@
 package com.nano.Bush.model;
 
+import java.util.Optional;
+
 public class Assay {
 
-    private final int idAssay;
+    private final Optional<Integer> idAssay;
     private final int idCrop;
     private final String name;
     private final String description;
     private final int idUserCreator;
 
-    public Assay(int idAssay, int idCrop, String name, String description, int idUserCreator) {
+    public Assay(Optional<Integer> idAssay, int idCrop, String name, String description, int idUserCreator) {
         this.idAssay = idAssay;
         this.idCrop = idCrop;
         this.name = name;
@@ -33,7 +35,7 @@ public class Assay {
         return idUserCreator;
     }
 
-    public int getIdAssay() {
+    public Optional<Integer> getIdAssay() {
         return idAssay;
     }
 }
