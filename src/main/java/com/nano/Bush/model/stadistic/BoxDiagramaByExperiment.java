@@ -7,10 +7,12 @@ import java.util.Set;
  **/
 public class BoxDiagramaByExperiment {
     private final Integer experimentId;
+    private final Integer treatmentId;
     private final Set<Double> values;
 
-    public BoxDiagramaByExperiment(Integer experimentId, Set<Double> values) {
+    public BoxDiagramaByExperiment(Integer experimentId, Integer treatmentId, Set<Double> values) {
         this.experimentId = experimentId;
+        this.treatmentId = treatmentId;
         this.values = values;
     }
 
@@ -20,5 +22,9 @@ public class BoxDiagramaByExperiment {
 
     public Set<Double> getValues() {
         return values;
+    }
+
+    public Integer getTreatmentId() {
+        return treatmentId;
     }
 }
