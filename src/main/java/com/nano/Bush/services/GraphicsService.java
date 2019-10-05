@@ -53,7 +53,7 @@ public class GraphicsService {
     private Map<String, String> getExperimentsAssaysMap(String assayId) {
         Map<String, String> assays = new HashMap<>();
 
-        List<Experiment> experiments = experimentService.getExperimentsFrom(assayId);
+        List<Experiment> experiments = experimentService.getExperimentsFromAssay(assayId);
 
         experiments.forEach(experiment -> assays.put(experiment.getExperimentId().toString(), assayId));
         return assays;

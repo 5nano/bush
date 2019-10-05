@@ -40,7 +40,7 @@ public class ExperimentController {
 
     @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
-        return new ResponseEntity<>(experimentService.getExperimentsFrom(assayId), HttpStatus.OK);
+        return new ResponseEntity<>(experimentService.getExperimentsFromAssay(assayId), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/experimentos/insertar", method = RequestMethod.POST, produces = "application/json")

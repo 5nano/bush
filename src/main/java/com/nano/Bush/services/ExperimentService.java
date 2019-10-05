@@ -36,21 +36,25 @@ public class ExperimentService {
         return experiment;
     }
 
-    public List<Experiment> getExperimentsFrom(String assayId) {
+    public List<Experiment> getExperimentsFromAssay(String assayId) {
 
         List<Experiment> experiments;
 
         try {
-            experiments = assaysDao.getExperiments(assayId).stream()
-                    .map(experimentId -> {
-                        try {
-                            return experimentsDao.getExperiment(experimentId.toString());
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    })
-                    .collect(Collectors.toList());
+            experiments = assaysDao.getExperimentsFromAssay(assayId);
+        } catch (SQLException e) {
+            logger.error("Error al obtener el nombre del experimento, exception: " + e);
+            throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
+        }
+        return experiments;
+    }
+
+    public List<Experiment> getExperimentsFromTreatment(String treatmentId) {
+
+        List<Experiment> experiments;
+
+        try {
+            experiments = assaysDao.getExperimentsFromAssay(treatmentId);
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
