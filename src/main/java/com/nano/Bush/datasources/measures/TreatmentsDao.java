@@ -42,8 +42,16 @@ public class TreatmentsDao {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion) values (default, ?, ?, ?, ?, ?) RETURNING idTratamiento");
         preparedStatement.setInt(1, treatment.getIdAssay());
-        preparedStatement.setInt(2, treatment.getIdAgrochemical());
-        preparedStatement.setInt(3, treatment.getIdMixture());
+        if (treatment.getIdAgrochemical() == null) {
+            preparedStatement.setNull(2, java.sql.Types.INTEGER);
+        }else{
+            preparedStatement.setInt(2, treatment.getIdAgrochemical());
+        }
+        if (treatment.getIdAgrochemical() == null) {
+            preparedStatement.setNull(3, java.sql.Types.INTEGER);
+        }else{
+            preparedStatement.setInt(3, treatment.getIdMixture());
+        }
         preparedStatement.setString(4, treatment.getName());
         preparedStatement.setString(5, treatment.getDescription());
 
