@@ -33,7 +33,7 @@ public class AssaysDao {
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo VALUES (default, ?, ?,?,?) RETURNING idEnsayo");
+                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador) VALUES (default, ?, ?,?,?) RETURNING idEnsayo");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
         preparedStatement.setString(3, Assay.getDescription());
