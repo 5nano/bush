@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class AgrochemicalsDao {
@@ -40,7 +41,7 @@ public class AgrochemicalsDao {
         ResultSet resultSet = statement.executeQuery("SELECT * FROM agroquimico");
         List<Agrochemical> agrochemicals = new ArrayList<>();
         while (resultSet.next()) {
-            agrochemicals.add(new Agrochemical(resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            agrochemicals.add(new Agrochemical(Optional.of(resultSet.getInt("idAgroquimico")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return agrochemicals;
     }

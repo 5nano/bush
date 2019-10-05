@@ -14,6 +14,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class MixturesDao {
@@ -38,10 +39,10 @@ public class MixturesDao {
     }
 
     public List<Mixture> getMixtures() throws SQLException {
-        resultSet = statement.executeQuery("SELECT nombre,descripcion FROM mezcla");
+        resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla");
         List<Mixture> mixtures = new ArrayList<>();
         while (resultSet.next()) {
-            mixtures.add(new Mixture(resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            mixtures.add(new Mixture(Optional.of(resultSet.getInt("idMezcla")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return mixtures;
     }
