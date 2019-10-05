@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CropsDao {
@@ -38,7 +39,7 @@ public class CropsDao {
         resultSet = statement.executeQuery("SELECT * FROM cultivo");
         List<Crop> crops = new ArrayList<>();
         while (resultSet.next()) {
-            crops.add(new Crop(resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            crops.add(new Crop(Optional.of(resultSet.getInt("idCultivo")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return crops;
     }
