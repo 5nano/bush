@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -29,6 +30,22 @@ public class TreatmentsService {
             experiments.put(experimentId.toString(), treatment.getIdAssay().toString()+"-"+experimentId.toString());
         });
         return new TreatmentInsertResponse(experiments);
+    }
+
+    public void modify(Treatment treatment) throws SQLException {
+        treatmentsDao.update(treatment);
+    }
+
+    public void delete(Integer idTreatment) throws SQLException {
+        treatmentsDao.delete(idTreatment);
+    }
+
+    public List<Treatment> treatments(Integer idAssay) throws SQLException {
+        return  treatmentsDao.getTreatments(idAssay);
+    }
+
+    public Treatment treatment(Integer idTreatment) throws SQLException {
+        return  treatmentsDao.getTreatment(idTreatment);
     }
 
 }

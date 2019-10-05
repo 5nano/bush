@@ -1,10 +1,9 @@
 package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.datasources.measures.AssaysDao;
-import com.nano.Bush.model.Assay;
-import com.nano.Bush.model.AssayInsertResponse;
-import com.nano.Bush.model.Response;
+import com.nano.Bush.model.*;
 import com.nano.Bush.services.AssayService;
+import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -27,6 +26,9 @@ public class AssayController {
     AssaysDao assaysDao;
     @Autowired
     ValidationsService validationsService;
+
+    @Autowired
+    private ExperimentService experimentService;
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
@@ -57,5 +59,16 @@ public class AssayController {
         return new ResponseEntity<>(new Response("Ensayo Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/ensayo/experimentos", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
+        return new ResponseEntity<>(experimentService.getExperimentsFromAssay(assayId), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/ensayo/tratamientos", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<Treatment>> showTreatmentsFrom(@RequestParam Integer assayId) {
+        return new ResponseEntity<>(assayService.getTreatmentsFrom(assayId), HttpStatus.OK);
+    }
 
 }

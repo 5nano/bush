@@ -2,6 +2,7 @@ package com.nano.Bush.datasources.measures;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,11 +66,22 @@ public class AssaysDao {
         return Assays;
     }
 
-    public List<Integer> getExperiments(String assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idExperimento FROM experimento WHERE idEnsayo = '" + assayId + "'");
-        List<Integer> experiments = new ArrayList<>();
+    public List<Experiment> getExperimentsFromAssay(String assayId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idEnsayo = '" + assayId + "'");
+        List<Experiment> experiments = new ArrayList<>();
         while (resultSet.next()) {
-            experiments.add(resultSet.getInt("idExperimento"));
+            experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(resultSet.getInt("idExperimento"))));
+        }
+        return experiments;
+    }
+
+    public List<Experiment> getExperimentsFromTreatment(String treatmentId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idTratamiento = '" + treatmentId + "'");
+        List<Experiment> experiments = new ArrayList<>();
+        while (resultSet.next()) {
+            experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(resultSet.getInt("idExperimento"))));
         }
         return experiments;
     }

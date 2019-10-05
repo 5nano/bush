@@ -61,12 +61,12 @@ public class StadisticsService {
         List<BoxDiagramaByExperiment> yellowFrequencies;
 
         try {
-            List<Integer> experiments;
-            experiments = assaysDao.getExperiments(assayId);
+            List<Experiment> experiments;
+            experiments = assaysDao.getExperimentsFromAssay(assayId);
             List<BoxDiagramaByExperiment> frequenciesByExperiment = experiments.stream()
-                    .map(experimentId -> {
+                    .map(experiment -> {
                         try {
-                            return new BoxDiagramaByExperiment(experimentId, this.getYellowFrequenciesValuesExperiment(experimentId.toString()));
+                            return new BoxDiagramaByExperiment(experiment.getExperimentId().get(), experiment.getTreatmentId(), this.getYellowFrequenciesValuesExperiment(experiment.getExperimentId().get().toString()));
                         } catch (SQLException e) {
                             e.printStackTrace();
                         }

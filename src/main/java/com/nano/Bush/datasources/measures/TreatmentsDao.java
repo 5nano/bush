@@ -1,7 +1,6 @@
 package com.nano.Bush.datasources.measures;
 
 import com.nano.Bush.conectors.PostgresConnector;
-import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.Experiment;
 import com.nano.Bush.model.Treatment;
 import org.slf4j.Logger;
@@ -17,7 +16,6 @@ import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 /**
  * Created by Matias Zeitune oct. 2019
@@ -78,10 +76,18 @@ public class TreatmentsDao {
 
     public void update(Treatment treatment) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion) values (default, 1, null, null, 'test', 'test') RETURNING idTratamiento");
+                .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion) values (default, ?, ?, ?, ?, ?) RETURNING idTratamiento");
         preparedStatement.setInt(1, treatment.getIdAssay());
-        preparedStatement.setInt(2, treatment.getIdAgrochemical());
-        preparedStatement.setInt(3, treatment.getIdMixture());
+        if (treatment.getIdAgrochemical() == null) {
+            preparedStatement.setNull(2, java.sql.Types.INTEGER);
+        }else{
+            preparedStatement.setInt(2, treatment.getIdAgrochemical());
+        }
+        if (treatment.getIdAgrochemical() == null) {
+            preparedStatement.setNull(3, java.sql.Types.INTEGER);
+        }else{
+            preparedStatement.setInt(3, treatment.getIdMixture());
+        }
         preparedStatement.setString(4, treatment.getName());
         preparedStatement.setString(5, treatment.getDescription());
 
