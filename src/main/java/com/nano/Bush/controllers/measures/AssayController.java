@@ -61,13 +61,13 @@ public class AssayController {
 
 
     @RequestMapping(value = "/ensayo/experimentos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
+    public @ResponseBody ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
         return new ResponseEntity<>(experimentService.getExperimentsFromAssay(assayId), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/ensayo/tratamientos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Treatment>> showTreatmentsFrom(@RequestParam Integer assayId) {
+    public @ResponseBody ResponseEntity<List<Treatment>> showTreatmentsFrom(@RequestParam Integer assayId) {
         return new ResponseEntity<>(assayService.getTreatmentsFrom(assayId), HttpStatus.OK);
     }
 
