@@ -4,6 +4,7 @@ import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.*;
 import com.nano.Bush.services.AssayService;
 import com.nano.Bush.services.ExperimentService;
+import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,8 @@ public class AssayController {
     AssaysDao assaysDao;
     @Autowired
     ValidationsService validationsService;
+    @Autowired
+    TreatmentsService treatmentsService;
 
     @Autowired
     private ExperimentService experimentService;
@@ -67,8 +70,9 @@ public class AssayController {
 
 
     @RequestMapping(value = "/ensayo/tratamientos", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<List<Treatment>> showTreatmentsFrom(@RequestParam Integer assayId) {
-        return new ResponseEntity<>(assayService.getTreatmentsFrom(assayId), HttpStatus.OK);
+    public @ResponseBody
+    ResponseEntity<List<Treatment>> getTreatments(@RequestParam Integer idAssay) throws SQLException {
+        return new ResponseEntity<>(treatmentsService.treatments(idAssay), HttpStatus.OK);
     }
 
 }
