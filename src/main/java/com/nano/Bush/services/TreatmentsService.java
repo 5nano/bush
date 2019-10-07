@@ -1,5 +1,6 @@
 package com.nano.Bush.services;
 
+import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Treatment;
 import com.nano.Bush.model.TreatmentInsertResponse;
@@ -23,6 +24,8 @@ public class TreatmentsService {
 
     @Autowired
     private TreatmentsDao treatmentsDao;
+    @Autowired
+    private ExperimentService experimentsService;
 
     public TreatmentInsertResponse insert(Treatment treatment) throws SQLException {
         Map<String, String> experiments = new HashMap<>();
@@ -47,5 +50,14 @@ public class TreatmentsService {
     public Treatment treatment(Integer idTreatment) throws SQLException {
         return  treatmentsDao.getTreatment(idTreatment);
     }
+
+    public TreatmentInsertResponse getTreatmentQRs(Integer idTreatment) throws SQLException {
+        Map<String, String> experiments = new HashMap<>();
+        experimentsService.getExperimentsFromTreatment(idTreatment.toString()).stream().forEach(experiment -> {
+            experiments.put(experiment.getExperimentId().get().toString(), experiment.getAssayId().toString()+"-"+experiment.getExperimentId().get().toString());
+        });
+        return new TreatmentInsertResponse(experiments);
+    }
+
 
 }

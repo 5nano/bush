@@ -54,7 +54,7 @@ public class ExperimentService {
         List<Experiment> experiments;
 
         try {
-            experiments = assaysDao.getExperimentsFromAssay(treatmentId);
+            experiments = assaysDao.getExperimentsFromTreatment(treatmentId);
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
