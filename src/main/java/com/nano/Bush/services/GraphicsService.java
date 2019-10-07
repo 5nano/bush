@@ -55,7 +55,7 @@ public class GraphicsService {
 
         List<Experiment> experiments = experimentService.getExperimentsFromAssay(assayId);
 
-        experiments.forEach(experiment -> assays.put(experiment.getExperimentId().toString(), assayId));
+        experiments.forEach(experiment -> assays.put(experiment.getExperimentId().get().toString(), assayId));
         return assays;
     }
 
