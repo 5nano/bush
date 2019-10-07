@@ -13,7 +13,9 @@ import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Repository
@@ -24,7 +26,7 @@ public class MeasuresDao {
 
     public List<MeasurePlant> selectMeasuresFrom(String assayId, String experimentId) {
 
-        String query = "SELECT measures FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
+        String query = "SELECT time,measures,image FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
         ResultSet rs = CassandraConnector.getConnection().execute(query);
 
         List<MeasurePlant> measuresPlants = new ArrayList<>();
@@ -46,43 +48,16 @@ public class MeasuresDao {
                         .replace(", 'datatype': \"<class 'float'>\",", ",")
                         .replaceAll("'", "\"");
 
-                measuresPlants.add(mapper.readValue(transformedText, MeasurePlant.class));
+                MeasurePlant measureConverted = mapper.readValue(transformedText, MeasurePlant.class);
+                measureConverted.setDay(row.getTimestamp("time").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
+                measureConverted.setImage("http://35.188.202.169:8080"+row.getString("image"));
+                measuresPlants.add(measureConverted);
             } catch (IOException e) {
                 e.printStackTrace();
             }
         }
 
-
-        for (long days = 0; days < measuresPlants.size(); days++) {
-            measuresPlants.get(Integer.parseInt(String.valueOf(days))).setDay(LocalDate.now().plusDays(days)); //TODO: sacar el plus days cuando se inserte bien la fecha
-        }
-
         return measuresPlants;
     }
 
-    private void putMeasure(Row r, ResultSet rs, List<MeasurePlant> measuresPlants) {
-        ObjectMapper mapper = new ObjectMapper();
-        mapper.enable(DeserializationFeature.USE_BIG_DECIMAL_FOR_FLOATS);
-
-        if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
-            rs.fetchMoreResults();
-        //measuresPlants.add(mapper.readValue(r.getString('Measures'), MeasurePlant.class));
-    }
-
-    public List<String> selectBase64ImageFrom(String experimentId, String assayId) {
-
-        String query = "SELECT image FROM images WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId +
-                " ALLOW FILTERING";
-
-        ResultSet rs = CassandraConnector.getConnection().execute(query);
-
-
-        List<String> images = new ArrayList<>();
-
-        if (rs.getAvailableWithoutFetching() == 100 && !rs.isFullyFetched())
-            rs.fetchMoreResults();
-        rs.forEach(r -> images.add(r.getString(0)));
-
-        return images;
-    }
 }

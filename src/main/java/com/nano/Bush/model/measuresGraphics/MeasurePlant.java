@@ -16,6 +16,9 @@ public class MeasurePlant {
     @JsonProperty("blue-yellow_frequencies")
     private Frequencies yellowFrequencies;
 
+    private String image;
+
+
     public Area getArea() {
         return area;
     }
@@ -40,4 +43,11 @@ public class MeasurePlant {
         this.day = day;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }

@@ -30,7 +30,6 @@ public class ExperimentController {
     @Autowired
     private ValidationsService validationsService;
 
-
     @RequestMapping(value = "/experimentos/nombre", method = RequestMethod.GET, produces = "text/plain")
     public @ResponseBody
     String getExperimentName(@RequestParam String experimentId) {
