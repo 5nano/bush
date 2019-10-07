@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeasurePlant {
@@ -16,6 +15,9 @@ public class MeasurePlant {
 
     @JsonProperty("blue-yellow_frequencies")
     private Frequencies yellowFrequencies;
+
+    private String image;
+
 
     public Area getArea() {
         return area;
@@ -41,4 +43,11 @@ public class MeasurePlant {
         this.day = day;
     }
 
+    public String getImage() {
+        return image;
+    }
+
+    public void setImage(String image) {
+        this.image = image;
+    }
 }
