@@ -39,8 +39,9 @@ public class StadisticsService {
                     .map(measure -> measure.getYellowFrequencies().getValue())
                     .collect(Collectors.toList());
             List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
-            yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
-            /*
+            yellowFrequencies = allFrequenciesExperiment;
+           /* yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
+
             Set<Double> sorted = new TreeSet<Double>(new Comparator<Double>() {
                 @Override
                 public int compare(Double o1, Double o2) {
