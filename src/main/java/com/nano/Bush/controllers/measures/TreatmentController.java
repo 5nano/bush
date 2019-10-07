@@ -50,11 +50,6 @@ public class TreatmentController {
         return new ResponseEntity<>(new Response("Experimento Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/tratamientos", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody
-    ResponseEntity<List<Treatment>> getTreatments(@RequestParam Integer idAssay) throws SQLException {
-        return new ResponseEntity<>(treatmentsService.treatments(idAssay), HttpStatus.OK);
-    }
 
     @RequestMapping(value = "/tratamiento", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
@@ -67,5 +62,11 @@ public class TreatmentController {
         return new ResponseEntity<>(experimentService.getExperimentsFromTreatment(treatmentId), HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/tratamiento/QRs", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<TreatmentInsertResponse> getQRsTreatment(@RequestParam Integer idTreatment) throws SQLException {
+        return new ResponseEntity<>(treatmentsService.getTreatmentQRs(idTreatment), HttpStatus.OK);
+    }
 
 }
