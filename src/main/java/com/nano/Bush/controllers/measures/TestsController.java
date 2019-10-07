@@ -12,7 +12,6 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST})
 public class TestsController {
 
-
     @Autowired
     private TestsService testsService;
 
