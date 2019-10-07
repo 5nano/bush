@@ -1,5 +1,6 @@
 package com.nano.Bush.model.stadistic;
 
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -8,9 +9,9 @@ import java.util.Set;
 public class BoxDiagramaByExperiment {
     private final Integer experimentId;
     private final Integer treatmentId;
-    private final Set<Double> values;
+    private final List<Double> values;
 
-    public BoxDiagramaByExperiment(Integer experimentId, Integer treatmentId, Set<Double> values) {
+    public BoxDiagramaByExperiment(Integer experimentId, Integer treatmentId, List<Double> values) {
         this.experimentId = experimentId;
         this.treatmentId = treatmentId;
         this.values = values;
@@ -20,7 +21,7 @@ public class BoxDiagramaByExperiment {
         return experimentId;
     }
 
-    public Set<Double> getValues() {
+    public List<Double> getValues() {
         return values;
     }
 

@@ -28,8 +28,8 @@ public class StadisticsService {
     @Autowired
     private ExperimentsDao experimentsDao;
 
-    public Set<Double> getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
-        Set<Double> yellowFrequencies;
+    public List<Double> getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
+        List<Double> yellowFrequencies;
 
         try {
             Experiment experiment;
@@ -40,6 +40,7 @@ public class StadisticsService {
                     .collect(Collectors.toList());
             List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
             yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
+            /*
             Set<Double> sorted = new TreeSet<Double>(new Comparator<Double>() {
                 @Override
                 public int compare(Double o1, Double o2) {
@@ -47,7 +48,7 @@ public class StadisticsService {
                 }
             });
             sorted.addAll(yellowFrequencies);
-            yellowFrequencies = sorted;
+            yellowFrequencies = sorted;*/
             yellowFrequencies.remove(new Double(0));
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
