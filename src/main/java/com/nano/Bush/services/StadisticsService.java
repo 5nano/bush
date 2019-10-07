@@ -39,7 +39,7 @@ public class StadisticsService {
                     .map(measure -> measure.getYellowFrequencies().getValue())
                     .collect(Collectors.toList());
             List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
-            yellowFrequencies = allFrequenciesExperiment;
+            yellowFrequencies = allFrequenciesExperiment.stream().filter(frequencie -> frequencie!=0).collect(Collectors.toList());
            /* yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
 
             Set<Double> sorted = new TreeSet<Double>(new Comparator<Double>() {
@@ -49,8 +49,8 @@ public class StadisticsService {
                 }
             });
             sorted.addAll(yellowFrequencies);
-            yellowFrequencies = sorted;*/
-            yellowFrequencies.remove(new Double(0));
+            yellowFrequencies = sorted;
+            yellowFrequencies.remove(new Double(0));*/
         } catch (SQLException e) {
             logger.error("Error al obtener el nombre del experimento, exception: " + e);
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
