@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("")
@@ -45,13 +46,18 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
+    public ResponseEntity<Response> deleteAssay(@RequestParam String assayId) throws SQLException {
 
-        if (!validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
+        String assayName = assayService.getAssays().stream()
+                .filter(assay -> assay.getIdAssay().get().equals(Integer.parseInt(assayId)))
+                .map(Assay::getName)
+                .collect(Collectors.toList()).get(0);
+
+        if (!validationsService.isRepetead("nombre", "ensayo", assayName)) {
             return new ResponseEntity<>(new Response("El ensayo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            assaysDao.delete(assay.getName());
+            assaysDao.delete(assayName);
             return new ResponseEntity<>(new Response("Ensayo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
@@ -64,7 +70,8 @@ public class AssayController {
 
 
     @RequestMapping(value = "/ensayo/experimentos", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
+    public @ResponseBody
+    ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
         return new ResponseEntity<>(experimentService.getExperimentsFromAssay(assayId), HttpStatus.OK);
     }
 
