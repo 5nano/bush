@@ -86,11 +86,6 @@ public class AssaysDao {
         return experiments;
     }
 
-    public void getAssay(Assay Assay) throws SQLException {
-        String query = "SELECT Nombre,Descripcion,idCultivo,idUserCreador FROM mezcla WHERE nombre = '" + Assay.getName() + "'";
-        resultSet = statement.executeQuery(query);
-    }
-
     public void delete(String assayName) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM ensayo WHERE nombre ='" + assayName + "'");

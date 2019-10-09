@@ -27,16 +27,16 @@ public class TagsController {
 
     @RequestMapping(value = "/tags/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Response> insertTag(@RequestBody Tag tag) throws SQLException {
-        //tagsService.insert(tag);
-        return new ResponseEntity<>(new Response("Tag creado exitosamente", HttpStatus.OK.value()), HttpStatus.OK);
+    ResponseEntity<Tag> insertTag(@RequestBody Tag tag) throws SQLException {
+
+        return new ResponseEntity<>(tagsService.insert(tag), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/tags/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Response> deleteTag(@RequestParam Integer idTag) throws SQLException {
-        //tagsService.insert(tag);
+    ResponseEntity<Response> deleteTag(@RequestParam String tagName) throws SQLException {
+        tagsService.delete(tagName);
         return new ResponseEntity<>(new Response("Tag eliminado exitosamente", HttpStatus.OK.value()), HttpStatus.OK);
 
     }
@@ -44,7 +44,7 @@ public class TagsController {
     @RequestMapping(value = "/tags/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> modifyTag(@RequestBody Tag tag) throws SQLException {
-        //tagsService.insert(tag);
+        tagsService.modify(tag);
         return new ResponseEntity<>(new Response("Tag modificado exitosamente", HttpStatus.OK.value()), HttpStatus.OK);
 
     }
@@ -52,7 +52,7 @@ public class TagsController {
     @RequestMapping(value = "/tags/ensayo/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> insertTagToAssay(@RequestParam Integer idTag, Integer idAssay) throws SQLException {
-        //tagsService.insert(tag);
+        tagsService.insertIntoAssay(idTag, idAssay);
         return new ResponseEntity<>(new Response("Tag creado exitosamente de ensayo", HttpStatus.OK.value()), HttpStatus.OK);
 
     }
@@ -60,7 +60,7 @@ public class TagsController {
     @RequestMapping(value = "/tags/ensayo/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> deleteTagToAssay(@RequestParam Integer idTag, Integer idAssay) throws SQLException {
-        //tagsService.insert(tag);
+        tagsService.deleteFromAssay(idTag, idAssay);
         return new ResponseEntity<>(new Response("Tag eliminado exitosamente de ensayo", HttpStatus.OK.value()), HttpStatus.OK);
 
     }
@@ -69,24 +69,21 @@ public class TagsController {
     @RequestMapping(value = "/tags", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<Tag>> tags(@RequestBody Tag tag) throws SQLException {
-        //tagsService.insert(tag);
-        return new ResponseEntity<>(, HttpStatus.OK);
+        return new ResponseEntity<>(tagsService.getTags(), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/tags/ensayos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<Assay>> getAssaysWithTags(@RequestBody List<String> tags) throws SQLException {
-        //tagsService.insert(tag);
-        return new ResponseEntity<>(, HttpStatus.OK);
+        return new ResponseEntity<>(tagsService.getAssays(tags), HttpStatus.OK);
 
     }
 
     @RequestMapping(value = "/ensayo/tags", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<Tag>> getTagsOfAssay(@RequestParam Integer idAssay) throws SQLException {
-        //tagsService.insert(tag);
-        return new ResponseEntity<>(, HttpStatus.OK);
+        return new ResponseEntity<>(tagsService.getTagsFrom(idAssay), HttpStatus.OK);
 
     }
 }
