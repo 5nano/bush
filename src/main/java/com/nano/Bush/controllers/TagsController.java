@@ -68,7 +68,7 @@ public class TagsController {
 
     @RequestMapping(value = "/tags", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<Tag>> tags(@RequestBody Tag tag) throws SQLException {
+    ResponseEntity<List<Tag>> tags() throws SQLException {
         return new ResponseEntity<>(tagsService.getTags(), HttpStatus.OK);
 
     }

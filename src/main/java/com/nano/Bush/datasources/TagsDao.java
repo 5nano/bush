@@ -3,7 +3,6 @@ package com.nano.Bush.datasources;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
-import com.nano.Bush.model.Company;
 import com.nano.Bush.model.Tag;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -77,8 +76,8 @@ public class TagsDao {
     }
 
     public List<Tag> getTagsFrom(Integer idAssay) throws SQLException {
-        resultSet = statement.executeQuery("select idTag,nombre,descripcion from tag where idTag in\n" +
-                "(select idTag from tagEnsayo where idEnsayo = '" + idAssay + "')");
+        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion FROM tag WHERE idTag IN\n" +
+                "(SELECT idTag FROM tagEnsayo WHERE idEnsayo = '" + idAssay + "')");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
             tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
@@ -88,21 +87,23 @@ public class TagsDao {
 
     public List<Assay> getAssayFrom(List<String> tagsNames) throws SQLException {
         Map<String, List<String>> assayWithTags = new HashMap<>();
-        List<Assay> assays = new ArrayList<>();
 
-        List<Integer> idTags = this.getTags().stream().map(tag -> tag.getIdTag().get()).collect(Collectors.toList());
+        List<String> idTags = this.getTags().stream()
+                .filter(tag -> tagsNames.contains(tag.getName()))
+                .map(tag -> tag.getIdTag().get().toString()).collect(Collectors.toList());
 
-        resultSet = statement.executeQuery("select idEnsayo, array_to_string(array_agg(idtag),',') as tagsByAssay" +
-                "from tagEnsayo group by idensayo");
+        resultSet = statement.executeQuery("SELECT idEnsayo, array_to_string(array_agg(idtag),',') AS tagsByAssay " +
+                "FROM tagEnsayo GROUP BY idensayo");
 
         while (resultSet.next()) {
             assayWithTags.put(resultSet.getString("idEnsayo"), Arrays.asList(resultSet.getString("tagsByAssay").split(",")));
         }
 
-        List<Integer> idAssays = assayWithTags.entrySet().stream().filter(assay -> tagsNames.containsAll(assay.getValue()))
+        List<Integer> idAssays = assayWithTags.entrySet().stream()
+                .filter(assayWithTagsElem -> assayWithTagsElem.getValue().containsAll(idTags))
                 .map(assayFiltered -> Integer.parseInt(assayFiltered.getKey())).collect(Collectors.toList());
 
-        return assaysDao.getAssays().stream().filter(assay-> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
+        return assaysDao.getAssays().stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
 
     }
 
@@ -112,15 +113,13 @@ public class TagsDao {
 
         preparedStatement.setInt(1, idTag);
         preparedStatement.setInt(2, idEnsayo);
-        preparedStatement.executeQuery();
+        preparedStatement.executeUpdate();
     }
 
     public void deleteIntoAssay(Integer idTag, Integer idEnsayo) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("delete from tagEnsayo where idTag ='" + idTag + "' and idEnsayo ='" + idEnsayo + "'");
 
-        preparedStatement.setInt(1, idTag);
-        preparedStatement.setInt(2, idEnsayo);
-        preparedStatement.executeQuery();
+        preparedStatement.executeUpdate();
     }
 }
