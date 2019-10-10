@@ -1,6 +1,7 @@
 package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
+import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.Company;
 import com.nano.Bush.model.Tag;
@@ -12,9 +13,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Created by Matias Zeitune oct. 2019
@@ -27,6 +27,9 @@ public class TagsDao {
     PostgresConnector postgresConnector;
     private Statement statement;
     private ResultSet resultSet;
+
+    @Autowired
+    AssaysDao assaysDao;
 
     @PostConstruct
     public void init() throws SQLException {
@@ -41,7 +44,7 @@ public class TagsDao {
         preparedStatement.setString(2, tag.getDescription());
         resultSet = preparedStatement.executeQuery();
         resultSet.next();
-        return new Tag(Optional.of(resultSet.getInt("idTag")),resultSet.getString("nombre"),resultSet.getString("descripcion"));
+        return new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"));
     }
 
     public void update(Tag tag) throws SQLException {
@@ -52,6 +55,7 @@ public class TagsDao {
 
         preparedStatement.executeUpdate();
     }
+
     public void delete(String tagName) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM tag WHERE nombre ='" + tagName + "'");
@@ -74,7 +78,7 @@ public class TagsDao {
 
     public List<Tag> getTagsFrom(Integer idAssay) throws SQLException {
         resultSet = statement.executeQuery("select idTag,nombre,descripcion from tag where idTag in\n" +
-                "(select idTag from tagEnsayo where idEnsayo = '"+idAssay+"')");
+                "(select idTag from tagEnsayo where idEnsayo = '" + idAssay + "')");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
             tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
@@ -82,14 +86,24 @@ public class TagsDao {
         return tags;
     }
 
-    public List<Assay> getAssayFrom(List<String> tags) throws SQLException {
-        /*resultSet = statement.executeQuery("select idTag,nombre,descripcion from tag where idTag in\n" +
-                "(select idTag from tagEnsayo where idEnsayo = '"+idAssay+"')");
-        List<Tag> tags = new ArrayList<>();
+    public List<Assay> getAssayFrom(List<String> tagsNames) throws SQLException {
+        Map<String, List<String>> assayWithTags = new HashMap<>();
+        List<Assay> assays = new ArrayList<>();
+
+        List<Integer> idTags = this.getTags().stream().map(tag -> tag.getIdTag().get()).collect(Collectors.toList());
+
+        resultSet = statement.executeQuery("select idEnsayo, array_to_string(array_agg(idtag),',') as tagsByAssay" +
+                "from tagEnsayo group by idensayo");
+
         while (resultSet.next()) {
-            tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            assayWithTags.put(resultSet.getString("idEnsayo"), Arrays.asList(resultSet.getString("tagsByAssay").split(",")));
         }
-        return tags;*/
+
+        List<Integer> idAssays = assayWithTags.entrySet().stream().filter(assay -> tagsNames.containsAll(assay.getValue()))
+                .map(assayFiltered -> Integer.parseInt(assayFiltered.getKey())).collect(Collectors.toList());
+
+        return assaysDao.getAssays().stream().filter(assay-> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
+
     }
 
     public void insertIntoAssay(Integer idTag, Integer idEnsayo) throws SQLException {
