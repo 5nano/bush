@@ -57,12 +57,14 @@ public class AssaysDao {
     }
 
     public List<Assay> getAssays() throws SQLException {
+        logger.info("Getting all assays ...");
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                     resultSet.getString("descripcion"), resultSet.getInt("idUserCreador")));
         }
+        logger.info("Finish getting assays");
         return Assays;
     }
 

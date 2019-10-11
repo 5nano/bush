@@ -41,8 +41,8 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Assay>> showAssays() throws SQLException {
-        return new ResponseEntity<>(assayService.getAssays(), HttpStatus.OK);
+    public ResponseEntity<List<AssayResponse>> showAssays() throws SQLException {
+        return new ResponseEntity<>(assayService.getAssaysWithExtraInfo(), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
