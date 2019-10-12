@@ -12,6 +12,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.*;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -75,17 +76,29 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials) throws SQLException {
-        if (!validationsService.isRepetead("usuario", "usuario", userCredentials.username)) {
-            return new ResponseEntity<>(new Response("El usuario a validar no existe", HttpStatus.CONFLICT.value()),
-                    HttpStatus.CONFLICT);
-        } else {
-            if (usersService.isValidUser(userCredentials))
-                return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
-            else
-                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE);
-        }
+    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response) {
 
+            if (usersService.isValidUser(userCredentials)){
+                manageSession(request,response);
+                return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED);
+    }
+
+    private void manageSession(HttpServletRequest request, HttpServletResponse response){
+        HttpSession oldSession = request.getSession(false);
+        if (oldSession != null) {
+            oldSession.invalidate();
+        }
+        //generate a new session
+        HttpSession newSession = request.getSession(true);
+
+        //setting session to expiry in 1 anio
+        newSession.setMaxInactiveInterval(60 * 60 * 24 * 365);
+
+        Cookie cookie = new Cookie("app", "bush");
+        response.addCookie(cookie);
     }
 
 }
