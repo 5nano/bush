@@ -32,19 +32,28 @@ public class SecurityFilter implements Filter {
     res.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "accept, content-type");
 
     logger.info("Passing through security filter. Path " + path);
-    if (!matchesLogin(path)) {
-      //passing the Boolean parameter “false” to the getSession() returns the existing session and returns null if no session exists.
-      // Passing the parameter “true” will create a new session if no session exists.
-      HttpSession session = req.getSession(false);
 
-      if (session == null)
-        res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access request");
+    if (HttpMethod.OPTIONS.equals(HttpMethod.valueOf(req.getMethod()))) {
+      res.setStatus(HttpServletResponse.SC_OK);
+      filterChain.doFilter(request,response);
+    }
+    else {
 
-      else
+      if (!matchesLogin(path)) {
+        //passing the Boolean parameter “false” to the getSession() returns the existing session and returns null if no session exists.
+        // Passing the parameter “true” will create a new session if no session exists.
+        HttpSession session = req.getSession(false);
+
+        if (session == null)
+          res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access request");
+
+        else
+          filterChain.doFilter(request, response);
+
+      } else
         filterChain.doFilter(request, response);
+    }
 
-    } else
-      filterChain.doFilter(request, response);
   }
 
   private static boolean matchesLogin(String path) {
