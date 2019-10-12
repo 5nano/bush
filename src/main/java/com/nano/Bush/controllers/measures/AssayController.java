@@ -44,8 +44,6 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity<List<Assay>> showAssays(HttpServletResponse response) throws SQLException {
-        response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS,"true");
-        response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,"*");
         return new ResponseEntity<>(assayService.getAssays(), HttpStatus.OK);
     }
 

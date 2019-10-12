@@ -34,10 +34,10 @@ public class UsersDao {
         preparedStatement.setString(3, user.getLastName());
         preparedStatement.setString(4, user.getUsername());
         preparedStatement.setString(5, user.getPassword());
-        preparedStatement.setString(6, user.getEmail());
+        preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
         preparedStatement.setTimestamp(7, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setTimestamp(8, new Timestamp(System.currentTimeMillis()));
-        preparedStatement.setBoolean(9, true);
+        preparedStatement.setBoolean(8, true);
+        preparedStatement.setString(9, user.getEmail());
 
         preparedStatement.executeUpdate();
     }
