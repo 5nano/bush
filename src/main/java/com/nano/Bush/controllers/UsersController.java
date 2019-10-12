@@ -6,7 +6,9 @@ import com.nano.Bush.model.User;
 import com.nano.Bush.model.UserCredentials;
 import com.nano.Bush.services.UsersService;
 import com.nano.Bush.services.ValidationsService;
+import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -78,7 +80,7 @@ public class UsersController {
     @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response) {
 
-            if (usersService.isValidUser(userCredentials)){
+        if (usersService.isValidUser(userCredentials)){
                 manageSession(request,response);
                 return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
             }
