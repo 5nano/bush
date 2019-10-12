@@ -2,6 +2,8 @@ package com.nano.Bush.filters;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -24,9 +26,12 @@ public class SecurityFilter implements Filter {
     final HttpServletRequest req = (HttpServletRequest) request;
     final HttpServletResponse res = (HttpServletResponse) response;
     final String path = req.getRequestURI().substring(req.getContextPath().length());
+    res.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS,"true");
+    res.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,"https://nanivo.herokuapp.com");
+    res.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_METHODS,"PUT,POST,GET,OPTIONS,PATCH");
+    res.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "accept, content-type");
 
     logger.info("Passing through security filter. Path " + path);
-
     if (!matchesLogin(path)) {
       //passing the Boolean parameter “false” to the getSession() returns the existing session and returns null if no session exists.
       // Passing the parameter “true” will create a new session if no session exists.
@@ -37,6 +42,7 @@ public class SecurityFilter implements Filter {
 
       else
         filterChain.doFilter(request, response);
+
     } else
       filterChain.doFilter(request, response);
   }
