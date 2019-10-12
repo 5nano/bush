@@ -7,11 +7,13 @@ import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -41,7 +43,9 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Assay>> showAssays() throws SQLException {
+    public ResponseEntity<List<Assay>> showAssays(HttpServletResponse response) throws SQLException {
+        response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_CREDENTIALS,"true");
+        response.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_ORIGIN,"*");
         return new ResponseEntity<>(assayService.getAssays(), HttpStatus.OK);
     }
 
