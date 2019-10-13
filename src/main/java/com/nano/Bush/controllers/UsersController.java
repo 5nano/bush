@@ -18,6 +18,9 @@ import javax.servlet.http.*;
 import java.sql.SQLException;
 import java.util.List;
 
+import static io.vavr.API.Option;
+import static java.util.Objects.isNull;
+
 @Controller
 @RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH, RequestMethod.PUT})
@@ -95,11 +98,11 @@ public class UsersController {
         }
         //generate a new session
         HttpSession newSession = request.getSession(true);
-
         //setting session to expiry in 1 anio
         newSession.setMaxInactiveInterval(60 * 60 * 24 * 365);
-
         Cookie cookie = new Cookie("app", "bush");
+        cookie.setDomain(request.getServerName().replaceAll(".*\\.(?=.*\\.)", ""));
+        cookie.setHttpOnly(false);
         response.addCookie(cookie);
     }
 
