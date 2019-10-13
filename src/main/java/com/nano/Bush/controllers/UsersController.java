@@ -6,20 +6,20 @@ import com.nano.Bush.model.User;
 import com.nano.Bush.model.UserCredentials;
 import com.nano.Bush.services.UsersService;
 import com.nano.Bush.services.ValidationsService;
-import org.apache.http.entity.ContentType;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.*;
+import javax.servlet.http.Cookie;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 
-import static io.vavr.API.Option;
-import static java.util.Objects.isNull;
+import static com.nano.Bush.controllers.SessionController.manageSession;
+import static com.nano.Bush.utils.EncryptUtils.encode;
 
 @Controller
 @RequestMapping("")
@@ -83,27 +83,22 @@ public class UsersController {
     @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
     public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response) {
 
-        if (usersService.isValidUser(userCredentials)){
-                manageSession(request,response);
-                return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
-            }
-            else
-                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED);
+        if (usersService.isValidUser(userCredentials)) {
+            addCookies(userCredentials, request, response);
+            return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
+        } else
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED);
     }
 
-    private void manageSession(HttpServletRequest request, HttpServletResponse response){
-        HttpSession oldSession = request.getSession(false);
-        if (oldSession != null) {
-            oldSession.invalidate();
-        }
-        //generate a new session
-        HttpSession newSession = request.getSession(true);
-        //setting session to expiry in 1 anio
-        newSession.setMaxInactiveInterval(60 * 60 * 24 * 365);
-        Cookie cookie = new Cookie("app", "bush");
-        cookie.setDomain(request.getServerName().replaceAll(".*\\.(?=.*\\.)", ""));
-        cookie.setHttpOnly(false);
-        response.addCookie(cookie);
+    private static void addCookies(UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response){
+        manageSession(request);
+        Cookie cookieUser = new Cookie("user", encode(userCredentials.username));
+        cookieUser.setMaxAge(60 * 60 * 24 * 365);
+        cookieUser.setPath("/");
+        cookieUser.setHttpOnly(false);
+        response.addCookie(cookieUser);
     }
+
+
 
 }
