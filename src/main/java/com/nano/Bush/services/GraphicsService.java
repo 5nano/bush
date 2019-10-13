@@ -37,11 +37,11 @@ public class GraphicsService {
 
     }
 
-    public List<GraphicDto> getComparativeExperimentsData(String assayId) {
+    public List<GraphicDto> getComparativeExperimentsData(Integer assayId) {
 
         List<List<MeasurePlant>> measures = new ArrayList<>();
 
-        getExperimentsAssaysMap(assayId).forEach((expId, assId) -> measures.add(measuresDao.selectMeasuresFrom(assId, expId)));
+        getExperimentsAssaysMap(assayId).forEach((expId, assId) -> measures.add(measuresDao.selectMeasuresFrom(Integer.valueOf(assId), Integer.valueOf(expId))));
 
         List<GraphicDto> graphicDtos = new ArrayList<>();
 
@@ -50,12 +50,12 @@ public class GraphicsService {
         return graphicDtos;
     }
 
-    private Map<String, String> getExperimentsAssaysMap(String assayId) {
+    private Map<String, String> getExperimentsAssaysMap(Integer assayId) {
         Map<String, String> assays = new HashMap<>();
 
         List<Experiment> experiments = experimentService.getExperimentsFromAssay(assayId);
 
-        experiments.forEach(experiment -> assays.put(experiment.getExperimentId().get().toString(), assayId));
+        experiments.forEach(experiment -> assays.put(experiment.getExperimentId().get().toString(), assayId.toString()));
         return assays;
     }
 

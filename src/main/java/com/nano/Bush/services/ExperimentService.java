@@ -26,7 +26,7 @@ public class ExperimentService {
 
 
 
-    public Experiment getExperimentNameFrom(String experimentId) {
+    public Experiment getExperimentNameFrom(Integer experimentId) {
 
         Experiment experiment;
 
@@ -39,7 +39,7 @@ public class ExperimentService {
         return experiment;
     }
 
-    public List<Experiment> getExperimentsFromAssay(String assayId) {
+    public List<Experiment> getExperimentsFromAssay(Integer assayId) {
 
         List<Experiment> experiments;
 

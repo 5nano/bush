@@ -3,16 +3,27 @@ package com.nano.Bush.services;
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
+import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Experiment;
+import com.nano.Bush.model.Treatment;
+import com.nano.Bush.model.measuresGraphics.MeasurePlant;
+import com.nano.Bush.model.stadistic.BoxDiagramDto;
 import com.nano.Bush.model.stadistic.BoxDiagramaByExperiment;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.security.cert.CollectionCertStoreParameters;
 import java.sql.SQLException;
-import java.util.*;
+import java.time.LocalDate;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * Created by Matias Zeitune sep. 2019
@@ -27,61 +38,94 @@ public class StadisticsService {
     private AssaysDao assaysDao;
     @Autowired
     private ExperimentsDao experimentsDao;
+    @Autowired
+    private TreatmentsDao treatmentsDao;
 
-    public List<Double> getYellowFrequenciesValuesExperiment(String experimentId) throws SQLException {
-        List<Double> yellowFrequencies;
 
-        try {
-            Experiment experiment;
-            experiment = experimentsDao.getExperiment(experimentId);
-            List<List<Double>> frequencies = measuresDao.selectMeasuresFrom(experiment.getAssayId().toString(), experimentId)
-                    .stream()
-                    .map(measure -> measure.getYellowFrequencies().getValue())
-                    .collect(Collectors.toList());
-            List<Double> allFrequenciesExperiment = frequencies.stream().flatMap(List::stream).collect(Collectors.toList());
-            yellowFrequencies = allFrequenciesExperiment.stream().filter(frequencie -> frequencie!=0).collect(Collectors.toList());
-           /* yellowFrequencies = new HashSet<>(allFrequenciesExperiment);
-
-            Set<Double> sorted = new TreeSet<Double>(new Comparator<Double>() {
-                @Override
-                public int compare(Double o1, Double o2) {
-                    return o2.compareTo(o1);
-                }
-            });
-            sorted.addAll(yellowFrequencies);
-            yellowFrequencies = sorted;
-            yellowFrequencies.remove(new Double(0));*/
-        } catch (SQLException e) {
-            logger.error("Error al obtener el nombre del experimento, exception: " + e);
-            throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
-        }
-
-        return yellowFrequencies;
+    public  Map<LocalDate, Map<Integer, List<Double>>> getYellowFrequenciesValuesAssay(Integer assayId) throws SQLException {
+        return getFrequenciesValuesAssay(assayId,"yellow");
     }
 
-    public List<BoxDiagramaByExperiment> getYellowFrequenciesValuesAssay(String assayId) throws SQLException {
-        List<BoxDiagramaByExperiment> yellowFrequencies;
+    public  Map<LocalDate, Map<Integer, List<Double>>> getGreenFrequenciesValuesAssay(Integer assayId) throws SQLException {
+        return getFrequenciesValuesAssay(assayId,"green");
+    }
 
-        try {
-            List<Experiment> experiments;
-            experiments = assaysDao.getExperimentsFromAssay(assayId);
-            List<BoxDiagramaByExperiment> frequenciesByExperiment = experiments.stream()
-                    .map(experiment -> {
-                        try {
-                            return new BoxDiagramaByExperiment(experiment.getExperimentId().get(), experiment.getTreatmentId(), this.getYellowFrequenciesValuesExperiment(experiment.getExperimentId().get().toString()));
-                        } catch (SQLException e) {
-                            e.printStackTrace();
-                        }
-                        return null;
-                    })
-                    .collect(Collectors.toList());
-            yellowFrequencies = frequenciesByExperiment;
 
-        } catch (SQLException e) {
-            logger.error("Error al obtener el nombre del experimento, exception: " + e);
-            throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
+    public  Map<LocalDate, Map<Integer, List<Double>>> getFrequenciesValuesAssay(Integer assayId, String color) throws SQLException {
+
+            List<Treatment> treatments;
+            treatments = treatmentsDao.getTreatments(assayId);
+            List<GroupMedian> collectMedians = treatments.stream()
+                .map(treatment -> {
+                    try {
+                        List<Experiment> experiments = treatmentsDao.getExperiments(treatment.getIdTreatment().get());
+                        List<MeasurePlant> measurePlants = experiments.stream().map(experiment ->
+                                measuresDao.selectMeasuresFrom(treatment.getIdAssay(), experiment.getExperimentId().get()))
+                                .flatMap(List::stream)
+                                .collect(Collectors.toList());
+
+                        return measurePlants.stream().map(measurePlant -> {
+                            return new GroupMedian(measurePlant.getDay(), measurePlant, treatment.getIdTreatment().get());
+                        }).collect(Collectors.toList());
+
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    return null;
+                }).flatMap(List::stream).collect(Collectors.toList());
+
+            Map<LocalDate, List<GroupMedian>> collect = collectMedians.stream().collect(Collectors.groupingBy(GroupMedian::getDate));
+            Map<LocalDate, List<BoxDiagramDto>> collectedByday = collect.entrySet()
+                .stream()
+                .map(entry -> Tuple.of(entry.getKey(), entry.getValue().stream()
+                        .map(groupMedian ->
+                                new BoxDiagramDto(groupMedian.treatmentId, (color.equals("yellow") ? groupMedian.measurePlant.getYellowFrequencies() : groupMedian.measurePlant.getGreenFrequencies())
+                                                .getValue().stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList()))).collect(Collectors.toList())))
+                .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
+             Map<LocalDate, Map<Integer, List<BoxDiagramDto>>> collectByDateAndCollectedByTreatment = collectedByday.entrySet().stream().map(entry ->
+                Tuple.of(entry.getKey(),
+                        entry.getValue().stream().collect(Collectors.groupingBy(BoxDiagramDto::getTreatmentId))))
+                .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
+
+        List<Tuple2<LocalDate, Map<Integer, List<Double>>>> collect1 = collectByDateAndCollectedByTreatment.entrySet().stream().map(entry ->
+                Tuple.of(entry.getKey(),
+                        entry.getValue().entrySet()
+                                .stream()
+                                .map(entry2 ->
+                                        Tuple.of(entry2.getKey(), entry2.getValue().stream()
+                                                .map(dto -> dto.getValues())
+                                                .flatMap(List::stream)
+                                                .collect(Collectors.toList())))
+                                .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2))
+                ))
+                .collect(Collectors.toList());
+
+        return collect1.stream().collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
+
+    }
+
+    private static class GroupMedian{
+        LocalDate date;
+        MeasurePlant measurePlant;
+        Integer treatmentId;
+
+        public LocalDate getDate() {
+            return date;
         }
 
-        return yellowFrequencies;
+        public MeasurePlant getMeasurePlant() {
+            return measurePlant;
+        }
+
+        public Integer getTreatmentId() {
+            return treatmentId;
+        }
+
+        public GroupMedian(LocalDate date, MeasurePlant measurePlant, Integer treatmentId) {
+            this.date = date;
+            this.measurePlant = measurePlant;
+            this.treatmentId = treatmentId;
+        }
     }
 }
+

@@ -20,7 +20,7 @@ public class GraphicsController {
 
     @RequestMapping(value = "/graficoComparativo/experimentos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<GraphicDto>> getComparativeExperimentsData(@RequestParam String assayId) {
+    ResponseEntity<List<GraphicDto>> getComparativeExperimentsData(@RequestParam Integer assayId) {
 
         return new ResponseEntity<>(graphicsService.getComparativeExperimentsData(assayId), HttpStatus.OK);
     }
