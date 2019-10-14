@@ -19,6 +19,7 @@ public class SecurityFilter implements Filter {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
   private static final Pattern loginPattern = Pattern.compile(".*" + "/usuarios/validar" + ".*");
+  private static final Pattern companyPattern = Pattern.compile("/companias");
   private static final String localhost = "localhost";
 
   @Override
@@ -44,7 +45,7 @@ public class SecurityFilter implements Filter {
         res.setStatus(HttpServletResponse.SC_OK);
         filterChain.doFilter(request, response);
       } else {
-        if (!matchesLogin(path)) {
+        if (!matchesLogin(path) &&  !isLookingForCompanies(req, path)) {
           //passing the Boolean parameter “false” to the getSession() returns the existing session and returns null if no session exists.
           // Passing the parameter “true” will create a new session if no session exists.
           HttpSession session = req.getSession(false);
@@ -59,8 +60,16 @@ public class SecurityFilter implements Filter {
 
   }
 
+  private boolean isLookingForCompanies(HttpServletRequest req, String path) {
+    return matchesCompany(path) && HttpMethod.GET.equals(HttpMethod.valueOf(req.getMethod()));
+  }
+
   private static boolean matchesLogin(String path) {
     return loginPattern.matcher(path).matches();
+  }
+
+  private static boolean matchesCompany(String path) {
+    return companyPattern.matcher(path).matches();
   }
 
 }

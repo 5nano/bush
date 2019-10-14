@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompaniesDao {
@@ -37,10 +38,10 @@ public class CompaniesDao {
     }
 
     public List<Company> getCompanies() throws SQLException {
-        resultSet = statement.executeQuery("SELECT nombre,descripcion FROM compania");
+        resultSet = statement.executeQuery("SELECT idCompania,nombre,descripcion FROM compania");
         List<Company> companies = new ArrayList<>();
         while (resultSet.next()) {
-            companies.add(new Company(resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            companies.add(new Company(Optional.of(resultSet.getInt("idCompania")),resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return companies;
     }
