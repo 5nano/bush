@@ -47,7 +47,7 @@ public class SessionController {
   @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = "application/json")
   public ResponseEntity<?> logout(HttpServletRequest request) {
     invalidateSession(request);
-    return new ResponseEntity<>(HttpStatus.OK);
+    return new ResponseEntity<>("Se ha cerrado la sesión",HttpStatus.OK);
 
   }
 
