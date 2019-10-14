@@ -1,5 +1,6 @@
 package com.nano.Bush.controllers;
 
+import com.nano.Bush.model.Response;
 import com.nano.Bush.model.UserCredentials;
 import com.nano.Bush.services.UsersService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,7 +48,7 @@ public class SessionController {
   @RequestMapping(value = "/logout", method = RequestMethod.POST, produces = "application/json")
   public ResponseEntity<?> logout(HttpServletRequest request) {
     invalidateSession(request);
-    return new ResponseEntity<>("Se ha cerrado la sesión",HttpStatus.OK);
+    return new ResponseEntity<>(new Response("Se ha cerrado la sesión", HttpStatus.OK.value()), HttpStatus.OK);
 
   }
 
