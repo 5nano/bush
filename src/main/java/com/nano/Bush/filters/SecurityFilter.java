@@ -1,5 +1,6 @@
 package com.nano.Bush.filters;
 
+import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpHeaders;
@@ -13,13 +14,12 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.regex.Pattern;
 
-import static java.util.Objects.isNull;
-
 @Component
 public class SecurityFilter implements Filter {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
   private static final Pattern loginPattern = Pattern.compile(".*" + "/usuarios/validar" + ".*");
+  private static final String localhost = "localhost";
 
   @Override
   public void doFilter(ServletRequest request, ServletResponse response, FilterChain filterChain) throws IOException, ServletException {
@@ -33,8 +33,10 @@ public class SecurityFilter implements Filter {
     res.addHeader(HttpHeaders.ACCESS_CONTROL_ALLOW_HEADERS, "accept, content-type");
 
     logger.info("Passing through security filter. Path " + path);
-    // Si el origen es nulo es porque chrome no seteo el header, solo pasa en loc
-    if (isNull(req.getHeader(HttpHeaders.ORIGIN))) {
+    // Si el es local lo dejo pasar
+    final Boolean isLocalhost = Option.of(req.getHeader(HttpHeaders.ORIGIN)).map(origin -> origin.contains(localhost)).getOrElse(false);
+
+    if (isLocalhost) {
       res.setStatus(HttpServletResponse.SC_OK);
       filterChain.doFilter(request, response);
     } else {

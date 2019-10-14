@@ -46,4 +46,8 @@ public class User {
     public String getEmail() {
         return email;
     }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
+    }
 }

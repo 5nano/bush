@@ -15,9 +15,11 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
 
+import static com.nano.Bush.controllers.SessionController.invalidateSession;
 import static com.nano.Bush.controllers.SessionController.manageSession;
 import static com.nano.Bush.utils.EncryptUtils.encode;
 
@@ -78,25 +80,6 @@ public class UsersController {
             return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
         }
 
-    }
-
-    @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response) {
-
-        if (usersService.isValidUser(userCredentials)) {
-            addCookies(userCredentials, request, response);
-            return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
-        } else
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED.value(), HttpStatus.UNAUTHORIZED);
-    }
-
-    private static void addCookies(UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response){
-        manageSession(request);
-        Cookie cookieUser = new Cookie("user", encode(userCredentials.username));
-        cookieUser.setMaxAge(60 * 60 * 24 * 365);
-        cookieUser.setPath("/");
-        cookieUser.setHttpOnly(false);
-        response.addCookie(cookieUser);
     }
 
 
