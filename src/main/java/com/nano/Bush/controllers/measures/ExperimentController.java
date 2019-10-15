@@ -32,13 +32,13 @@ public class ExperimentController {
 
     @RequestMapping(value = "/experimentos/nombre", method = RequestMethod.GET, produces = "text/plain")
     public @ResponseBody
-    String getExperimentName(@RequestParam String experimentId) {
+    String getExperimentName(@RequestParam Integer experimentId) {
         return experimentService.getExperimentNameFrom(experimentId).getName();
     }
 
 
     @RequestMapping(value = "/experimentos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String assayId) {
+    public ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam Integer assayId) {
         return new ResponseEntity<>(experimentService.getExperimentsFromAssay(assayId), HttpStatus.OK);
     }
 
