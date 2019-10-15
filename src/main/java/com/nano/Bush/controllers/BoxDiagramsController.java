@@ -39,4 +39,11 @@ public class BoxDiagramsController {
         return new ResponseEntity<>(stadisticsService.getGreenFrequenciesValuesAssay(assayId), HttpStatus.OK);
     }
 
+
+    @RequestMapping(value = "/medians/area", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Map<LocalDate, Map<Integer, List<Double>>>> getAreaMedians(@RequestParam Integer assayId) throws SQLException {
+        return new ResponseEntity<>(stadisticsService.getAreaValuesAssay(assayId), HttpStatus.OK);
+    }
+
 }

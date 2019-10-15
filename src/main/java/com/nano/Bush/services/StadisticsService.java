@@ -1,29 +1,24 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.datasources.measures.AssaysDao;
-import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Experiment;
 import com.nano.Bush.model.Treatment;
 import com.nano.Bush.model.measuresGraphics.MeasurePlant;
 import com.nano.Bush.model.stadistic.BoxDiagramDto;
-import com.nano.Bush.model.stadistic.BoxDiagramaByExperiment;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
-import io.vavr.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.security.cert.CollectionCertStoreParameters;
 import java.sql.SQLException;
 import java.time.LocalDate;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * Created by Matias Zeitune sep. 2019
@@ -35,27 +30,26 @@ public class StadisticsService {
     @Autowired
     private MeasuresDao measuresDao;
     @Autowired
-    private AssaysDao assaysDao;
-    @Autowired
-    private ExperimentsDao experimentsDao;
-    @Autowired
     private TreatmentsDao treatmentsDao;
 
 
-    public  Map<LocalDate, Map<Integer, List<Double>>> getYellowFrequenciesValuesAssay(Integer assayId) throws SQLException {
-        return getFrequenciesValuesAssay(assayId,"yellow");
+    public Map<LocalDate, Map<Integer, List<Double>>> getYellowFrequenciesValuesAssay(Integer assayId) throws SQLException {
+        return getFrequenciesValuesAssay(assayId, "yellow");
     }
 
-    public  Map<LocalDate, Map<Integer, List<Double>>> getGreenFrequenciesValuesAssay(Integer assayId) throws SQLException {
-        return getFrequenciesValuesAssay(assayId,"green");
+    public Map<LocalDate, Map<Integer, List<Double>>> getGreenFrequenciesValuesAssay(Integer assayId) throws SQLException {
+        return getFrequenciesValuesAssay(assayId, "green");
     }
 
 
-    public  Map<LocalDate, Map<Integer, List<Double>>> getFrequenciesValuesAssay(Integer assayId, String color) throws SQLException {
+    public Map<LocalDate, Map<Integer, List<Double>>> getAreaValuesAssay(Integer assayId) throws SQLException {
+        return getFrequenciesValuesAssay(assayId, "area");
+    }
 
-            List<Treatment> treatments;
-            treatments = treatmentsDao.getTreatments(assayId);
-            List<GroupMedian> collectMedians = treatments.stream()
+    private List<GroupMedian> allMediansResults(Integer assayId) throws SQLException {
+        List<Treatment> treatments;
+        treatments = treatmentsDao.getTreatments(assayId);
+        return treatments.stream()
                 .map(treatment -> {
                     try {
                         List<Experiment> experiments = treatmentsDao.getExperiments(treatment.getIdTreatment().get());
@@ -73,16 +67,37 @@ public class StadisticsService {
                     }
                     return null;
                 }).flatMap(List::stream).collect(Collectors.toList());
+    }
+    private List<Double> makeByOperation(GroupMedian groupMedian, String typeValue){
+        if(typeValue.equals("yellow")){
+            return groupMedian.measurePlant.getYellowFrequencies().getValue();
+        }else if(typeValue.equals("green")){
+            return groupMedian.measurePlant.getGreenFrequencies().getValue();
+        }else{
+            List<Double> area =  new LinkedList<>();
+            area.add(groupMedian.measurePlant.getArea().getValue());
+            return area;
+        }
+    }
 
-            Map<LocalDate, List<GroupMedian>> collect = collectMedians.stream().collect(Collectors.groupingBy(GroupMedian::getDate));
-            Map<LocalDate, List<BoxDiagramDto>> collectedByday = collect.entrySet()
+    private Map<LocalDate, List<BoxDiagramDto>> getValues(Map<LocalDate, List<GroupMedian>> medians, String typeValue){
+
+        return medians.entrySet()
                 .stream()
                 .map(entry -> Tuple.of(entry.getKey(), entry.getValue().stream()
                         .map(groupMedian ->
-                                new BoxDiagramDto(groupMedian.treatmentId, (color.equals("yellow") ? groupMedian.measurePlant.getYellowFrequencies() : groupMedian.measurePlant.getGreenFrequencies())
-                                                .getValue().stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList()))).collect(Collectors.toList())))
+                                new BoxDiagramDto(groupMedian.treatmentId,
+                                        this.makeByOperation(groupMedian,typeValue)
+                                        .stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList()))).collect(Collectors.toList())))
                 .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
-             Map<LocalDate, Map<Integer, List<BoxDiagramDto>>> collectByDateAndCollectedByTreatment = collectedByday.entrySet().stream().map(entry ->
+    }
+
+    private Map<LocalDate, Map<Integer, List<Double>>> getFrequenciesValuesAssay(Integer assayId, String typeValue) throws SQLException {
+
+        List<GroupMedian> collectMedians = this.allMediansResults(assayId);
+        Map<LocalDate, List<GroupMedian>> medians = collectMedians.stream().collect(Collectors.groupingBy(GroupMedian::getDate));
+        Map<LocalDate, List<BoxDiagramDto>> collectedByday = this.getValues(medians, typeValue);
+        Map<LocalDate, Map<Integer, List<BoxDiagramDto>>> collectByDateAndCollectedByTreatment = collectedByday.entrySet().stream().map(entry ->
                 Tuple.of(entry.getKey(),
                         entry.getValue().stream().collect(Collectors.groupingBy(BoxDiagramDto::getTreatmentId))))
                 .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
@@ -101,10 +116,9 @@ public class StadisticsService {
                 .collect(Collectors.toList());
 
         return collect1.stream().collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
-
     }
 
-    private static class GroupMedian{
+    private static class GroupMedian {
         LocalDate date;
         MeasurePlant measurePlant;
         Integer treatmentId;
