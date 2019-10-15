@@ -16,6 +16,9 @@ public class MeasurePlant {
     @JsonProperty("blue-yellow_frequencies")
     private Frequencies yellowFrequencies;
 
+    @JsonProperty("green_frequencies")
+    private Frequencies greenFrequencies;
+
     private String image;
 
 
@@ -49,5 +52,13 @@ public class MeasurePlant {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public void setGreenFrequencies(Frequencies greenFrequencies) {
+        this.greenFrequencies = greenFrequencies;
+    }
+
+    public Frequencies getGreenFrequencies() {
+        return greenFrequencies;
     }
 }

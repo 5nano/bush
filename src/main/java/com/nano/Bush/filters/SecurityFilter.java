@@ -62,6 +62,7 @@ public class SecurityFilter implements Filter {
 
   private boolean isLookingForCompanies(HttpServletRequest req, String path) {
     return matchesCompany(path) && HttpMethod.GET.equals(HttpMethod.valueOf(req.getMethod()));
+
   }
 
   private static boolean matchesLogin(String path) {

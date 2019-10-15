@@ -66,7 +66,7 @@ public class AssaysDao {
         return Assays;
     }
 
-    public List<Experiment> getExperimentsFromAssay(String assayId) throws SQLException {
+    public List<Experiment> getExperimentsFromAssay(Integer assayId) throws SQLException {
         resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idEnsayo = '" + assayId + "'");
         List<Experiment> experiments = new ArrayList<>();
         while (resultSet.next()) {
