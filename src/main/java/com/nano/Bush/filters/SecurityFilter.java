@@ -18,7 +18,7 @@ import java.util.regex.Pattern;
 public class SecurityFilter implements Filter {
 
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
-  private static final Pattern loginPattern = Pattern.compile(".*" + "/usuarios/validar" + ".*");
+  private static final Pattern loginPattern = Pattern.compile(".*" + "/login" + ".*");
   private static final Pattern companyPattern = Pattern.compile("/companias");
   private static final String localhost = "localhost";
 
