@@ -1,6 +1,7 @@
 package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.model.measuresGraphics.GraphicDto;
+import com.nano.Bush.model.measuresGraphics.GraphicLineTime;
 import com.nano.Bush.services.GraphicsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,21 @@ public class GraphicsController {
     ResponseEntity<List<GraphicDto>> getComparativeExperimentsData(@RequestParam Integer assayId) {
 
         return new ResponseEntity<>(graphicsService.getComparativeExperimentsData(assayId), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/graficoComparativo/tratamiento/experimentos", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<List<GraphicDto>> getComparativeTreatmentData(@RequestParam Integer treatmentId) {
+
+        return new ResponseEntity<>(graphicsService.getComparativeTreatmentData(treatmentId), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/graficoComparativo/tratamiento/experimentos/promediado", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<List<GraphicLineTime>> getComparativeTreatmentAveragedData(@RequestParam Integer treatmentId) {
+
+        return new ResponseEntity<>(graphicsService.getComparativeTreatmentAveragedData(treatmentId), HttpStatus.OK);
     }
 
 
