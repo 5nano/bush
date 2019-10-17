@@ -6,16 +6,16 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class Observations {
     @JsonProperty("area")
-    private Area area;
+    private PlantCvValue area;
 
     @JsonProperty("blue-yellow_frequencies")
     private Frequencies yellowFrequencies;
 
-    public Area getArea() {
+    public PlantCvValue getArea() {
         return area;
     }
 
-    public void setArea(Area area) {
+    public void setArea(PlantCvValue area) {
         this.area = area;
     }
 

@@ -11,7 +11,11 @@ public class MeasurePlant {
     private LocalDate day;
 
     @JsonProperty("area")
-    private Area area;
+    private PlantCvValue area;
+
+    private PlantCvValue width;
+
+    private PlantCvValue height;
 
     @JsonProperty("blue-yellow_frequencies")
     private Frequencies yellowFrequencies;
@@ -22,11 +26,11 @@ public class MeasurePlant {
     private String image;
 
 
-    public Area getArea() {
+    public PlantCvValue getArea() {
         return area;
     }
 
-    public void setArea(Area area) {
+    public void setArea(PlantCvValue area) {
         this.area = area;
     }
 
@@ -60,5 +64,17 @@ public class MeasurePlant {
 
     public Frequencies getGreenFrequencies() {
         return greenFrequencies;
+    }
+
+    public void setWidth(PlantCvValue width) {
+        this.width = width;
+    }
+
+    public PlantCvValue getHeight() {
+        return height;
+    }
+
+    public PlantCvValue getWidth() {
+        return width;
     }
 }
