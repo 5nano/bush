@@ -38,6 +38,16 @@ public class MixturesDao {
         preparedStatement.executeUpdate();
     }
 
+    public Mixture getMixture(Integer mixtureId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla WHERE idMezcla = " + mixtureId);
+        Mixture mixture = null;
+        while (resultSet.next()) {
+            mixture = new Mixture(Optional.of(resultSet.getInt("idMezcla")),
+                    resultSet.getString("nombre"), resultSet.getString("descripcion"));
+        }
+        return mixture;
+    }
+
     public List<Mixture> getMixtures() throws SQLException {
         resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla");
         List<Mixture> mixtures = new ArrayList<>();
