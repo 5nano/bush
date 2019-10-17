@@ -20,6 +20,7 @@ public class SecurityFilter implements Filter {
   private static final Logger logger = LoggerFactory.getLogger(SecurityFilter.class);
   private static final Pattern loginPattern = Pattern.compile(".*" + "/login" + ".*");
   private static final Pattern companyPattern = Pattern.compile("/companias");
+  private static final Pattern insertUserPattern = Pattern.compile("/usuarios/insertar");
   private static final String localhost = "localhost";
 
   @Override
@@ -35,7 +36,10 @@ public class SecurityFilter implements Filter {
 
     logger.info("Passing through security filter. Path " + path);
     // Si el es local lo dejo pasar
-    /*final Boolean isLocalhost = Option.of(req.getHeader(HttpHeaders.ORIGIN)).map(origin -> origin.contains(localhost)).getOrElse(false);
+
+    final Boolean isLocalhost = Option.of(req.getHeader(HttpHeaders.ORIGIN))
+            .map(origin -> origin.contains(localhost))
+            .getOrElse(false);
 
     if (isLocalhost) {
       res.setStatus(HttpServletResponse.SC_OK);
@@ -45,7 +49,7 @@ public class SecurityFilter implements Filter {
         res.setStatus(HttpServletResponse.SC_OK);
         filterChain.doFilter(request, response);
       } else {
-        if (!matchesLogin(path) &&  !isLookingForCompanies(req, path)) {
+        if (!matchesLogin(path) &&  !isLookingForCompanies(req, path) && !matchesInsertUser(path)) {
           //passing the Boolean parameter “false” to the getSession() returns the existing session and returns null if no session exists.
           // Passing the parameter “true” will create a new session if no session exists.
           HttpSession session = req.getSession(false);
@@ -53,10 +57,10 @@ public class SecurityFilter implements Filter {
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access request");
           else
             filterChain.doFilter(request, response);
-        } else */
+        } else
           filterChain.doFilter(request, response);
-      //}
-    //}
+      }
+    }
 
   }
 
@@ -71,6 +75,10 @@ public class SecurityFilter implements Filter {
 
   private static boolean matchesCompany(String path) {
     return companyPattern.matcher(path).matches();
+  }
+
+  private static boolean matchesInsertUser(String path) {
+    return insertUserPattern.matcher(path).matches();
   }
 
 }
