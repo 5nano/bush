@@ -34,13 +34,13 @@ public class ExperimentController {
 
 
     @RequestMapping(value = "/experiment/points", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<ExperimentPoint>> showExperiment(@RequestParam Integer experimentId) throws SQLException {
+    public ResponseEntity<List<ExperimentPoint>> showExperimentPoints(@RequestParam Integer experimentId) throws SQLException {
         return new ResponseEntity<>(experimentService.getExperimentPoints(experimentId), HttpStatus.OK);
     }
 
 
     @RequestMapping(value = "/experiment/point", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<ExperimentPoint> showExperiment(@RequestParam Integer experimentId, LocalDate timestamp) throws SQLException {
+    public ResponseEntity<ExperimentPoint> showExperimentPoint(@RequestParam Integer experimentId, LocalDate timestamp) throws SQLException {
         return new ResponseEntity<>(experimentService.getExperimentPoint(experimentId, timestamp), HttpStatus.OK);
     }
 

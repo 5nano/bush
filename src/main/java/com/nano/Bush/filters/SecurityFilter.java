@@ -38,7 +38,7 @@ public class SecurityFilter implements Filter {
     // Si el es local lo dejo pasar
 
     final Boolean isLocalhost = Option.of(req.getHeader(HttpHeaders.ORIGIN))
-            .map(origin -> origin.contains(localhost))
+            .map(origin -> isFromLocalhost(origin, req))
             .getOrElse(false);
 
     if (isLocalhost) {
@@ -49,7 +49,7 @@ public class SecurityFilter implements Filter {
         res.setStatus(HttpServletResponse.SC_OK);
         filterChain.doFilter(request, response);
       } else {
-        if (!matchesLogin(path) &&  !isLookingForCompanies(req, path) && !matchesInsertUser(path)) {
+        if (!matchesLogin(path) && !isLookingForCompanies(req, path) && !matchesInsertUser(path)) {
           //passing the Boolean parameter “false” to the getSession() returns the existing session and returns null if no session exists.
           // Passing the parameter “true” will create a new session if no session exists.
           HttpSession session = req.getSession(false);
@@ -62,6 +62,10 @@ public class SecurityFilter implements Filter {
       }
     }
 
+  }
+
+  private boolean isFromLocalhost(String origin, HttpServletRequest req) {
+    return origin.contains(localhost) || Option.of(req.getRequestURL().toString()).getOrElse("").contains(localhost);
   }
 
   private boolean isLookingForCompanies(HttpServletRequest req, String path) {
