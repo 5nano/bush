@@ -3,6 +3,7 @@ package com.nano.Bush.controllers.measures;
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.model.Experiment;
 import com.nano.Bush.model.Response;
+import com.nano.Bush.model.stadistic.ExperimentPoint;
 import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 
 @Controller
@@ -29,6 +31,18 @@ public class ExperimentController {
     private ExperimentsDao experimentsDao;
     @Autowired
     private ValidationsService validationsService;
+
+
+    @RequestMapping(value = "/experiment/points", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<List<ExperimentPoint>> showExperiment(@RequestParam Integer experimentId) throws SQLException {
+        return new ResponseEntity<>(experimentService.getExperimentPoints(experimentId), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/experiment/point", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<ExperimentPoint> showExperiment(@RequestParam Integer experimentId, LocalDate timestamp) throws SQLException {
+        return new ResponseEntity<>(experimentService.getExperimentPoint(experimentId, timestamp), HttpStatus.OK);
+    }
 
     @RequestMapping(value = "/experimentos/nombre", method = RequestMethod.GET, produces = "text/plain")
     public @ResponseBody

@@ -4,12 +4,14 @@ import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.model.Experiment;
+import com.nano.Bush.model.stadistic.ExperimentPoint;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,11 +22,36 @@ public class ExperimentService {
 
     @Autowired
     ExperimentsDao experimentsDao;
+    @Autowired
+    MeasuresDao measuresDao;
 
     @Autowired
     AssaysDao assaysDao;
 
+    public ExperimentPoint getExperimentPoint(Integer experimentId, LocalDate timestamp) throws SQLException {
+        List<ExperimentPoint> experimentPoints = this.getExperimentPoints(experimentId);
+        return experimentPoints.stream().filter(experimentPoint -> experimentPoint.getTimestamp().equals(timestamp)).collect(Collectors.toList()).get(0);
+    }
 
+    public List<ExperimentPoint> getExperimentPoints(Integer experimentId) throws SQLException {
+
+        Experiment experiment = experimentsDao.getExperiment(experimentId);
+        return  measuresDao.selectMeasuresFrom(experiment.getAssayId(), experimentId)
+                .stream()
+                .map(measurePlant ->
+                        new ExperimentPoint(
+                                experiment.getAssayId(),
+                                experiment.getTreatmentId(),
+                                experimentId,
+                                measurePlant.getImage(),
+                                measurePlant.getDay(),
+                                measurePlant.getWidth().getValue(),
+                                measurePlant.getHeight().getValue(),
+                                measurePlant.getArea().getValue()
+                                )
+                ).collect(Collectors.toList());
+
+    }
 
     public Experiment getExperimentNameFrom(Integer experimentId) {
 
