@@ -1,6 +1,6 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.model.pressureIndicator.PressureIndicator;
+import com.nano.Bush.model.PressureIndicator;
 import com.nano.Bush.services.PressureIndicatorService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
