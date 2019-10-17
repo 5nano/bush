@@ -9,7 +9,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequestMapping("")
@@ -19,28 +21,34 @@ public class GraphicsController {
     @Autowired
     private GraphicsService graphicsService;
 
-    @RequestMapping(value = "/graficoComparativo/experimentos", method = RequestMethod.GET, produces = "application/json")
+   /* @RequestMapping(value = "/graficoComparativo/experimentos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<GraphicDto>> getComparativeExperimentsData(@RequestParam Integer assayId) {
 
         return new ResponseEntity<>(graphicsService.getComparativeExperimentsData(assayId), HttpStatus.OK);
-    }
+    }*/
 
     @RequestMapping(value = "/graficoComparativo/tratamiento/experimentos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<GraphicDto>> getComparativeTreatmentData(@RequestParam Integer treatmentId) {
+    ResponseEntity<Map<Integer, List<GraphicLineTime>>> getComparativeTreatmentData(@RequestParam Integer treatmentId) throws SQLException {
 
         return new ResponseEntity<>(graphicsService.getComparativeTreatmentData(treatmentId), HttpStatus.OK);
     }
 
 
-    @RequestMapping(value = "/graficoComparativo/tratamiento/experimentos/promediado", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/graficoComparativo/tratamiento/promediado", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<GraphicLineTime>> getComparativeTreatmentAveragedData(@RequestParam Integer treatmentId) {
 
         return new ResponseEntity<>(graphicsService.getComparativeTreatmentAveragedData(treatmentId), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/graficoComparativo/ensayo/tratamientos/promediado", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Map<Integer, List<GraphicLineTime>>> getComparativeTreatmentAveragedDataByAssay(@RequestParam Integer assayId) throws SQLException {
+
+        return new ResponseEntity<>(graphicsService.getComparativeTreatmentAveragedDataByAssay(assayId), HttpStatus.OK);
+    }
 
 }
 
