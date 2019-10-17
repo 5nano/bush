@@ -35,7 +35,7 @@ public class SecurityFilter implements Filter {
 
     logger.info("Passing through security filter. Path " + path);
     // Si el es local lo dejo pasar
-    final Boolean isLocalhost = Option.of(req.getHeader(HttpHeaders.ORIGIN)).map(origin -> origin.contains(localhost)).getOrElse(false);
+    /*final Boolean isLocalhost = Option.of(req.getHeader(HttpHeaders.ORIGIN)).map(origin -> origin.contains(localhost)).getOrElse(false);
 
     if (isLocalhost) {
       res.setStatus(HttpServletResponse.SC_OK);
@@ -53,10 +53,10 @@ public class SecurityFilter implements Filter {
             res.sendError(HttpServletResponse.SC_UNAUTHORIZED, "Unauthorized access request");
           else
             filterChain.doFilter(request, response);
-        } else
+        } else */
           filterChain.doFilter(request, response);
-      }
-    }
+      //}
+    //}
 
   }
 
