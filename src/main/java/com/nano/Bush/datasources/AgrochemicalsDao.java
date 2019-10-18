@@ -56,14 +56,14 @@ public class AgrochemicalsDao {
 
     public List<PressureIndicator> getAgrochemicalWithPressureFrom(Integer treatmentId) throws SQLException {
 
-        ResultSet resultSet = statement.executeQuery("SELECT t.idMezcla, a.nombre, ma.precion FROM tratamiento AS t " +
+        ResultSet resultSet = statement.executeQuery("SELECT t.idMezcla, a.nombre, t.presion FROM tratamiento AS t " +
                 "JOIN mezclaAgroquimico AS ma ON t.idMezcla = ma.idMezcla " +
                 "JOIN agroquimico AS a ON ma.idAgroquimico = a.idAgroquimico WHERE t.idTratamiento = " + treatmentId);
 
         List<PressureIndicator> pressureIndicators = new ArrayList<>();
 
         while (resultSet.next()) {
-            pressureIndicators.add(new PressureIndicator(resultSet.getFloat("precion"), resultSet.getString("nombre"),
+            pressureIndicators.add(new PressureIndicator(resultSet.getFloat("presion"), resultSet.getString("nombre"),
                     new Tuple2<>(0, 1200), resultSet.getInt("idMezcla")));
         }
 
