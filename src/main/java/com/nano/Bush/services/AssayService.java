@@ -37,19 +37,6 @@ public class AssayService {
 
     }
 
-    public List<Treatment> getTreatmentsFrom(Integer assayId) {
-
-        List<Treatment> treatments;
-
-        try {
-            treatments = treatmentDao.getTreatments(assayId);
-        } catch (SQLException e) {
-            logger.error("Error al obtener el nombre del experimento, exception: " + e);
-            throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
-        }
-        return treatments;
-    }
-
     public void deleteTestFromExperiments(Integer assayId) throws SQLException {
         assaysDao.getExperimentsFromAssay(assayId)
                 .forEach(experiment -> measuresDao.deleteExperiment(assayId, experiment.getExperimentId().get()));
