@@ -2,6 +2,7 @@ package com.nano.Bush.datasources.measures;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.AssayStatesEnum;
 import com.nano.Bush.model.Experiment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -9,10 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -33,11 +31,13 @@ public class AssaysDao {
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador) VALUES (default, ?, ?,?,?) RETURNING idEnsayo");
+                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado) VALUES (default, ?, ?,?,?,?,?) RETURNING idEnsayo");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
         preparedStatement.setString(3, Assay.getDescription());
         preparedStatement.setInt(4, Assay.getIdUserCreator());
+        preparedStatement.setString(5, AssayStatesEnum.ACTIVE.toString());
+        preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
 
         resultSet = preparedStatement.executeQuery();
         resultSet.next();
@@ -57,11 +57,11 @@ public class AssaysDao {
     }
 
     public List<Assay> getAssays() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador FROM ensayo");
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
-                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador")));
+                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))), Optional.empty()));
         }
         return Assays;
     }
