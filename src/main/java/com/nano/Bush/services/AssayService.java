@@ -53,4 +53,16 @@ public class AssayService {
         return new AssayInsertResponse(insertAndReturnIdAssay);
     }
 
+    public void archiveAssay(Integer idAssay) throws SQLException {
+        assaysDao.archiveAssay(idAssay);
+    }
+
+    public void activeAssay(Integer idAssay) throws SQLException {
+        assaysDao.activeAssay(idAssay);
+    }
+
+    public void finishAssay(Integer idAssay, Integer stars, String commments) throws SQLException {
+        assaysDao.finishAssay(idAssay, stars, commments);
+    }
+
 }

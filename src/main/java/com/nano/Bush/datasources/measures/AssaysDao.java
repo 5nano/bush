@@ -106,4 +106,30 @@ public class AssaysDao {
         this.delete(assay.getName());
         this.update(assay);
     }
+
+    public void archiveAssay(Integer idAssay) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector
+                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.ARCHIVED.toString() + "' where idEnsayo = '"+idAssay+"'");
+        preparedStatement.executeUpdate();
+    }
+
+    public void activeAssay(Integer idAssay) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector
+                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.ACTIVE.toString() + "' where idEnsayo = '"+idAssay+"'");
+        preparedStatement.executeUpdate();
+    }
+
+    public void finishAssay(Integer idAssay, Integer stars, String comments) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector
+                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.FINISHED.toString() + "' where idEnsayo = '"+idAssay+"'");
+        preparedStatement.executeUpdate();
+
+        preparedStatement = postgresConnector
+                .getPreparedStatementFor("INSERT INTO ensayoTerminado (idEnsayoTerminado,idEnsayo,conclusiones,estrellas) VALUES (default, ?, ?,?)");
+        preparedStatement.setInt(1, idAssay);
+        preparedStatement.setString(2, comments);
+        preparedStatement.setInt(3, stars);
+
+        preparedStatement.executeUpdate();
+    }
 }

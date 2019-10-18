@@ -84,4 +84,25 @@ public class AssayController {
         return new ResponseEntity<>(treatmentsService.treatments(idAssay), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/ensayo/archivar", method = RequestMethod.PATCH, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> archiveAssay(@RequestParam Integer idAssay) throws SQLException {
+        assayService.archiveAssay(idAssay);
+        return new ResponseEntity<>(new Response("Ensayo Archivado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ensayo/activar", method = RequestMethod.PATCH, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> activeAssay(@RequestParam Integer idAssay) throws SQLException {
+        assayService.activeAssay(idAssay);
+        return new ResponseEntity<>(new Response("Ensayo Activado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ensayo/terminar", method = RequestMethod.PATCH, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> activeAssay(@RequestParam Integer idAssay, Integer stars, String comments) throws SQLException {
+        assayService.finishAssay(idAssay, stars, comments);
+        return new ResponseEntity<>(new Response("Ensayo Terminado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
 }
