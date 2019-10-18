@@ -47,7 +47,8 @@ public class MeasuresDao {
 
                 MeasurePlant measureConverted = mapper.readValue(transformedText, MeasurePlant.class);
                 measureConverted.setDay(row.getTimestamp("time").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-                measureConverted.setImage("http://35.188.202.169:8080"+row.getString("image"));
+                measureConverted.setDayWithHour(row.getTimestamp("time")); //TODO: fijarse el timestamp del cassandra vs aca en ARG
+                measureConverted.setImage("http://35.188.202.169:8080" + row.getString("image"));
                 measuresPlants.add(measureConverted);
             } catch (IOException e) {
                 e.printStackTrace();

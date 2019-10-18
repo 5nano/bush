@@ -50,7 +50,7 @@ public class AgrochemicalController {
             return new ResponseEntity<>(new Response("El agroquimico a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            agrochemicalsDao.delete(agrochemical.getName());
+            agrochemicalsDao.delete(agrochemical);
             return new ResponseEntity<>(new Response("Agroquimico Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }

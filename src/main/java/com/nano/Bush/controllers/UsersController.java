@@ -3,7 +3,6 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.User;
-import com.nano.Bush.model.UserCredentials;
 import com.nano.Bush.services.UsersService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,16 +11,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.Cookie;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.sql.SQLException;
 import java.util.List;
-
-import static com.nano.Bush.controllers.SessionController.invalidateSession;
-import static com.nano.Bush.controllers.SessionController.manageSession;
-import static com.nano.Bush.utils.EncryptUtils.encode;
 
 @Controller
 @RequestMapping("")
@@ -64,7 +55,7 @@ public class UsersController {
             return new ResponseEntity<>(new Response("El usuario a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            usersDao.delete(user.getUsername());
+            usersDao.delete(user.getUserId().get());
             return new ResponseEntity<>(new Response("Usuario Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
@@ -81,7 +72,6 @@ public class UsersController {
         }
 
     }
-
 
 
 }

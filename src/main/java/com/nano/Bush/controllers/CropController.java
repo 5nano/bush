@@ -47,7 +47,7 @@ public class CropController {
             return new ResponseEntity<>(new Response("El cultivo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            cropsDao.delete(crop.getName());
+            cropsDao.delete(crop);
             return new ResponseEntity<>(new Response("Cultivo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }

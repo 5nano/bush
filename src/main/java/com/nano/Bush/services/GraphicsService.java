@@ -63,7 +63,7 @@ public class GraphicsService {
     }
 
     public Map<Integer, List<GraphicLineTime>> getComparativeTreatmentData(Integer treatmentId) throws SQLException {
-
+        //TODO: MZ usa el date con hora aca  y no el agrupado por dia
         List<Experiment> experiments = treatmentsDao.getExperiments(treatmentId);
         return experiments
                 .stream()

@@ -31,7 +31,8 @@ public class AssaysDao {
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado) VALUES (default, ?, ?,?,?,?,?) RETURNING idEnsayo");
+                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado) " +
+                        "VALUES (default, ?, ?,?,?,?,?) RETURNING idEnsayo");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
         preparedStatement.setString(3, Assay.getDescription());
@@ -50,7 +51,9 @@ public class AssaysDao {
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
-                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))), Optional.of(resultSet.getTimestamp(""))));
+                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
+                    Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
+                    Optional.of(resultSet.getTimestamp("creado"))));
         }
         return Assays;
     }

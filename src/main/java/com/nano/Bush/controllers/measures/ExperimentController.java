@@ -21,10 +21,6 @@ import java.util.List;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class ExperimentController {
 
-    //TODO: hacer el get de pruebas
-    //TODO: definir que pasa cuando se borra un ensayo o un experimento o algo que tenga foreign key
-    //TODO: definir como hacer el modificar
-
     @Autowired
     private ExperimentService experimentService;
     @Autowired
@@ -68,7 +64,7 @@ public class ExperimentController {
             return new ResponseEntity<>(new Response("El experimento a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            experimentsDao.delete(experiment.getName());
+            experimentsDao.delete(experiment);
             return new ResponseEntity<>(new Response("Experimento Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
