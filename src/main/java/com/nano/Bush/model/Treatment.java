@@ -14,8 +14,9 @@ public class Treatment {
     private final Integer idAgrochemical;
     private final String name;
     private final String description;
+    private final Optional<Double> pressure;
 
-    public Treatment(Optional<Integer> idTreatment, Optional<Integer> experimentsLength, Integer idAssay, Integer idMixture, Integer idAgrochemical, String name, String description) {
+    public Treatment(Optional<Integer> idTreatment, Optional<Integer> experimentsLength, Integer idAssay, Integer idMixture, Integer idAgrochemical, String name, String description, Optional<Double> pressure) {
         this.idTreatment = idTreatment;
         this.experimentsLength = experimentsLength;
         this.idAssay = idAssay;
@@ -23,6 +24,7 @@ public class Treatment {
         this.idAgrochemical = idAgrochemical;
         this.name = name;
         this.description = description;
+        this.pressure = pressure;
     }
 
     public Optional<Integer> getExperimentsLength(){
@@ -52,5 +54,9 @@ public class Treatment {
 
     public Optional<Integer> getIdTreatment() {
         return idTreatment;
+    }
+
+    public Optional<Double> getPressure() {
+        return pressure;
     }
 }

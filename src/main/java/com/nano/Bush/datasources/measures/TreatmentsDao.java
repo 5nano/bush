@@ -9,10 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -38,7 +35,7 @@ public class TreatmentsDao {
 
     public List<Integer>  insert(Treatment treatment) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion) values (default, ?, ?, ?, ?, ?) RETURNING idTratamiento");
+                .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion) values (default, ?, ?, ?, ?, ?, ?) RETURNING idTratamiento");
         preparedStatement.setInt(1, treatment.getIdAssay());
         if (treatment.getIdAgrochemical() == null) {
             preparedStatement.setNull(2, java.sql.Types.INTEGER);
@@ -51,7 +48,17 @@ public class TreatmentsDao {
             preparedStatement.setInt(3, treatment.getIdMixture());
         }
         preparedStatement.setString(4, treatment.getName());
-        preparedStatement.setString(5, treatment.getDescription());
+        if (treatment.getDescription() == null) {
+            preparedStatement.setNull(5, Types.VARBINARY);
+        }else{
+            preparedStatement.setString(5, treatment.getDescription());
+        }
+        if (treatment.getPressure() == null) {
+            preparedStatement.setNull(6, Types.FLOAT);
+        }else{
+            preparedStatement.setDouble(6, treatment.getPressure().get());
+        }
+
 
         resultSet = preparedStatement.executeQuery();
         resultSet.next();
@@ -76,7 +83,7 @@ public class TreatmentsDao {
 
     public void update(Treatment treatment) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion) values (default, ?, ?, ?, ?, ?) RETURNING idTratamiento");
+                .getPreparedStatementFor("insert into tratamiento (idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion) values (default, ?, ?, ?, ?, ?, ?) RETURNING idTratamiento");
         preparedStatement.setInt(1, treatment.getIdAssay());
         if (treatment.getIdAgrochemical() == null) {
             preparedStatement.setNull(2, java.sql.Types.INTEGER);
@@ -89,18 +96,28 @@ public class TreatmentsDao {
             preparedStatement.setInt(3, treatment.getIdMixture());
         }
         preparedStatement.setString(4, treatment.getName());
-        preparedStatement.setString(5, treatment.getDescription());
+        if (treatment.getDescription() == null) {
+            preparedStatement.setNull(5, Types.VARBINARY);
+        }else{
+            preparedStatement.setString(5, treatment.getDescription());
+        }
+        if (treatment.getPressure() == null) {
+            preparedStatement.setNull(6, Types.FLOAT);
+        }else{
+            preparedStatement.setDouble(6, treatment.getPressure().get());
+        }
+
 
         preparedStatement.executeUpdate();
     }
 
     public List<Treatment> getTreatments(Integer assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion FROM tratamiento WHERE idEnsayo = '" + assayId + "'");
+        resultSet = statement.executeQuery("SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion FROM tratamiento WHERE idEnsayo = '" + assayId + "'");
         List<Treatment> treatments = new ArrayList<>();
         while (resultSet.next()) {
             treatments.add(new Treatment(Optional.of(resultSet.getInt("idTratamiento")),Optional.empty(), resultSet.getInt("idEnsayo"),
                     resultSet.getInt("idagroquimico"),
-                    resultSet.getInt("idmezcla"), resultSet.getString("nombre"), resultSet.getString("descripcion")));
+                    resultSet.getInt("idmezcla"), resultSet.getString("nombre"), resultSet.getString("descripcion"), Optional.of(resultSet.getDouble("presion"))));
         }
         return treatments;
     }
@@ -116,12 +133,12 @@ public class TreatmentsDao {
     }
 
     public Treatment getTreatment(Integer idTreatment) throws SQLException {
-        String query = "SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion FROM tratamiento WHERE idTratamiento = '" + idTreatment + "'";
+        String query = "SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion FROM tratamiento WHERE idTratamiento = '" + idTreatment + "'";
         resultSet = statement.executeQuery(query);
         if (resultSet.next()) {
             return new Treatment(Optional.of(resultSet.getInt("idTratamiento")),Optional.empty(), resultSet.getInt("idEnsayo"),
                     resultSet.getInt("idagroquimico"),
-                    resultSet.getInt("idmezcla"), resultSet.getString("nombre"), resultSet.getString("descripcion"));
+                    resultSet.getInt("idmezcla"), resultSet.getString("nombre"), resultSet.getString("descripcion"), Optional.of(resultSet.getDouble("presion")));
         }
         return null;
     }
