@@ -47,14 +47,14 @@ public class CropController {
             return new ResponseEntity<>(new Response("El cultivo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            cropsDao.delete(crop.getName());
+            cropsDao.delete(crop);
             return new ResponseEntity<>(new Response("Cultivo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/cultivos/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyCrop(@RequestBody Crop crop) throws SQLException {
-        cropsDao.modify(crop);
+        cropsDao.update(crop);
         return new ResponseEntity<>(new Response("Cultivo Modificado", HttpStatus.OK.value()), HttpStatus.OK);
 
     }

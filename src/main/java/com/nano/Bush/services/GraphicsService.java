@@ -15,7 +15,10 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -63,7 +66,7 @@ public class GraphicsService {
     }
 
     public Map<Integer, List<GraphicLineTime>> getComparativeTreatmentData(Integer treatmentId) throws SQLException {
-
+        //TODO: MZ usa el date con hora aca  y no el agrupado por dia
         List<Experiment> experiments = treatmentsDao.getExperiments(treatmentId);
         return experiments
                 .stream()
@@ -78,7 +81,7 @@ public class GraphicsService {
         return measures
                 .stream()
                 .map(measurePlant ->
-                        new GraphicLineTime(measurePlant.getDay(),measurePlant.getArea().getValue(),measurePlant.getImage()))
+                        new GraphicLineTime(measurePlant.getDay(), measurePlant.getArea().getValue(), measurePlant.getImage()))
                 .collect(Collectors.toList());
 
     }
@@ -93,7 +96,7 @@ public class GraphicsService {
         Map<LocalDate, Double> measuresAveraged = measuresAgruppedByDay.entrySet().stream().map(entry ->
                 Tuple.of(entry.getKey(),
                         averageMeasurePlants(entry.getValue()))).collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
-        return measuresAveraged.entrySet().stream().map(entry -> new GraphicLineTime(entry.getKey(), entry.getValue(),null)).collect(Collectors.toList());
+        return measuresAveraged.entrySet().stream().map(entry -> new GraphicLineTime(entry.getKey(), entry.getValue(), null)).collect(Collectors.toList());
     }
 
 

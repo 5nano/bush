@@ -3,7 +3,6 @@ package com.nano.Bush.model.measuresGraphics;
 import com.fasterxml.jackson.annotation.JsonInclude;
 
 import java.time.LocalDate;
-import java.util.Optional;
 
 /**
  * Created by Matias Zeitune oct. 2019

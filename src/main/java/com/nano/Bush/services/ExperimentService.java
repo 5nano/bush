@@ -36,7 +36,7 @@ public class ExperimentService {
     public List<ExperimentPoint> getExperimentPoints(Integer experimentId) throws SQLException {
 
         Experiment experiment = experimentsDao.getExperiment(experimentId);
-        return  measuresDao.selectMeasuresFrom(experiment.getAssayId(), experimentId)
+        return measuresDao.selectMeasuresFrom(experiment.getAssayId(), experimentId)
                 .stream()
                 .map(measurePlant ->
                         new ExperimentPoint(
@@ -48,7 +48,7 @@ public class ExperimentService {
                                 measurePlant.getWidth().getValue(),
                                 measurePlant.getHeight().getValue(),
                                 measurePlant.getArea().getValue()
-                                )
+                        )
                 ).collect(Collectors.toList());
 
     }

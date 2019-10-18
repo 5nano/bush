@@ -27,7 +27,7 @@ public class Treatment {
         this.pressure = pressure;
     }
 
-    public Optional<Integer> getExperimentsLength(){
+    public Optional<Integer> getExperimentsLength() {
         return this.experimentsLength;
     }
 

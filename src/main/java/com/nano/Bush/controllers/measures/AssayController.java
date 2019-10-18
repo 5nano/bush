@@ -7,7 +7,6 @@ import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -16,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Controller
 @RequestMapping("")
@@ -48,25 +46,21 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
-    public ResponseEntity<Response> deleteAssay(@RequestParam String assayId) throws SQLException {
+    public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
 
-        String assayName = assayService.getAssays("ALL").stream()
-                .filter(assay -> assay.getIdAssay().get().equals(Integer.parseInt(assayId)))
-                .map(Assay::getName)
-                .collect(Collectors.toList()).get(0);
-
-        if (!validationsService.isRepetead("nombre", "ensayo", assayName)) {
+        if (!validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
             return new ResponseEntity<>(new Response("El ensayo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            assaysDao.delete(assayName);
+            assayService.deleteTestFromExperiments(assay.getIdAssay().get());
+            assaysDao.delete(assay.getIdAssay().get());
             return new ResponseEntity<>(new Response("Ensayo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/ensayos/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyAssay(@RequestBody Assay assay) throws SQLException {
-        assaysDao.modify(assay);
+        assaysDao.update(assay);
         return new ResponseEntity<>(new Response("Ensayo Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 

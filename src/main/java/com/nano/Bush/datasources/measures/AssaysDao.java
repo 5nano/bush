@@ -31,7 +31,8 @@ public class AssaysDao {
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado) VALUES (default, ?, ?,?,?,?,?) RETURNING idEnsayo");
+                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado) " +
+                        "VALUES (default, ?, ?,?,?,?,?) RETURNING idEnsayo");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
         preparedStatement.setString(3, Assay.getDescription());
@@ -45,23 +46,14 @@ public class AssaysDao {
 
     }
 
-    public void update(Assay Assay) throws SQLException {
-        PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo VALUES (default, ?, ?,?,?)");
-        preparedStatement.setInt(1, Assay.getIdCrop());
-        preparedStatement.setString(2, Assay.getName());
-        preparedStatement.setString(3, Assay.getDescription());
-        preparedStatement.setInt(4, Assay.getIdUserCreator());
-
-        preparedStatement.executeUpdate();
-    }
-
     public List<Assay> getAssays() throws SQLException {
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
-                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))), Optional.empty()));
+                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
+                    Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
+                    Optional.of(resultSet.getTimestamp("creado"))));
         }
         return Assays;
     }
@@ -96,15 +88,14 @@ public class AssaysDao {
         return experiments;
     }
 
-    public void delete(String assayName) throws SQLException {
-        PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM ensayo WHERE nombre ='" + assayName + "'");
+    public void delete(Integer assayId) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("DELETE FROM ensayo WHERE idEnsayo = " + assayId);
         preparedStatement.executeUpdate();
     }
 
-    public void modify(Assay assay) throws SQLException {
-        this.delete(assay.getName());
-        this.update(assay);
+    public void update(Assay assay) throws SQLException {
+        postgresConnector.update("ensayo", "nombre", assay.getName(), "idEnsayo", assay.getIdAssay().get());
+        postgresConnector.update("ensayo", "descripcion", assay.getDescription(), "idEnsayo", assay.getIdAssay().get());
     }
 
     public void archiveAssay(Integer idAssay) throws SQLException {

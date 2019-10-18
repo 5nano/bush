@@ -51,7 +51,7 @@ public class CompanyController {
             return new ResponseEntity<>(new Response("La compania a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            companiesDao.delete(company.getName());
+            companiesDao.delete(company);
             return new ResponseEntity<>(new Response("Compania Eliminada", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }

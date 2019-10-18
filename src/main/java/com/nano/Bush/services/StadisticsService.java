@@ -68,27 +68,28 @@ public class StadisticsService {
                     return null;
                 }).flatMap(List::stream).collect(Collectors.toList());
     }
-    private List<Double> makeByOperation(GroupMedian groupMedian, String typeValue){
-        if(typeValue.equals("yellow")){
+
+    private List<Double> makeByOperation(GroupMedian groupMedian, String typeValue) {
+        if (typeValue.equals("yellow")) {
             return groupMedian.measurePlant.getYellowFrequencies().getValue();
-        }else if(typeValue.equals("green")){
+        } else if (typeValue.equals("green")) {
             return groupMedian.measurePlant.getGreenFrequencies().getValue();
-        }else{
-            List<Double> area =  new LinkedList<>();
+        } else {
+            List<Double> area = new LinkedList<>();
             area.add(groupMedian.measurePlant.getArea().getValue());
             return area;
         }
     }
 
-    private Map<LocalDate, List<BoxDiagramDto>> getValues(Map<LocalDate, List<GroupMedian>> medians, String typeValue){
+    private Map<LocalDate, List<BoxDiagramDto>> getValues(Map<LocalDate, List<GroupMedian>> medians, String typeValue) {
 
         return medians.entrySet()
                 .stream()
                 .map(entry -> Tuple.of(entry.getKey(), entry.getValue().stream()
                         .map(groupMedian ->
                                 new BoxDiagramDto(groupMedian.treatmentId,
-                                        this.makeByOperation(groupMedian,typeValue)
-                                        .stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList()))).collect(Collectors.toList())))
+                                        this.makeByOperation(groupMedian, typeValue)
+                                                .stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList()))).collect(Collectors.toList())))
                 .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
     }
 
@@ -123,6 +124,12 @@ public class StadisticsService {
         MeasurePlant measurePlant;
         Integer treatmentId;
 
+        public GroupMedian(LocalDate date, MeasurePlant measurePlant, Integer treatmentId) {
+            this.date = date;
+            this.measurePlant = measurePlant;
+            this.treatmentId = treatmentId;
+        }
+
         public LocalDate getDate() {
             return date;
         }
@@ -133,12 +140,6 @@ public class StadisticsService {
 
         public Integer getTreatmentId() {
             return treatmentId;
-        }
-
-        public GroupMedian(LocalDate date, MeasurePlant measurePlant, Integer treatmentId) {
-            this.date = date;
-            this.measurePlant = measurePlant;
-            this.treatmentId = treatmentId;
         }
     }
 }
