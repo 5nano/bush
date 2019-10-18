@@ -67,7 +67,7 @@ public class UsersController {
             return new ResponseEntity<>(new Response("El usuario a modificar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            usersDao.modify(user);
+            usersService.updateUser(user);
             return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
         }
 
