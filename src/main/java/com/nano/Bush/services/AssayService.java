@@ -1,6 +1,7 @@
 package com.nano.Bush.services;
 
 import com.nano.Bush.datasources.measures.AssaysDao;
+import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.AssayInsertResponse;
@@ -23,6 +24,8 @@ public class AssayService {
     AssaysDao assaysDao;
     @Autowired
     TreatmentsDao treatmentDao;
+    @Autowired
+    MeasuresDao measuresDao;
 
     public List<Assay> getAssays(String state) throws SQLException {
         if(state.equals("ALL")){
@@ -45,6 +48,11 @@ public class AssayService {
             throw new RuntimeException("Error al obtener el nombre del experimento, exception: " + e);
         }
         return treatments;
+    }
+
+    public void deleteTestFromExperiments(Integer assayId) throws SQLException {
+        assaysDao.getExperimentsFromAssay(assayId)
+                .forEach(experiment -> measuresDao.deleteExperiment(assayId, experiment.getExperimentId().get()));
     }
 
 

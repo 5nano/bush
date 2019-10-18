@@ -1,6 +1,5 @@
 package com.nano.Bush.controllers.measures;
 
-import com.nano.Bush.model.measuresGraphics.GraphicDto;
 import com.nano.Bush.model.measuresGraphics.GraphicLineTime;
 import com.nano.Bush.services.GraphicsService;
 import org.springframework.beans.factory.annotation.Autowired;

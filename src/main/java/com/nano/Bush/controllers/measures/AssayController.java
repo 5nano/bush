@@ -52,6 +52,7 @@ public class AssayController {
             return new ResponseEntity<>(new Response("El ensayo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
+            assayService.deleteTestFromExperiments(assay.getIdAssay().get());
             assaysDao.delete(assay.getIdAssay().get());
             return new ResponseEntity<>(new Response("Ensayo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }

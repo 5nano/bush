@@ -3,7 +3,6 @@ package com.nano.Bush.model.measuresGraphics;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.sql.Timestamp;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -62,16 +61,12 @@ public class MeasurePlant {
         this.image = image;
     }
 
-    public void setGreenFrequencies(Frequencies greenFrequencies) {
-        this.greenFrequencies = greenFrequencies;
-    }
-
     public Frequencies getGreenFrequencies() {
         return greenFrequencies;
     }
 
-    public void setWidth(PlantCvValue width) {
-        this.width = width;
+    public void setGreenFrequencies(Frequencies greenFrequencies) {
+        this.greenFrequencies = greenFrequencies;
     }
 
     public PlantCvValue getHeight() {
@@ -80,6 +75,10 @@ public class MeasurePlant {
 
     public PlantCvValue getWidth() {
         return width;
+    }
+
+    public void setWidth(PlantCvValue width) {
+        this.width = width;
     }
 
     public Date getDayWithHour() {

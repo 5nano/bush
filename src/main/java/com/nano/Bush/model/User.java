@@ -47,12 +47,12 @@ public class User {
         return companyId;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
     public void setCompanyId(Integer companyId) {
         this.companyId = companyId;
+    }
+
+    public String getEmail() {
+        return email;
     }
 
     public Optional<Integer> getUserId() {

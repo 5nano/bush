@@ -58,4 +58,9 @@ public class MeasuresDao {
         return measuresPlants;
     }
 
+    public void deleteExperiment(Integer assayId, Integer experimentId) {
+        String query = "delete FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
+        CassandraConnector.getConnection().execute(query);
+    }
+
 }

@@ -9,7 +9,7 @@ public class Company {
     private final String description;
 
 
-    public Company(Optional<Integer> idCompany,String name, String description) {
+    public Company(Optional<Integer> idCompany, String name, String description) {
         this.name = name;
         this.description = description;
         this.companyId = idCompany;

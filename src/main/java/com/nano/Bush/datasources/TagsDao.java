@@ -24,11 +24,10 @@ public class TagsDao {
 
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private ResultSet resultSet;
-
     @Autowired
     AssaysDao assaysDao;
+    private Statement statement;
+    private ResultSet resultSet;
 
     @PostConstruct
     public void init() throws SQLException {
