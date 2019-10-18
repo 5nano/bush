@@ -43,14 +43,14 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Assay>> showAssays(HttpServletResponse response) throws SQLException {
-        return new ResponseEntity<>(assayService.getAssays(), HttpStatus.OK);
+    public ResponseEntity<List<Assay>> showAssays(String state) throws SQLException {
+        return new ResponseEntity<>(assayService.getAssays(state), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestParam String assayId) throws SQLException {
 
-        String assayName = assayService.getAssays().stream()
+        String assayName = assayService.getAssays("all").stream()
                 .filter(assay -> assay.getIdAssay().get().equals(Integer.parseInt(assayId)))
                 .map(Assay::getName)
                 .collect(Collectors.toList()).get(0);

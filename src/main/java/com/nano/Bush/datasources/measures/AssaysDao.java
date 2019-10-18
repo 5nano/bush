@@ -66,6 +66,16 @@ public class AssaysDao {
         return Assays;
     }
 
+    public List<Assay> getAssays(AssayStatesEnum assayStatesEnum) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where estado = '" + assayStatesEnum.toString() + "'");
+        List<Assay> Assays = new ArrayList<>();
+        while (resultSet.next()) {
+            Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
+                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))), Optional.empty()));
+        }
+        return Assays;
+    }
+
     public List<Experiment> getExperimentsFromAssay(Integer assayId) throws SQLException {
         resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idEnsayo = '" + assayId + "'");
         List<Experiment> experiments = new ArrayList<>();

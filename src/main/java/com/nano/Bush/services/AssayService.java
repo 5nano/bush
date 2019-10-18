@@ -4,6 +4,7 @@ import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.AssayInsertResponse;
+import com.nano.Bush.model.AssayStatesEnum;
 import com.nano.Bush.model.Treatment;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,8 +24,14 @@ public class AssayService {
     @Autowired
     TreatmentsDao treatmentDao;
 
-    public List<Assay> getAssays() throws SQLException {
-        return assaysDao.getAssays();
+    public List<Assay> getAssays(String state) throws SQLException {
+        if(state.equals("ALL")){
+            return assaysDao.getAssays();
+        }else{
+            AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
+            return assaysDao.getAssays(assayState);
+        }
+
     }
 
     public List<Treatment> getTreatmentsFrom(Integer assayId) {
