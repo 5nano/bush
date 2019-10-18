@@ -48,8 +48,8 @@ public class AgrochemicalsDao {
         return agrochemicals;
     }
 
-    public void delete(String agrochemicalName) throws SQLException {
-        String query = "DELETE FROM agroquimico WHERE nombre ='" + agrochemicalName + "'";
+    public void delete(Agrochemical agrochemical) throws SQLException {
+        String query = "DELETE FROM agroquimico WHERE idAgroquimico = " + agrochemical.getIdAgrochemical();
         preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
@@ -70,9 +70,9 @@ public class AgrochemicalsDao {
         return pressureIndicators;
     }
 
-    public void modify(Agrochemical agrochemical) throws SQLException {
-        this.delete(agrochemical.getName());
-        this.insert(agrochemical);
+    public void update(Agrochemical agrochemical) throws SQLException {
+        postgresConnector.update("agroquimico", "nombre", agrochemical.getName(), "idAgroquimico", agrochemical.getIdAgrochemical().get());
+        postgresConnector.update("agroquimico", "descripcion", agrochemical.getDescription(), "idAgroquimico", agrochemical.getIdAgrochemical().get());
     }
 
 }

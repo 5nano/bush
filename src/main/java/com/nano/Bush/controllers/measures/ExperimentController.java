@@ -75,7 +75,7 @@ public class ExperimentController {
 
     @RequestMapping(value = "/experimentos/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyExperiment(@RequestBody Experiment experiment) throws SQLException {
-        experimentsDao.modify(experiment);
+        experimentsDao.update(experiment);
         return new ResponseEntity<>(new Response("Experimento Modificado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 

@@ -33,14 +33,6 @@ public class TagsController {
 
     }
 
-    @RequestMapping(value = "/tags/eliminar", method = RequestMethod.DELETE, produces = "application/json")
-    public @ResponseBody
-    ResponseEntity<Response> deleteTag(@RequestParam String tagName) throws SQLException {
-        tagsService.delete(tagName);
-        return new ResponseEntity<>(new Response("Tag eliminado exitosamente", HttpStatus.OK.value()), HttpStatus.OK);
-
-    }
-
     @RequestMapping(value = "/tags/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> modifyTag(@RequestBody Tag tag) throws SQLException {

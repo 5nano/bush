@@ -47,14 +47,14 @@ public class ExperimentsDao {
         return null;
     }
 
-    public void delete(String experimentName) throws SQLException {
-        String query = "DELETE FROM experimento WHERE nombre ='" + experimentName + "'";
+    public void delete(Experiment experiment) throws SQLException {
+        String query = "DELETE FROM experimento WHERE idExperimento = " + experiment.getExperimentId();
         preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
-    public void modify(Experiment experiment) throws SQLException {
-        this.delete(experiment.getName());
-        this.insert(experiment);
+    public void update(Experiment experiment) throws SQLException {
+        postgresConnector.update("experimento", "nombre", experiment.getName(), "idExperimento", experiment.getExperimentId().get());
+        postgresConnector.update("experimento", "descripcion", experiment.getDescription(), "idExperimento", experiment.getExperimentId().get());
     }
 }
