@@ -50,7 +50,7 @@ public class AssayController {
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestParam String assayId) throws SQLException {
 
-        String assayName = assayService.getAssays("all").stream()
+        String assayName = assayService.getAssays("ALL").stream()
                 .filter(assay -> assay.getIdAssay().get().equals(Integer.parseInt(assayId)))
                 .map(Assay::getName)
                 .collect(Collectors.toList()).get(0);
