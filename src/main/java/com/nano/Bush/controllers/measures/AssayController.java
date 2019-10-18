@@ -43,14 +43,14 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Assay>> showAssays(HttpServletResponse response) throws SQLException {
-        return new ResponseEntity<>(assayService.getAssays(), HttpStatus.OK);
+    public ResponseEntity<List<Assay>> showAssays(String state) throws SQLException {
+        return new ResponseEntity<>(assayService.getAssays(state), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestParam String assayId) throws SQLException {
 
-        String assayName = assayService.getAssays().stream()
+        String assayName = assayService.getAssays("ALL").stream()
                 .filter(assay -> assay.getIdAssay().get().equals(Integer.parseInt(assayId)))
                 .map(Assay::getName)
                 .collect(Collectors.toList()).get(0);
@@ -82,6 +82,27 @@ public class AssayController {
     public @ResponseBody
     ResponseEntity<List<Treatment>> getTreatments(@RequestParam Integer idAssay) throws SQLException {
         return new ResponseEntity<>(treatmentsService.treatments(idAssay), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ensayo/archivar", method = RequestMethod.PATCH, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> archiveAssay(@RequestParam Integer idAssay) throws SQLException {
+        assayService.archiveAssay(idAssay);
+        return new ResponseEntity<>(new Response("Ensayo Archivado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ensayo/activar", method = RequestMethod.PATCH, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> activeAssay(@RequestParam Integer idAssay) throws SQLException {
+        assayService.activeAssay(idAssay);
+        return new ResponseEntity<>(new Response("Ensayo Activado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ensayo/terminar", method = RequestMethod.PATCH, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> activeAssay(@RequestParam Integer idAssay, Integer stars, String comments) throws SQLException {
+        assayService.finishAssay(idAssay, stars, comments);
+        return new ResponseEntity<>(new Response("Ensayo Terminado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
 }
