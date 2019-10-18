@@ -58,7 +58,8 @@ public class TreatmentController {
     }
 
     @RequestMapping(value = "/tratamiento/experimentos", method = RequestMethod.GET, produces = "application/json")
-    public @ResponseBody ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String treatmentId) {
+    public @ResponseBody
+    ResponseEntity<List<Experiment>> showExperimentsFrom(@RequestParam String treatmentId) {
         return new ResponseEntity<>(experimentService.getExperimentsFromTreatment(treatmentId), HttpStatus.OK);
     }
 

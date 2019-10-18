@@ -1,9 +1,6 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.model.stadistic.BoxDiagramDto;
-import com.nano.Bush.model.stadistic.BoxDiagramaByExperiment;
 import com.nano.Bush.services.StadisticsService;
-import io.vavr.Tuple2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

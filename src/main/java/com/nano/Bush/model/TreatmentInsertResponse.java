@@ -14,7 +14,7 @@ public class TreatmentInsertResponse {
         this.experimentsQR = experimentsQR;
     }
 
-    public Map<String, String> getExperimentsQR(){
+    public Map<String, String> getExperimentsQR() {
         return experimentsQR;
     }
 }

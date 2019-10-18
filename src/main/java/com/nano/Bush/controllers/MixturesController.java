@@ -54,7 +54,7 @@ public class MixturesController {
 
     @RequestMapping(value = "/mezclas/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyCrop(@RequestBody Mixture mixture) throws SQLException {
-        mixturesDao.modify(mixture);
+        mixturesDao.update(mixture);
         return new ResponseEntity<>(new Response("Mezcla Modificada", HttpStatus.OK.value()), HttpStatus.OK);
 
     }

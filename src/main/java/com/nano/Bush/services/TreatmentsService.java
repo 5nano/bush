@@ -1,6 +1,5 @@
 package com.nano.Bush.services;
 
-import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Treatment;
 import com.nano.Bush.model.TreatmentInsertResponse;
@@ -30,7 +29,7 @@ public class TreatmentsService {
     public TreatmentInsertResponse insert(Treatment treatment) throws SQLException {
         Map<String, String> experiments = new HashMap<>();
         treatmentsDao.insert(treatment).stream().forEach(experimentId -> {
-            experiments.put(experimentId.toString(), treatment.getIdAssay().toString()+"-"+experimentId.toString());
+            experiments.put(experimentId.toString(), treatment.getIdAssay().toString() + "-" + experimentId.toString());
         });
         return new TreatmentInsertResponse(experiments);
     }
@@ -44,17 +43,17 @@ public class TreatmentsService {
     }
 
     public List<Treatment> treatments(Integer idAssay) throws SQLException {
-        return  treatmentsDao.getTreatments(idAssay);
+        return treatmentsDao.getTreatments(idAssay);
     }
 
     public Treatment treatment(Integer idTreatment) throws SQLException {
-        return  treatmentsDao.getTreatment(idTreatment);
+        return treatmentsDao.getTreatment(idTreatment);
     }
 
     public TreatmentInsertResponse getTreatmentQRs(Integer idTreatment) throws SQLException {
         Map<String, String> experiments = new HashMap<>();
         experimentsService.getExperimentsFromTreatment(idTreatment.toString()).stream().forEach(experiment -> {
-            experiments.put(experiment.getExperimentId().get().toString(), experiment.getAssayId().toString()+"-"+experiment.getExperimentId().get().toString());
+            experiments.put(experiment.getExperimentId().get().toString(), experiment.getAssayId().toString() + "-" + experiment.getExperimentId().get().toString());
         });
         return new TreatmentInsertResponse(experiments);
     }

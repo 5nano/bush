@@ -59,13 +59,13 @@ public class MixturesDao {
 
     public void delete(Mixture Mixture) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM mezcla WHERE nombre ='" + Mixture.getName() + "'");
+                .getPreparedStatementFor("DELETE FROM mezcla WHERE idMezcla =" + Mixture.getIdMixture());
         preparedStatement.executeUpdate();
     }
 
-    public void modify(Mixture mixture) throws SQLException {
-        this.delete(mixture);
-        this.insert(mixture);
+    public void update(Mixture mixture) throws SQLException {
+        postgresConnector.update("mezcla", "nombre", mixture.getName(), "idMezcla", mixture.getIdMixture().get());
+        postgresConnector.update("mezcla", "descripcion", mixture.getDescription(), "idMezcla", mixture.getIdMixture().get());
     }
 
 }

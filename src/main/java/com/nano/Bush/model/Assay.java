@@ -1,7 +1,6 @@
 package com.nano.Bush.model;
 
 import java.sql.Timestamp;
-import java.util.Date;
 import java.util.Optional;
 
 public class Assay {
@@ -12,9 +11,9 @@ public class Assay {
     private final String description;
     private final int idUserCreator;
     private final Optional<AssayStatesEnum> state;
-    private final Optional<Date> created;
+    private final Optional<Timestamp> created;
 
-    public Assay(Optional<Integer> idAssay, int idCrop, String name, String description, int idUserCreator, Optional<AssayStatesEnum> state, Optional<Date> created) {
+    public Assay(Optional<Integer> idAssay, int idCrop, String name, String description, int idUserCreator, Optional<AssayStatesEnum> state, Optional<Timestamp> created) {
         this.idAssay = idAssay;
         this.idCrop = idCrop;
         this.name = name;
@@ -49,7 +48,7 @@ public class Assay {
         return state;
     }
 
-    public Optional<Date> getCreated() {
+    public Optional<Timestamp> getCreated() {
         return created;
     }
 }

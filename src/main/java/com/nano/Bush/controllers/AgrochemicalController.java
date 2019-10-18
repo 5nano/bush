@@ -50,14 +50,14 @@ public class AgrochemicalController {
             return new ResponseEntity<>(new Response("El agroquimico a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            agrochemicalsDao.delete(agrochemical.getName());
+            agrochemicalsDao.delete(agrochemical);
             return new ResponseEntity<>(new Response("Agroquimico Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
 
     @RequestMapping(value = "/agroquimicos/modificar", method = RequestMethod.PATCH, produces = "application/json")
     public ResponseEntity<Response> modifyAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
-        agrochemicalsDao.modify(agrochemical);
+        agrochemicalsDao.update(agrochemical);
         return new ResponseEntity<>(new Response("Agroquimico Modificado", HttpStatus.OK.value()), HttpStatus.OK);
 
     }
