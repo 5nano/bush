@@ -31,6 +31,14 @@ public class UsersService {
         return usersDao.getUsers();
     }
 
+    public void updateUser(User user) throws SQLException {
+        user.setPassword(generateMD5HashPass(user.getPassword()));
+        // 1 es el id de nanotica
+        Integer cId = Option.of(user.getCompanyId()).getOrElse(1);
+        user.setCompanyId(cId);
+        usersDao.modify(user);
+    }
+
     public void insertUser(User user) throws SQLException {
         user.setPassword(generateMD5HashPass(user.getPassword()));
         // 1 es el id de nanotica
