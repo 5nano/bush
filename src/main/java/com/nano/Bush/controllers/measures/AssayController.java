@@ -15,6 +15,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 @RequestMapping("")
@@ -41,8 +42,14 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Assay>> showAssays(String state) throws SQLException {
-        return new ResponseEntity<>(assayService.getAssays(state), HttpStatus.OK);
+    public ResponseEntity<List<Assay>> showAssays(Optional<String> state) throws SQLException {
+        List<Assay> assays;
+        if(!state.isPresent()){
+            assays = assayService.getAssays("ALL");
+        }else{
+            assays = assayService.getAssays(state.get());
+        }
+        return new ResponseEntity<>(assays, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
