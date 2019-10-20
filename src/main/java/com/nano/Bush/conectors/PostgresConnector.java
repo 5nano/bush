@@ -45,13 +45,13 @@ public class PostgresConnector {
     }
 
     public void update(String tableName, String fieldName, String value, String fieldNameUpdateWhere, Integer whereValue) throws SQLException {
-        String query = "UPDATE " + tableName + "SET" + fieldName + "= '" + value + " ' WHERE " + fieldNameUpdateWhere + " = " + whereValue;
+        String query = "UPDATE " + tableName + " SET " + fieldName + " = '" + value + " ' WHERE " + fieldNameUpdateWhere + " = " + whereValue;
         PreparedStatement preparedStatement = this.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
     public void update(String tableName, String fieldName, Double value, String fieldNameUpdateWhere, Integer whereValue) throws SQLException {
-        String query = "UPDATE " + tableName + "SET" + fieldName + "= '" + value + " ' WHERE " + fieldNameUpdateWhere + " = " + whereValue;
+        String query = "UPDATE " + tableName + " SET " + fieldName + " = '" + value + " ' WHERE " + fieldNameUpdateWhere + " = " + whereValue;
         PreparedStatement preparedStatement = this.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
