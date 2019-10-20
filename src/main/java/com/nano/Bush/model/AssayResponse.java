@@ -1,29 +1,37 @@
 package com.nano.Bush.model;
 
+import java.sql.Timestamp;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 public class AssayResponse {
-    private final Optional<Integer> idAssay;
-    private final int idCrop;
-    private final String name;
-    private final String description;
-    private final int idUserCreator;
-    private final List<Tag> tags;
-    private final Crop crop;
-    private final Agrochemical agrochemical;
-    private final Mixture mixture;
+  private final Optional<Integer> idAssay;
+  private final Optional<Timestamp> created;
+  private final int idCrop;
+  private final String name;
+  private final String description;
+  private final int idUserCreator;
+  private final List<Tag> tags;
+  private final Crop crop;
+  private final Set<Integer> idAgrochemicals;
+  private final Set<Integer> idMixtures;
+  private final Integer treatments;
+  private final Integer experiments;
 
-  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Agrochemical agrochemical, Mixture mixture) {
+  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures,Integer treatments, Integer experiments) {
     this.idAssay = assay.getIdAssay();
+    this.created = assay.getCreated();
     this.idCrop = assay.getIdCrop();
     this.name = assay.getName();
     this.description = assay.getDescription();
     this.idUserCreator = assay.getIdUserCreator();
     this.tags = tags;
     this.crop = crop;
-    this.agrochemical = agrochemical;
-    this.mixture = mixture;
+    this.idAgrochemicals = idAgrochemicals;
+    this.idMixtures = idMixtures;
+    this.treatments = treatments;
+    this.experiments = experiments;
   }
 
   public Optional<Integer> getIdAssay() {
@@ -54,11 +62,23 @@ public class AssayResponse {
     return crop;
   }
 
-  public Agrochemical getAgrochemical() {
-    return agrochemical;
+  public Set<Integer> getIdAgrochemicals() {
+    return idAgrochemicals;
   }
 
-  public Mixture getMixture() {
-    return mixture;
+  public Set<Integer> getIdMixtures() {
+    return idMixtures;
+  }
+
+  public Optional<Timestamp> getCreated() {
+    return created;
+  }
+
+  public Integer getTreatments() {
+    return treatments;
+  }
+
+  public Integer getExperiments() {
+    return experiments;
   }
 }

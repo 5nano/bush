@@ -4,26 +4,36 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.time.LocalDate;
+import java.util.Date;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class MeasurePlant {
 
     private LocalDate day;
 
+    private Date dayWithHour;
+
     @JsonProperty("area")
-    private Area area;
+    private PlantCvValue area;
+
+    private PlantCvValue width;
+
+    private PlantCvValue height;
 
     @JsonProperty("blue-yellow_frequencies")
     private Frequencies yellowFrequencies;
 
+    @JsonProperty("green_frequencies")
+    private Frequencies greenFrequencies;
+
     private String image;
 
 
-    public Area getArea() {
+    public PlantCvValue getArea() {
         return area;
     }
 
-    public void setArea(Area area) {
+    public void setArea(PlantCvValue area) {
         this.area = area;
     }
 
@@ -49,5 +59,33 @@ public class MeasurePlant {
 
     public void setImage(String image) {
         this.image = image;
+    }
+
+    public Frequencies getGreenFrequencies() {
+        return greenFrequencies;
+    }
+
+    public void setGreenFrequencies(Frequencies greenFrequencies) {
+        this.greenFrequencies = greenFrequencies;
+    }
+
+    public PlantCvValue getHeight() {
+        return height;
+    }
+
+    public PlantCvValue getWidth() {
+        return width;
+    }
+
+    public void setWidth(PlantCvValue width) {
+        this.width = width;
+    }
+
+    public Date getDayWithHour() {
+        return dayWithHour;
+    }
+
+    public void setDayWithHour(Date dayWithHour) {
+        this.dayWithHour = dayWithHour;
     }
 }

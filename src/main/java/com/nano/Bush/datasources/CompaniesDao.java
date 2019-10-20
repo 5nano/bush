@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class CompaniesDao {
@@ -37,10 +38,10 @@ public class CompaniesDao {
     }
 
     public List<Company> getCompanies() throws SQLException {
-        resultSet = statement.executeQuery("SELECT nombre,descripcion FROM compania");
+        resultSet = statement.executeQuery("SELECT idCompania,nombre,descripcion FROM compania");
         List<Company> companies = new ArrayList<>();
         while (resultSet.next()) {
-            companies.add(new Company(resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            companies.add(new Company(Optional.of(resultSet.getInt("idCompania")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return companies;
     }
@@ -50,14 +51,13 @@ public class CompaniesDao {
         resultSet = statement.executeQuery(query);
     }
 
-    public void delete(String companyName) throws SQLException {
-        PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM compania WHERE nombre ='" + companyName + "'");
+    public void delete(Company company) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("DELETE FROM compania WHERE idCompania = " + company);
         preparedStatement.executeUpdate();
     }
 
     public void modify(Company company) throws SQLException {
-        this.delete(company.getName());
-        this.insert(company);
+        postgresConnector.update("compania", "nombre", company.getName(), "idCompania", company.getCompanyId().get());
+        postgresConnector.update("compania", "descripcion", company.getDescription(), "idCompania", company.getCompanyId().get());
     }
 }

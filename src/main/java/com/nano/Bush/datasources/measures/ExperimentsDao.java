@@ -37,24 +37,24 @@ public class ExperimentsDao {
         return resultSet.getInt("idExperimento");
     }
 
-    public Experiment getExperiment(String experimentId) throws SQLException {
+    public Experiment getExperiment(Integer experimentId) throws SQLException {
         String query = "SELECT nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idExperimento = '" + experimentId + "'";
         ResultSet resultSet = statement.executeQuery(query);
         if (resultSet.next()) {
             return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
-                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(Integer.parseInt(experimentId)));
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(experimentId));
         }
         return null;
     }
 
-    public void delete(String experimentName) throws SQLException {
-        String query = "DELETE FROM experimento WHERE nombre ='" + experimentName + "'";
+    public void delete(Experiment experiment) throws SQLException {
+        String query = "DELETE FROM experimento WHERE idExperimento = " + experiment.getExperimentId();
         preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
-    public void modify(Experiment experiment) throws SQLException {
-        this.delete(experiment.getName());
-        this.insert(experiment);
+    public void update(Experiment experiment) throws SQLException {
+        postgresConnector.update("experimento", "nombre", experiment.getName(), "idExperimento", experiment.getExperimentId().get());
+        postgresConnector.update("experimento", "descripcion", experiment.getDescription(), "idExperimento", experiment.getExperimentId().get());
     }
 }

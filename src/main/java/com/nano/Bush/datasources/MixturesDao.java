@@ -38,6 +38,16 @@ public class MixturesDao {
         preparedStatement.executeUpdate();
     }
 
+    public Mixture getMixture(Integer mixtureId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla WHERE idMezcla = " + mixtureId);
+        Mixture mixture = null;
+        while (resultSet.next()) {
+            mixture = new Mixture(Optional.of(resultSet.getInt("idMezcla")),
+                    resultSet.getString("nombre"), resultSet.getString("descripcion"));
+        }
+        return mixture;
+    }
+
     public List<Mixture> getMixtures() throws SQLException {
         resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla");
         List<Mixture> mixtures = new ArrayList<>();
@@ -49,13 +59,13 @@ public class MixturesDao {
 
     public void delete(Mixture Mixture) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM mezcla WHERE nombre ='" + Mixture.getName() + "'");
+                .getPreparedStatementFor("DELETE FROM mezcla WHERE idMezcla =" + Mixture.getIdMixture());
         preparedStatement.executeUpdate();
     }
 
-    public void modify(Mixture mixture) throws SQLException {
-        this.delete(mixture);
-        this.insert(mixture);
+    public void update(Mixture mixture) throws SQLException {
+        postgresConnector.update("mezcla", "nombre", mixture.getName(), "idMezcla", mixture.getIdMixture().get());
+        postgresConnector.update("mezcla", "descripcion", mixture.getDescription(), "idMezcla", mixture.getIdMixture().get());
     }
 
 }

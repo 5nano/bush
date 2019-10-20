@@ -29,11 +29,10 @@ public class TagsDao {
 
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private ResultSet resultSet;
-
     @Autowired
     AssaysDao assaysDao;
+    private Statement statement;
+    private ResultSet resultSet;
 
     @PostConstruct
     public void init() throws SQLException {
@@ -52,23 +51,8 @@ public class TagsDao {
     }
 
     public void update(Tag tag) throws SQLException {
-        PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO (idTag,nombre,descripcion) VALUES (default, ?,?)");
-        preparedStatement.setString(1, tag.getName());
-        preparedStatement.setString(2, tag.getDescription());
-
-        preparedStatement.executeUpdate();
-    }
-
-    public void delete(String tagName) throws SQLException {
-        PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM tag WHERE nombre ='" + tagName + "'");
-        preparedStatement.executeUpdate();
-    }
-
-    public void modify(Tag tag) throws SQLException {
-        this.delete(tag.getName());
-        this.update(tag);
+        postgresConnector.update("tag", "nombre", tag.getName(), "idTag", tag.getIdTag().get());
+        postgresConnector.update("tag", "descripcion", tag.getDescription(), "idTag", tag.getIdTag().get());
     }
 
     public List<Tag> getTags() throws SQLException {
@@ -117,7 +101,7 @@ public class TagsDao {
                 .filter(assayWithTagsElem -> assayWithTagsElem.getValue().containsAll(idTags))
                 .map(assayFiltered -> assayFiltered.getKey()).collect(Collectors.toList());
 
-        return assaysDao.getAssays().stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
+        return assaysDao.getAllAssays().stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
 
     }
 

@@ -3,6 +3,7 @@ package com.nano.Bush.services;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.User;
 import com.nano.Bush.model.UserCredentials;
+import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,8 +31,19 @@ public class UsersService {
         return usersDao.getUsers();
     }
 
+    public void updateUser(User user) throws SQLException {
+        user.setPassword(generateMD5HashPass(user.getPassword()));
+        // 1 es el id de nanotica
+        Integer cId = Option.of(user.getCompanyId()).getOrElse(1);
+        user.setCompanyId(cId);
+        usersDao.modify(user);
+    }
+
     public void insertUser(User user) throws SQLException {
         user.setPassword(generateMD5HashPass(user.getPassword()));
+        // 1 es el id de nanotica
+        Integer cId = Option.of(user.getCompanyId()).getOrElse(1);
+        user.setCompanyId(cId);
         usersDao.insert(user);
     }
 

@@ -3,7 +3,6 @@ package com.nano.Bush.controllers;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.User;
-import com.nano.Bush.model.UserCredentials;
 import com.nano.Bush.services.UsersService;
 import com.nano.Bush.services.ValidationsService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +55,7 @@ public class UsersController {
             return new ResponseEntity<>(new Response("El usuario a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            usersDao.delete(user.getUsername());
+            usersDao.delete(user.getUserId().get());
             return new ResponseEntity<>(new Response("Usuario Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
@@ -68,24 +67,11 @@ public class UsersController {
             return new ResponseEntity<>(new Response("El usuario a modificar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            usersDao.modify(user);
+            usersService.updateUser(user);
             return new ResponseEntity<>(new Response("Usuario Modificado", HttpStatus.OK.value()), HttpStatus.OK);
         }
 
     }
 
-    @RequestMapping(value = "/usuarios/validar", method = RequestMethod.PUT, produces = "application/json")
-    public ResponseEntity<?> validateUser(@RequestBody UserCredentials userCredentials) throws SQLException {
-        if (!validationsService.isRepetead("usuario", "usuario", userCredentials.username)) {
-            return new ResponseEntity<>(new Response("El usuario a validar no existe", HttpStatus.CONFLICT.value()),
-                    HttpStatus.CONFLICT);
-        } else {
-            if (usersService.isValidUser(userCredentials))
-                return new ResponseEntity<>(HttpStatus.OK.value(), HttpStatus.OK);
-            else
-                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE.value(), HttpStatus.NOT_ACCEPTABLE);
-        }
-
-    }
 
 }

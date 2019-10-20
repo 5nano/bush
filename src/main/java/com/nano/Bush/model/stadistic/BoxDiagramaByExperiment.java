@@ -1,31 +1,34 @@
 package com.nano.Bush.model.stadistic;
 
+import java.time.LocalDate;
 import java.util.List;
-import java.util.Set;
 
 /**
  * Created by Matias Zeitune sep. 2019
  **/
-public class BoxDiagramaByExperiment {
-    private final Integer experimentId;
-    private final Integer treatmentId;
-    private final List<Double> values;
 
-    public BoxDiagramaByExperiment(Integer experimentId, Integer treatmentId, List<Double> values) {
-        this.experimentId = experimentId;
-        this.treatmentId = treatmentId;
+
+/*
+*
+* [
+{date: '11-10-2009', values: [{treatmentId: 1, values: [....]}, {treatmentId: 2, values: [....]}, {treatmentId: 3, values: [....]}]}
+{date: '12-10-2009', values: [{treatmentId: 1, values: [....]}, {treatmentId: 2, values: [....]}, {treatmentId: 3, values: [....]}]}
+]
+* */
+public class BoxDiagramaByExperiment {
+    private final LocalDate date;
+    private final List<BoxDiagramDto> values;
+
+    public BoxDiagramaByExperiment(LocalDate date, List<BoxDiagramDto> values) {
+        this.date = date;
         this.values = values;
     }
 
-    public Integer getExperimentId() {
-        return experimentId;
+    public LocalDate getDate() {
+        return date;
     }
 
-    public List<Double> getValues() {
+    public List<BoxDiagramDto> getValues() {
         return values;
-    }
-
-    public Integer getTreatmentId() {
-        return treatmentId;
     }
 }
