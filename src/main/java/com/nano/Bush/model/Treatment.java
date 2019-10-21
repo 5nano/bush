@@ -7,8 +7,9 @@ import java.util.Optional;
  **/
 public class Treatment {
 
+
     private final Optional<Integer> idTreatment;
-    private final Optional<Integer> experimentsLength;
+    private Optional<Integer> experimentsLength;
     private final Integer idAssay;
     private final Integer idMixture;
     private final Integer idAgrochemical;
@@ -58,5 +59,9 @@ public class Treatment {
 
     public Optional<Double> getPressure() {
         return pressure;
+    }
+
+    public void setExperimentsLength(Optional<Integer> experimentsLength) {
+        this.experimentsLength = experimentsLength;
     }
 }

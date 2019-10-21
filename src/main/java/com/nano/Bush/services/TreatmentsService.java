@@ -12,6 +12,7 @@ import java.sql.SQLException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by Matias Zeitune oct. 2019
@@ -43,11 +44,19 @@ public class TreatmentsService {
     }
 
     public List<Treatment> treatments(Integer idAssay) throws SQLException {
-        return treatmentsDao.getTreatments(idAssay);
+        List<Treatment> treatments = treatmentsDao.getTreatments(idAssay);
+        treatments.forEach(treatment -> {
+            Integer experimentsLength = experimentsService.getExperimentsFromTreatment(treatment.getIdTreatment().get().toString()).size();
+            treatment.setExperimentsLength(Optional.of(experimentsLength));
+        });
+        return treatments;
     }
 
     public Treatment treatment(Integer idTreatment) throws SQLException {
-        return treatmentsDao.getTreatment(idTreatment);
+        Integer experimentsLength = experimentsService.getExperimentsFromTreatment(idTreatment.toString()).size();
+        Treatment treatment = treatmentsDao.getTreatment(idTreatment);
+        treatment.setExperimentsLength(Optional.of(experimentsLength));
+        return treatment;
     }
 
     public TreatmentInsertResponse getTreatmentQRs(Integer idTreatment) throws SQLException {
