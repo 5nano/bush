@@ -42,9 +42,10 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state) throws SQLException {
+    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state) {
+
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> assayService.getAssaysByState(ste))
+                .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays() : assayService.getAssaysByState(ste))
                 .getOrElse(assayService.getAllAssays());
 
         return new ResponseEntity<>(assays, HttpStatus.OK);
