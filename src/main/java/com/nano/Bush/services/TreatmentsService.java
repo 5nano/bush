@@ -3,12 +3,16 @@ package com.nano.Bush.services;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Treatment;
 import com.nano.Bush.model.TreatmentInsertResponse;
+import io.vavr.control.Try;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Collections;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,8 +47,11 @@ public class TreatmentsService {
         treatmentsDao.delete(idTreatment);
     }
 
-    public List<Treatment> treatments(Integer idAssay) throws SQLException {
-        List<Treatment> treatments = treatmentsDao.getTreatments(idAssay);
+    public List<Treatment> treatments(Integer idAssay) {
+        List<Treatment> treatments = Try.of(()-> treatmentsDao.getTreatments(idAssay))
+                .onFailure(error -> logger.error("Unexpected error",error))
+                .getOrElse(Collections.emptyList());
+
         treatments.forEach(treatment -> {
             Integer experimentsLength = experimentsService.getExperimentsFromTreatment(treatment.getIdTreatment().get().toString()).size();
             treatment.setExperimentsLength(Optional.of(experimentsLength));

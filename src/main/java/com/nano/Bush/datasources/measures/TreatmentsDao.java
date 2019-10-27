@@ -109,6 +109,21 @@ public class TreatmentsDao {
         return experiments;
     }
 
+    public Integer getExperimentsCount(Integer idTreatment) {
+        Integer experiments = 0;
+        try {
+            resultSet = statement.executeQuery("SELECT count(*) as amount FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
+            while (resultSet.next()) {
+                experiments = resultSet.getInt("amount");
+            }
+        }
+        catch (SQLException ex){
+            logger.error("Unexpected error", ex);
+        }
+        return experiments;
+
+    }
+
     public Treatment getTreatment(Integer idTreatment) throws SQLException {
         String query = "SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion FROM tratamiento WHERE idTratamiento = '" + idTreatment + "'";
         resultSet = statement.executeQuery(query);

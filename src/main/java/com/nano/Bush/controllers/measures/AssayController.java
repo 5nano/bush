@@ -6,13 +6,13 @@ import com.nano.Bush.services.AssayService;
 import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
+import io.vavr.control.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import javax.servlet.http.HttpServletResponse;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
@@ -42,13 +42,11 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<Assay>> showAssays(Optional<String> state) throws SQLException {
-        List<Assay> assays;
-        if(!state.isPresent()){
-            assays = assayService.getAssays("ALL");
-        }else{
-            assays = assayService.getAssays(state.get());
-        }
+    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state) throws SQLException {
+        List<AssayResponse> assays = Option.ofOptional(state)
+                .map(ste -> assayService.getAssaysByState(ste))
+                .getOrElse(assayService.getAllAssays());
+
         return new ResponseEntity<>(assays, HttpStatus.OK);
     }
 
