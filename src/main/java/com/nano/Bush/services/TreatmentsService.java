@@ -4,6 +4,7 @@ import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.Treatment;
 import com.nano.Bush.model.TreatmentInsertResponse;
 import io.vavr.control.Try;
+import io.vavr.control.Try;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,9 +12,11 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 /**
  * Created by Matias Zeitune oct. 2019
@@ -45,13 +48,22 @@ public class TreatmentsService {
     }
 
     public List<Treatment> treatments(Integer idAssay) {
-        return Try.of(()-> treatmentsDao.getTreatments(idAssay))
-                    .onFailure(error -> logger.error("Unexpected error",error))
-                    .getOrElse(Collections.emptyList());
+        List<Treatment> treatments = Try.of(()-> treatmentsDao.getTreatments(idAssay))
+                .onFailure(error -> logger.error("Unexpected error",error))
+                .getOrElse(Collections.emptyList());
+
+        treatments.forEach(treatment -> {
+            Integer experimentsLength = experimentsService.getExperimentsFromTreatment(treatment.getIdTreatment().get().toString()).size();
+            treatment.setExperimentsLength(Optional.of(experimentsLength));
+        });
+        return treatments;
     }
 
     public Treatment treatment(Integer idTreatment) throws SQLException {
-        return treatmentsDao.getTreatment(idTreatment);
+        Integer experimentsLength = experimentsService.getExperimentsFromTreatment(idTreatment.toString()).size();
+        Treatment treatment = treatmentsDao.getTreatment(idTreatment);
+        treatment.setExperimentsLength(Optional.of(experimentsLength));
+        return treatment;
     }
 
     public TreatmentInsertResponse getTreatmentQRs(Integer idTreatment) throws SQLException {
