@@ -46,7 +46,7 @@ public class AssaysDao {
 
     }
 
-    public List<Assay> getAssays() throws SQLException {
+    public List<Assay> getAllAssays() throws SQLException {
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
@@ -58,12 +58,13 @@ public class AssaysDao {
         return Assays;
     }
 
-    public List<Assay> getAssays(AssayStatesEnum assayStatesEnum) throws SQLException {
+    public List<Assay> getAssaysByState(AssayStatesEnum assayStatesEnum) throws SQLException {
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where estado = '" + assayStatesEnum.toString() + "'");
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
-                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))), Optional.empty()));
+                    resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
+                    Optional.of(resultSet.getTimestamp("creado"))));
         }
         return Assays;
     }
