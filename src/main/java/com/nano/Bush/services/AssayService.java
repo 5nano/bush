@@ -24,6 +24,8 @@ import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import static java.util.Collections.emptyList;
+
 @Service
 public class AssayService {
 
@@ -49,7 +51,7 @@ public class AssayService {
     return Try.of(() -> assaysDao.getAllAssays())
             .onFailure(e -> logger.error("Unexpected error", e))
             .map(assays -> enrichAssays(assays))
-            .getOrElse(Collections.emptyList());
+            .getOrElse(emptyList());
   }
 
   public List<AssayResponse> getAssaysByState(String state) {
@@ -57,7 +59,7 @@ public class AssayService {
     return Try.of(() -> assaysDao.getAssaysByState(assayState))
             .onFailure(e -> logger.error("Unexpected error", e))
             .map(assays -> enrichAssays(assays))
-            .getOrElse(Collections.emptyList());
+            .getOrElse(emptyList());
   }
 
   public void deleteTestFromExperiments(Integer assayId) throws SQLException {
@@ -73,10 +75,10 @@ public class AssayService {
     // resolver por queris? Me da mucha paja to mucho joins
     final List<Tag> tags = Try.of(() -> tagsService.getTags())
             .onFailure(e -> logger.error("Unexpected error", e))
-            .getOrElse(Collections.emptyList());
+            .getOrElse(emptyList());
     final List<Crop> crops = Try.of(() -> cropsDao.getCrops())
             .onFailure(e -> logger.error("Unexpected error", e))
-            .getOrElse(Collections.emptyList());
+            .getOrElse(emptyList());
     //sure we have the key
     final Map<Integer, Tag> tagsMap = tags.stream().collect(Collectors.toMap(tag -> tag.getIdTag().get(), Function.identity()));
     final Map<Integer, Crop> cropsMap = crops.stream().collect(Collectors.toMap(crop -> crop.getIdCrop().get(), Function.identity()));
@@ -88,7 +90,7 @@ public class AssayService {
               final Crop crop = cropsMap.get(assay.getIdCrop());
               final List<Tag> assayTags = Option.of(assayWithTags.get(assay.getIdAssay().get()))
                       .map(idTags -> idTags.stream().map(idTag -> tagsMap.get(idTag)).collect(Collectors.toList()))
-                      .getOrElse(Collections.emptyList());
+                      .getOrElse(emptyList());
               Tuple2<Set<Integer>, Set<Integer>> agrochemicalMixtures = Tuple.of(Sets.newHashSet(), Sets.newHashSet());
               final List<Treatment> treatments = treatmentsService.treatments(assay.getIdAssay().get());
               List<Integer> associatedExperiments = Lists.newArrayList();

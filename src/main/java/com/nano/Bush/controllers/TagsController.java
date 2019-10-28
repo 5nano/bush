@@ -1,6 +1,7 @@
 package com.nano.Bush.controllers;
 
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.AssayResponse;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.Tag;
 import com.nano.Bush.services.TagsService;
@@ -67,7 +68,7 @@ public class TagsController {
 
     @RequestMapping(value = "/tags/ensayos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<Assay>> getAssaysWithTags(@RequestBody List<String> tags) throws SQLException {
+    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags) {
         return new ResponseEntity<>(tagsService.getAssays(tags), HttpStatus.OK);
 
     }
