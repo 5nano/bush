@@ -4,6 +4,8 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nano.Bush.datasources.TagsDao;
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.AssayResponse;
+import com.nano.Bush.model.AssayStatesEnum;
 import com.nano.Bush.model.Tag;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
@@ -12,9 +14,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+
+import static java.util.Collections.emptyList;
 
 /**
  * Created by Matias Zeitune oct. 2019
@@ -27,6 +32,8 @@ public class TagsService {
 
     @Autowired
     TagsDao tagsDao;
+    @Autowired
+    AssayService assayService;
 
     public Tag insert(Tag tag) throws SQLException {
         return tagsDao.insert(tag);
@@ -50,9 +57,9 @@ public class TagsService {
     }
 
     public List<Tag> getTagsFrom(Integer idAssay) {
-            return Try.of(()->tagsDao.getTagsFrom(idAssay))
-                    .onFailure(error-> logger.error("Unexpected error getting tags for idAssay {}",idAssay,error))
-                    .getOrElse(Lists.newArrayList());
+        return Try.of(()->tagsDao.getTagsFrom(idAssay))
+                .onFailure(error-> logger.error("Unexpected error getting tags for idAssay {}",idAssay,error))
+                .getOrElse(Lists.newArrayList());
 
     }
 
@@ -62,7 +69,18 @@ public class TagsService {
                 .getOrElse(Maps.newHashMap());
     }
 
-    public List<Assay> getAssays(List<String> tags) throws SQLException {
-        return tagsDao.getAssayFrom(tags);
+    public List<AssayResponse> getAllAssaysFrom(List<String> tags) {
+        return Try.of(() -> tagsDao.getAllAssayFrom(tags))
+                .onFailure(e -> logger.error("Unexpected error", e))
+                .map(assays -> assayService.enrichAssays(assays))
+                .getOrElse(emptyList());
+    }
+
+    public List<AssayResponse> getAssaysFromByState(List<String> tags,String state) {
+        AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
+        return Try.of(() -> tagsDao.getAssaysFromByState(tags, assayState))
+                .onFailure(e -> logger.error("Unexpected error", e))
+                .map(assays -> assayService.enrichAssays(assays))
+                .getOrElse(emptyList());
     }
 }
