@@ -1,10 +1,10 @@
 package com.nano.Bush.controllers;
 
-import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.AssayResponse;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.Tag;
 import com.nano.Bush.services.TagsService;
+import io.vavr.control.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Created by Matias Zeitune oct. 2019
@@ -68,8 +69,11 @@ public class TagsController {
 
     @RequestMapping(value = "/tags/ensayos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags) {
-        return new ResponseEntity<>(tagsService.getAssays(tags), HttpStatus.OK);
+    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state) {
+        List<AssayResponse> assays = Option.ofOptional(state)
+                .map(ste -> "ALL".equalsIgnoreCase(ste)? tagsService.getAllAssaysFrom(tags) : tagsService.getAssaysFromByState(tags,ste))
+                .getOrElse(tagsService.getAllAssaysFrom(tags));
+        return new ResponseEntity<>(assays, HttpStatus.OK);
 
     }
 

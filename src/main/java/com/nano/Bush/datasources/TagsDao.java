@@ -5,6 +5,7 @@ import com.google.common.collect.Maps;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.Assay;
+import com.nano.Bush.model.AssayStatesEnum;
 import com.nano.Bush.model.Tag;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -92,7 +93,7 @@ public class TagsDao {
         return assayWithTags;
     }
 
-    public List<Assay> getAssayFrom(List<String> tagsNames) throws SQLException {
+    public List<Assay> getAllAssayFrom(List<String> tagsNames) throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = assayWithTags();
 
         List<Integer> idTags = this.getTags().stream()
@@ -106,6 +107,23 @@ public class TagsDao {
                 .collect(Collectors.toList());
 
         return assaysDao.getAllAssays().stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
+
+    }
+
+    public List<Assay> getAssaysFromByState(List<String> tagsNames, AssayStatesEnum state) throws SQLException {
+        Map<Integer, Set<Integer>> assayWithTags = assayWithTags();
+
+        List<Integer> idTags = this.getTags().stream()
+                .filter(tag -> tagsNames.contains(tag.getName()))
+                .map(tag -> tag.getIdTag().get()).collect(Collectors.toList());
+
+
+        List<Integer> idAssays = assayWithTags.entrySet().stream()
+                .filter(assayWithTagsElem -> CollectionUtils.containsAny(assayWithTagsElem.getValue(),idTags))
+                .map(assayFiltered -> assayFiltered.getKey())
+                .collect(Collectors.toList());
+
+        return assaysDao.getAssaysByState(state).stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
 
     }
 
