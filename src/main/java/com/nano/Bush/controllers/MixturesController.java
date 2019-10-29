@@ -41,7 +41,7 @@ public class MixturesController {
         return new ResponseEntity<>(mixturesDao.getMixtures(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/mezclas/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/mezclas/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteCrop(@RequestBody Mixture mixture) throws SQLException {
         if (!validationsService.isRepetead("nombre", "mezcla", mixture.getName())) {
             return new ResponseEntity<>(new Response("La mezcla a eliminar no existe", HttpStatus.CONFLICT.value()),

@@ -58,7 +58,7 @@ public class ExperimentController {
         return new ResponseEntity<>(new Response("Experimento Creado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/experimentos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/experimentos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteExperiment(@RequestBody Experiment experiment) throws SQLException {
         if (!validationsService.isRepetead("nombre", "experimento", experiment.getName())) {
             return new ResponseEntity<>(new Response("El experimento a eliminar no existe", HttpStatus.CONFLICT.value()),

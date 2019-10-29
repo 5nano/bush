@@ -51,7 +51,7 @@ public class AssayController {
         return new ResponseEntity<>(assays, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
 
         if (!validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
