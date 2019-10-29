@@ -51,7 +51,7 @@ public class TagsController {
 
     }
 
-    @RequestMapping(value = "/tags/ensayo/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/tags/ensayo/eliminar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> deleteTagToAssay(@RequestParam Integer idTag, Integer idAssay) throws SQLException {
         tagsService.deleteFromAssay(idTag, idAssay);
