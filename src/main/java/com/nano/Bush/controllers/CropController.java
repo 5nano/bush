@@ -41,7 +41,7 @@ public class CropController {
         return new ResponseEntity<>(cropsDao.getCrops(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/cultivos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/cultivos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteCrop(@RequestBody Crop crop) throws SQLException {
         if (!validationsService.isRepetead("nombre", "cultivo", crop.getName())) {
             return new ResponseEntity<>(new Response("El cultivo a eliminar no existe", HttpStatus.CONFLICT.value()),

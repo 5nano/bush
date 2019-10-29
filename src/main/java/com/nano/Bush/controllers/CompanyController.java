@@ -44,7 +44,7 @@ public class CompanyController {
         return new ResponseEntity<>(companiesDao.getCompanies(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/companias/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/companias/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteCompany(@RequestBody Company company) throws SQLException {
 
         if (!validationsService.isRepetead("nombre", "compania", company.getName())) {

@@ -48,7 +48,7 @@ public class UsersController {
         return new ResponseEntity<>(usersService.getUsers(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/usuarios/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/usuarios/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteCrop(@RequestBody User user) throws SQLException {
 
         if (!validationsService.isRepetead("usuario", "usuario", user.getUsername())) {

@@ -43,7 +43,7 @@ public class AgrochemicalController {
         return new ResponseEntity<>(agrochemicalsDao.getAgrochemicals(), HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/agroquimicos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
+    @RequestMapping(value = "/agroquimicos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
 
         if (!validationsService.isRepetead("nombre", "agroquimico", agrochemical.getName())) {
