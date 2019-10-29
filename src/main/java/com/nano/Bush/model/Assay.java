@@ -12,6 +12,7 @@ public class Assay {
     private  int idUserCreator;
     private  Optional<AssayStatesEnum> state;
     private  Optional<Timestamp> created;
+    private int idCompany;
 
     public Assay(Optional<Integer> idAssay, int idCrop, String name, String description, int idUserCreator, Optional<AssayStatesEnum> state, Optional<Timestamp> created) {
         this.idAssay = idAssay;
@@ -54,5 +55,13 @@ public class Assay {
 
     public void setIdUserCreator(int idUserCreator) {
         this.idUserCreator = idUserCreator;
+    }
+
+    public int getIdCompany() {
+        return idCompany;
+    }
+
+    public void setIdCompany(int idCompany) {
+        this.idCompany = idCompany;
     }
 }

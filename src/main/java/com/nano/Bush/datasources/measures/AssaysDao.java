@@ -31,14 +31,15 @@ public class AssaysDao {
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado) " +
-                        "VALUES (default, ?, ?,?,?,?,?) RETURNING idEnsayo");
+                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado,idcompania) " +
+                        "VALUES (default, ?, ?,?,?,?,?,?) RETURNING idEnsayo");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
         preparedStatement.setString(3, Assay.getDescription());
         preparedStatement.setInt(4, Assay.getIdUserCreator());
         preparedStatement.setString(5, AssayStatesEnum.ACTIVE.toString());
         preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
+        preparedStatement.setInt(7, Assay.getIdCompany());
 
         resultSet = preparedStatement.executeQuery();
         resultSet.next();
@@ -46,8 +47,8 @@ public class AssaysDao {
 
     }
 
-    public List<Assay> getAllAssays() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo");
+    public List<Assay> getAllAssays(Integer idCompany) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where idcompania="+ idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
@@ -58,8 +59,8 @@ public class AssaysDao {
         return Assays;
     }
 
-    public List<Assay> getAssaysByState(AssayStatesEnum assayStatesEnum) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where estado = '" + assayStatesEnum.toString() + "'");
+    public List<Assay> getAssaysByState(Integer idCompany, AssayStatesEnum assayStatesEnum) throws SQLException {
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where estado = '" + assayStatesEnum.toString() + "' and idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),

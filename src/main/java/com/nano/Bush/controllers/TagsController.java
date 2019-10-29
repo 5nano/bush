@@ -4,6 +4,7 @@ import com.nano.Bush.model.AssayResponse;
 import com.nano.Bush.model.Response;
 import com.nano.Bush.model.Tag;
 import com.nano.Bush.services.TagsService;
+import com.nano.Bush.utils.RequestHomeMadeInterceptor;
 import io.vavr.control.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,6 +27,8 @@ public class TagsController {
 
     @Autowired
     TagsService tagsService;
+    @Autowired
+    private RequestHomeMadeInterceptor interceptor;
 
     @RequestMapping(value = "/tags/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
@@ -69,10 +72,11 @@ public class TagsController {
 
     @RequestMapping(value = "/tags/ensayos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state) {
+    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state,@CookieValue("user") String user) {
+        final Integer idCompany = interceptor.extractIdCompany(user);
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste)? tagsService.getAllAssaysFrom(tags) : tagsService.getAssaysFromByState(tags,ste))
-                .getOrElse(tagsService.getAllAssaysFrom(tags));
+                .map(ste -> "ALL".equalsIgnoreCase(ste)? tagsService.getAllAssaysFrom(idCompany,tags) : tagsService.getAssaysFromByState(idCompany,tags,ste))
+                .getOrElse(tagsService.getAllAssaysFrom(idCompany,tags));
         return new ResponseEntity<>(assays, HttpStatus.OK);
 
     }
@@ -81,6 +85,5 @@ public class TagsController {
     public @ResponseBody
     ResponseEntity<List<Tag>> getTagsOfAssay(@RequestParam Integer idAssay) {
         return new ResponseEntity<>(tagsService.getTagsFrom(idAssay), HttpStatus.OK);
-
     }
 }

@@ -2,6 +2,8 @@ package com.nano.Bush.utils;
 
 import com.nano.Bush.model.User;
 import com.nano.Bush.services.UsersService;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
@@ -25,6 +27,13 @@ public class RequestHomeMadeInterceptor {
     return usersService.getUserByUserName(user)
             .map(u ->u.getCompanyId())
             .getOrElseThrow(() -> new RuntimeException("Company not found"));
+  }
+
+  public Tuple2<Integer, Integer> extractUserCompany(String user) {
+    /*String user = decode(userEncoded);*/
+    return usersService.getUserByUserName(user)
+            .map(u ->Tuple.of(u.getCompanyId(),u.getUserId().get()))
+            .getOrElseThrow(() -> new RuntimeException("User not found"));
   }
 
 }

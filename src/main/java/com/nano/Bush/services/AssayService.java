@@ -47,16 +47,16 @@ public class AssayService {
   TreatmentsService treatmentsService;
 
 
-  public List<AssayResponse> getAllAssays() {
-    return Try.of(() -> assaysDao.getAllAssays())
+  public List<AssayResponse> getAllAssays(Integer idCompany) {
+    return Try.of(() -> assaysDao.getAllAssays(idCompany))
             .onFailure(e -> logger.error("Unexpected error", e))
             .map(assays -> enrichAssays(assays))
             .getOrElse(emptyList());
   }
 
-  public List<AssayResponse> getAssaysByState(String state) {
+  public List<AssayResponse> getAssaysByState(Integer idCompany,String state) {
     AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
-    return Try.of(() -> assaysDao.getAssaysByState(assayState))
+    return Try.of(() -> assaysDao.getAssaysByState(idCompany,assayState))
             .onFailure(e -> logger.error("Unexpected error", e))
             .map(assays -> enrichAssays(assays))
             .getOrElse(emptyList());
