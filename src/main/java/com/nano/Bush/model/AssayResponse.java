@@ -18,11 +18,13 @@ public class AssayResponse {
   private final Set<Integer> idMixtures;
   private final Integer treatments;
   private final Integer experiments;
+  private Optional<AssayStatesEnum> state;
 
-  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures,Integer treatments, Integer experiments) {
+  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments) {
     this.idAssay = assay.getIdAssay();
     this.created = assay.getCreated();
     this.idCrop = assay.getIdCrop();
+    this.state = assay.getState();
     this.name = assay.getName();
     this.description = assay.getDescription();
     this.idUserCreator = assay.getIdUserCreator();
@@ -81,4 +83,9 @@ public class AssayResponse {
   public Integer getExperiments() {
     return experiments;
   }
+
+  public Optional<AssayStatesEnum> getState() {
+    return state;
+  }
+
 }
