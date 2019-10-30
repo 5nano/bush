@@ -74,7 +74,7 @@ public class TagsController {
     public @ResponseBody
     ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state,
                                                           @CookieValue(value = "user", required = false) Optional<String> user,
-                                                          @CookieValue(value = "encoded_user", required = false) Optional<String> encoded_user) {
+                                                          @CookieValue(value = "user_encoded", required = false) Optional<String> encoded_user) {
         final Integer idCompany = interceptor.extractIdCompany(encoded_user, user);
         List<AssayResponse> assays = Option.ofOptional(state)
                 .map(ste -> "ALL".equalsIgnoreCase(ste)? tagsService.getAllAssaysFrom(idCompany,tags) : tagsService.getAssaysFromByState(idCompany,tags,ste))

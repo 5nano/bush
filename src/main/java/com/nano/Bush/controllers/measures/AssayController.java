@@ -6,12 +6,15 @@ import com.nano.Bush.services.*;
 import com.nano.Bush.utils.RequestHomeMadeInterceptor;
 import io.vavr.Tuple2;
 import io.vavr.control.Option;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
@@ -23,6 +26,8 @@ import static com.nano.Bush.utils.EncryptUtils.decode;
 @RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET, RequestMethod.POST, RequestMethod.DELETE, RequestMethod.PATCH})
 public class AssayController {
+
+    private static final Logger logger = LoggerFactory.getLogger(AssayController.class);
 
 
     @Autowired
@@ -40,17 +45,26 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "encoded_user", required = false) Optional<String> encoded_user) throws SQLException {
-        final Tuple2<Integer,Integer> tuple = interceptor.extractUserCompany(encoded_user,user);
+    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws SQLException {
+        final Tuple2<Integer,Integer> tuple = interceptor.extractUserCompany(user_encoded,user);
         assay.setIdCompany(tuple._1);
         assay.setIdUserCreator(tuple._2);
         return new ResponseEntity<>(assayService.insert(assay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "encoded_user", required = false) Optional<String> encoded_user) {
+    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state, HttpServletRequest request,@CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
+        final Cookie[] cookies = request.getCookies();
 
-        final Integer idCompany = interceptor.extractIdCompany(encoded_user,user);
+        if (cookies != null) {
+            for (Cookie cookie : cookies) {
+                logger.info("Received cookie {}:{}", cookie.getName(),cookie.getValue());
+        }}
+        else {
+            logger.info("Empty cookies");
+        }
+
+        final Integer idCompany = interceptor.extractIdCompany(user_encoded,user);
 
         List<AssayResponse> assays = Option.ofOptional(state)
                 .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany,ste))
