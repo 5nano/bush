@@ -2,6 +2,7 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Mixture;
+import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,34 +39,37 @@ public class MixturesDao {
         preparedStatement.executeUpdate();
     }
 
-    public Mixture getMixture(Integer mixtureId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla WHERE idMezcla = " + mixtureId);
-        Mixture mixture = null;
-        while (resultSet.next()) {
-            mixture = new Mixture(Optional.of(resultSet.getInt("idMezcla")),
-                    resultSet.getString("nombre"), resultSet.getString("descripcion"));
+    public Optional<Mixture> getMixture(Integer mixtureId)  {
+        try {
+            resultSet = statement.executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla WHERE idmezcla = " + mixtureId);
+            while (resultSet.next()) {
+                return Optional.of( new Mixture(Optional.of(resultSet.getInt("idmezcla")),
+                        resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            }
+        } catch (SQLException sqe){
+            logger.error("Unexpected  error with mixture " + mixtureId ,sqe);
         }
-        return mixture;
+        return Optional.empty();
     }
 
     public List<Mixture> getMixtures() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idMezcla,nombre,descripcion FROM mezcla");
+        resultSet = statement.executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla");
         List<Mixture> mixtures = new ArrayList<>();
         while (resultSet.next()) {
-            mixtures.add(new Mixture(Optional.of(resultSet.getInt("idMezcla")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            mixtures.add(new Mixture(Optional.of(resultSet.getInt("idmezcla")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
         }
         return mixtures;
     }
 
     public void delete(Integer mixtureId) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM mezcla WHERE idMezcla = " + mixtureId);
+                .getPreparedStatementFor("DELETE FROM mezcla WHERE idmezcla = " + mixtureId);
         preparedStatement.executeUpdate();
     }
 
     public void update(Mixture mixture) throws SQLException {
-        postgresConnector.update("mezcla", "nombre", mixture.getName(), "idMezcla", mixture.getIdMixture().get());
-        postgresConnector.update("mezcla", "descripcion", mixture.getDescription(), "idMezcla", mixture.getIdMixture().get());
+        postgresConnector.update("mezcla", "nombre", mixture.getName(), "idmezcla", mixture.getIdMixture().get());
+        postgresConnector.update("mezcla", "descripcion", mixture.getDescription(), "idmezcla", mixture.getIdMixture().get());
     }
 
 }

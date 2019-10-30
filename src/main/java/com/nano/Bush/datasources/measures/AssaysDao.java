@@ -59,6 +59,23 @@ public class AssaysDao {
         return Assays;
     }
 
+    public Optional<Assay> getAssay(Integer idAssay)  {
+
+        try {
+            resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where idEnsayo = " + idAssay);
+            while (resultSet.next()) {
+                return Optional.of(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
+                        resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
+                        Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
+                        Optional.of(resultSet.getTimestamp("creado"))));
+            }
+        } catch (SQLException sqe){
+            logger.error("Unexpected error with assay " + idAssay,sqe);
+        }
+
+        return Optional.empty();
+    }
+
     public List<Assay> getAssaysByState(Integer idCompany, AssayStatesEnum assayStatesEnum) throws SQLException {
         resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where estado = '" + assayStatesEnum.toString() + "' and idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
