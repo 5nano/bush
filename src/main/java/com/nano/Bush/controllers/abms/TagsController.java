@@ -1,4 +1,4 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.abms;
 
 import com.nano.Bush.model.AssayResponse;
 import com.nano.Bush.model.Response;
