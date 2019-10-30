@@ -48,6 +48,20 @@ public class AgrochemicalsDao {
         return agrochemicals;
     }
 
+    public Optional<Agrochemical> getAgrochemical(Integer id) {
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT * FROM agroquimico where idagroquimico=" + id);
+            while (resultSet.next()) {
+                return Optional.of(new Agrochemical(Optional.of(resultSet.getInt("idagroquimico")), resultSet.getString("nombre"),
+                        resultSet.getString("descripcion")));
+            }
+        } catch (SQLException sqe){
+            logger.error("Unexpected error with idAgrochemical " + id, sqe);
+        }
+
+        return Optional.empty();
+    }
+
     public void delete(Integer agrochemicalId) throws SQLException {
         String query = "DELETE FROM agroquimico WHERE idAgroquimico = " + agrochemicalId;
         preparedStatement = postgresConnector.getPreparedStatementFor(query);
