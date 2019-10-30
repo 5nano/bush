@@ -135,6 +135,16 @@ public class TreatmentsDao {
         return null;
     }
 
+    public List<Integer> getMixturesUsedInAllTreatments() throws SQLException {
+        String query = "SELECT idmezcla FROM tratamiento WHERE idMezcla IS NOT NULL";
+        List<Integer> mixturesIds = new ArrayList<>();
+        resultSet = statement.executeQuery(query);
+        while (resultSet.next()) {
+            mixturesIds.add(resultSet.getInt("idmezcla"));
+        }
+        return mixturesIds;
+    }
+
     public void delete(Integer idTreatment) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM tratamiento WHERE idTratamiento = " + idTreatment);
