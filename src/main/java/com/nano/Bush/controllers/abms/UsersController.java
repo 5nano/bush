@@ -1,4 +1,4 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.abms;
 
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.model.Response;
@@ -49,13 +49,13 @@ public class UsersController {
     }
 
     @RequestMapping(value = "/usuarios/eliminar", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Response> deleteCrop(@RequestBody User user) throws SQLException {
+    public ResponseEntity<Response> deleteCrop(@RequestParam Integer userId) throws SQLException {
 
-        if (!validationsService.isRepetead("usuario", "usuario", user.getUsername())) {
+        if (!validationsService.isRepetead("idUsuario", "usuario", userId)) {
             return new ResponseEntity<>(new Response("El usuario a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            usersDao.delete(user.getUserId().get());
+            usersDao.delete(userId);
             return new ResponseEntity<>(new Response("Usuario Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }

@@ -1,4 +1,4 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.abms;
 
 import com.nano.Bush.datasources.AgrochemicalsDao;
 import com.nano.Bush.model.Agrochemical;
@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.*;
 
 import java.sql.SQLException;
 import java.util.List;
@@ -44,13 +41,13 @@ public class AgrochemicalController {
     }
 
     @RequestMapping(value = "/agroquimicos/eliminar", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Response> deleteAgrochemical(@RequestBody Agrochemical agrochemical) throws SQLException {
+    public ResponseEntity<Response> deleteAgrochemical(@RequestParam Integer agrochemicalId) throws SQLException {
 
-        if (!validationsService.isRepetead("nombre", "agroquimico", agrochemical.getName())) {
+        if (!validationsService.isRepetead("idAgroquimico", "agroquimico", agrochemicalId)) {
             return new ResponseEntity<>(new Response("El agroquimico a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            agrochemicalsDao.delete(agrochemical);
+            agrochemicalsDao.delete(agrochemicalId);
             return new ResponseEntity<>(new Response("Agroquimico Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }

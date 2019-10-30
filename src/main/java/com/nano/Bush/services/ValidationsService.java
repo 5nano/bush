@@ -33,5 +33,14 @@ public class ValidationsService {
 
     }
 
+    public Boolean isRepetead(String field, String table, Integer value) throws SQLException {
+
+        String query = "SELECT " + field + " FROM " + table + " WHERE " + field + " = " + value;
+        ResultSet resultSet = statement.executeQuery(query);
+
+        return resultSet.next();
+
+    }
+
 
 }

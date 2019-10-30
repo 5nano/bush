@@ -48,8 +48,8 @@ public class CropsDao {
         resultSet = statement.executeQuery("SELECT Nombre,Descripcion FROM cultivo WHERE nombre = '" + crop.getName() + "'");
     }
 
-    public void delete(Crop crop) throws SQLException {
-        String query = "DELETE FROM cultivo WHERE idCultivo = " + crop.getIdCrop().get();
+    public void delete(Integer idCrop) throws SQLException {
+        String query = "DELETE FROM cultivo WHERE idCultivo = " + idCrop;
         PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }

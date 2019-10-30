@@ -51,8 +51,8 @@ public class CompaniesDao {
         resultSet = statement.executeQuery(query);
     }
 
-    public void delete(Company company) throws SQLException {
-        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("DELETE FROM compania WHERE idCompania = " + company);
+    public void delete(Integer companyId) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("DELETE FROM compania WHERE idCompania = " + companyId);
         preparedStatement.executeUpdate();
     }
 

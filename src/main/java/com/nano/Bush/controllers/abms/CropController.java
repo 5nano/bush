@@ -1,4 +1,4 @@
-package com.nano.Bush.controllers;
+package com.nano.Bush.controllers.abms;
 
 import com.nano.Bush.datasources.CropsDao;
 import com.nano.Bush.model.Crop;
@@ -42,12 +42,12 @@ public class CropController {
     }
 
     @RequestMapping(value = "/cultivos/eliminar", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Response> deleteCrop(@RequestBody Crop crop) throws SQLException {
-        if (!validationsService.isRepetead("nombre", "cultivo", crop.getName())) {
+    public ResponseEntity<Response> deleteCrop(@RequestParam Integer idCrop) throws SQLException {
+        if (!validationsService.isRepetead("idCultivo", "cultivo", idCrop)) {
             return new ResponseEntity<>(new Response("El cultivo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            cropsDao.delete(crop);
+            cropsDao.delete(idCrop);
             return new ResponseEntity<>(new Response("Cultivo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }
