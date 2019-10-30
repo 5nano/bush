@@ -1,7 +1,7 @@
 package com.nano.Bush.controllers.generalMetrics;
 
-import com.nano.Bush.model.generalMetrics.GanttMetricDTO;
-import com.nano.Bush.services.generalMetrics.GanttAssaysService;
+import com.nano.Bush.model.generalMetrics.SankeyAssayDTO;
+import com.nano.Bush.services.generalMetrics.SankeyAssayService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,14 +23,14 @@ import java.sql.SQLException;
 @Controller
 @RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
-public class GeneralAssayFinishedMetric {
+public class GeneralAssaySankeyMetric {
 
     @Autowired
-    private com.nano.Bush.services.generalMetrics.GanttAssaysService GanttAssaysService;
+    private SankeyAssayService sankeyAssayService;
 
-    @RequestMapping(value = "/metricas/ensayos/gantt", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/metricas/ensayos/sankey", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<GanttMetricDTO> getMixturesAgrochemicals() throws SQLException {
-        return new ResponseEntity<>(GanttAssaysService.getAssaysGantt(), HttpStatus.OK);
+    ResponseEntity<SankeyAssayDTO> getMixturesAgrochemicals() throws SQLException {
+        return new ResponseEntity<>(SankeyAssayService.getSankeyAssays(), HttpStatus.OK);
     }
 }
