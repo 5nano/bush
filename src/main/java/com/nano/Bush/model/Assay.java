@@ -5,13 +5,14 @@ import java.util.Optional;
 
 public class Assay {
 
-    private final Optional<Integer> idAssay;
-    private final int idCrop;
-    private final String name;
-    private final String description;
-    private final int idUserCreator;
-    private final Optional<AssayStatesEnum> state;
-    private final Optional<Timestamp> created;
+    private  Optional<Integer> idAssay;
+    private  int idCrop;
+    private  String name;
+    private  String description;
+    private  int idUserCreator;
+    private  Optional<AssayStatesEnum> state;
+    private  Optional<Timestamp> created;
+    private int idCompany;
 
     public Assay(Optional<Integer> idAssay, int idCrop, String name, String description, int idUserCreator, Optional<AssayStatesEnum> state, Optional<Timestamp> created) {
         this.idAssay = idAssay;
@@ -50,5 +51,17 @@ public class Assay {
 
     public Optional<Timestamp> getCreated() {
         return created;
+    }
+
+    public void setIdUserCreator(int idUserCreator) {
+        this.idUserCreator = idUserCreator;
+    }
+
+    public int getIdCompany() {
+        return idCompany;
+    }
+
+    public void setIdCompany(int idCompany) {
+        this.idCompany = idCompany;
     }
 }

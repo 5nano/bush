@@ -1,6 +1,5 @@
 package com.nano.Bush.datasources;
 
-import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.datasources.measures.AssaysDao;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.PostConstruct;
 import java.sql.PreparedStatement;
@@ -93,7 +91,7 @@ public class TagsDao {
         return assayWithTags;
     }
 
-    public List<Assay> getAllAssayFrom(List<String> tagsNames) throws SQLException {
+    public List<Assay> getAllAssayFrom(Integer idCompany,List<String> tagsNames) throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = assayWithTags();
 
         List<Integer> idTags = this.getTags().stream()
@@ -106,11 +104,11 @@ public class TagsDao {
                 .map(assayFiltered -> assayFiltered.getKey())
                 .collect(Collectors.toList());
 
-        return assaysDao.getAllAssays().stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
+        return assaysDao.getAllAssays(idCompany).stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
 
     }
 
-    public List<Assay> getAssaysFromByState(List<String> tagsNames, AssayStatesEnum state) throws SQLException {
+    public List<Assay> getAssaysFromByState(Integer idCompany,List<String> tagsNames, AssayStatesEnum state) throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = assayWithTags();
 
         List<Integer> idTags = this.getTags().stream()
@@ -123,7 +121,7 @@ public class TagsDao {
                 .map(assayFiltered -> assayFiltered.getKey())
                 .collect(Collectors.toList());
 
-        return assaysDao.getAssaysByState(state).stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
+        return assaysDao.getAssaysByState(idCompany, state).stream().filter(assay -> idAssays.contains(assay.getIdAssay().get())).collect(Collectors.toList());
 
     }
 

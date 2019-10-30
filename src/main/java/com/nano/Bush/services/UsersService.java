@@ -13,6 +13,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Optional;
 
 import static java.util.Objects.isNull;
 
@@ -29,6 +30,10 @@ public class UsersService {
 
     public List<User> getUsers() throws SQLException {
         return usersDao.getUsers();
+    }
+
+    public Option<User> getUserByUserName(String username){
+        return usersDao.getUserByUsername(username);
     }
 
     public void updateUser(User user) throws SQLException {

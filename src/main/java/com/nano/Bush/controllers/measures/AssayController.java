@@ -2,10 +2,9 @@ package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.*;
-import com.nano.Bush.services.AssayService;
-import com.nano.Bush.services.ExperimentService;
-import com.nano.Bush.services.TreatmentsService;
-import com.nano.Bush.services.ValidationsService;
+import com.nano.Bush.services.*;
+import com.nano.Bush.utils.RequestHomeMadeInterceptor;
+import io.vavr.Tuple2;
 import io.vavr.control.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,9 +12,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
+
+import static com.nano.Bush.utils.EncryptUtils.decode;
 
 @Controller
 @RequestMapping("")
@@ -31,22 +33,28 @@ public class AssayController {
     ValidationsService validationsService;
     @Autowired
     TreatmentsService treatmentsService;
-
     @Autowired
     private ExperimentService experimentService;
+    @Autowired
+    private RequestHomeMadeInterceptor interceptor;
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay) throws SQLException {
+    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue("user") String user) throws SQLException {
+        final Tuple2<Integer,Integer> tuple = interceptor.extractUserCompany(user);
+        assay.setIdCompany(tuple._1);
+        assay.setIdUserCreator(tuple._2);
         return new ResponseEntity<>(assayService.insert(assay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state) {
+    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state,@CookieValue("user") String user) {
+
+        final Integer idCompany = interceptor.extractIdCompany(user);
 
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays() : assayService.getAssaysByState(ste))
-                .getOrElse(assayService.getAllAssays());
+                .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany,ste))
+                .getOrElse(assayService.getAllAssays(idCompany));
 
         return new ResponseEntity<>(assays, HttpStatus.OK);
     }

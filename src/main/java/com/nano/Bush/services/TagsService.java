@@ -69,16 +69,16 @@ public class TagsService {
                 .getOrElse(Maps.newHashMap());
     }
 
-    public List<AssayResponse> getAllAssaysFrom(List<String> tags) {
-        return Try.of(() -> tagsDao.getAllAssayFrom(tags))
+    public List<AssayResponse> getAllAssaysFrom(Integer idCompany,List<String> tags) {
+        return Try.of(() -> tagsDao.getAllAssayFrom(idCompany,tags))
                 .onFailure(e -> logger.error("Unexpected error", e))
                 .map(assays -> assayService.enrichAssays(assays))
                 .getOrElse(emptyList());
     }
 
-    public List<AssayResponse> getAssaysFromByState(List<String> tags,String state) {
+    public List<AssayResponse> getAssaysFromByState(Integer idCompany,List<String> tags,String state) {
         AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
-        return Try.of(() -> tagsDao.getAssaysFromByState(tags, assayState))
+        return Try.of(() -> tagsDao.getAssaysFromByState(idCompany,tags, assayState))
                 .onFailure(e -> logger.error("Unexpected error", e))
                 .map(assays -> assayService.enrichAssays(assays))
                 .getOrElse(emptyList());
