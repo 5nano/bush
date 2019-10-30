@@ -40,17 +40,17 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue("user") String user) throws SQLException {
-        final Tuple2<Integer,Integer> tuple = interceptor.extractUserCompany(user);
+    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "encoded_user", required = false) Optional<String> encoded_user) throws SQLException {
+        final Tuple2<Integer,Integer> tuple = interceptor.extractUserCompany(encoded_user,user);
         assay.setIdCompany(tuple._1);
         assay.setIdUserCreator(tuple._2);
         return new ResponseEntity<>(assayService.insert(assay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state,@CookieValue("user") String user) {
+    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "encoded_user", required = false) Optional<String> encoded_user) {
 
-        final Integer idCompany = interceptor.extractIdCompany(user);
+        final Integer idCompany = interceptor.extractIdCompany(encoded_user,user);
 
         List<AssayResponse> assays = Option.ofOptional(state)
                 .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany,ste))

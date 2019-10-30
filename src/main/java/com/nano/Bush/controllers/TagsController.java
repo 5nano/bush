@@ -72,8 +72,10 @@ public class TagsController {
 
     @RequestMapping(value = "/tags/ensayos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state,@CookieValue("user") String user) {
-        final Integer idCompany = interceptor.extractIdCompany(user);
+    ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state,
+                                                          @CookieValue(value = "user", required = false) Optional<String> user,
+                                                          @CookieValue(value = "encoded_user", required = false) Optional<String> encoded_user) {
+        final Integer idCompany = interceptor.extractIdCompany(encoded_user, user);
         List<AssayResponse> assays = Option.ofOptional(state)
                 .map(ste -> "ALL".equalsIgnoreCase(ste)? tagsService.getAllAssaysFrom(idCompany,tags) : tagsService.getAssaysFromByState(idCompany,tags,ste))
                 .getOrElse(tagsService.getAllAssaysFrom(idCompany,tags));
