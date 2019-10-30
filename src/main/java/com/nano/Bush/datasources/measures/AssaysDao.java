@@ -48,7 +48,7 @@ public class AssaysDao {
     }
 
     public List<Assay> getAllAssays(Integer idCompany) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where idcompania="+ idCompany);
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo WHERE idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
@@ -60,7 +60,7 @@ public class AssaysDao {
     }
 
     public List<Assay> getAssaysByState(Integer idCompany, AssayStatesEnum assayStatesEnum) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where estado = '" + assayStatesEnum.toString() + "' and idcompania=" + idCompany);
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo WHERE estado = '" + assayStatesEnum.toString() + "' AND idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
@@ -102,19 +102,19 @@ public class AssaysDao {
 
     public void archiveAssay(Integer idAssay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.ARCHIVED.toString() + "' where idEnsayo = '"+idAssay+"'");
+                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.ARCHIVED.toString() + "' where idEnsayo = '" + idAssay + "'");
         preparedStatement.executeUpdate();
     }
 
     public void activeAssay(Integer idAssay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.ACTIVE.toString() + "' where idEnsayo = '"+idAssay+"'");
+                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.ACTIVE.toString() + "' where idEnsayo = '" + idAssay + "'");
         preparedStatement.executeUpdate();
     }
 
     public void finishAssay(Integer idAssay, Integer stars, String comments) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.FINISHED.toString() + "' where idEnsayo = '"+idAssay+"'");
+                .getPreparedStatementFor("update ensayo set estado ='" + AssayStatesEnum.FINISHED.toString() + "' where idEnsayo = '" + idAssay + "'");
         preparedStatement.executeUpdate();
 
         preparedStatement = postgresConnector
