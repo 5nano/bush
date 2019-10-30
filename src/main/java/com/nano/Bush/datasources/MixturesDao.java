@@ -59,7 +59,7 @@ public class MixturesDao {
 
     public void delete(Mixture Mixture) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("DELETE FROM mezcla WHERE idMezcla =" + Mixture.getIdMixture());
+                .getPreparedStatementFor("DELETE FROM mezcla WHERE idMezcla = " + Mixture.getIdMixture().get());
         preparedStatement.executeUpdate();
     }
 
