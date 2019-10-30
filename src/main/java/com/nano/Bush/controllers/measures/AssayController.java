@@ -103,8 +103,8 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayo/tratamientos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<Treatment>> getTreatments(@RequestParam Integer idAssay) throws SQLException {
-        return new ResponseEntity<>(treatmentsService.treatments(idAssay), HttpStatus.OK);
+    ResponseEntity<List<TreatmentResponse>> getTreatments(@RequestParam Integer idAssay) throws SQLException {
+        return new ResponseEntity<>(treatmentsService.getTreatmentsFrom(idAssay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayo/archivar", method = RequestMethod.PATCH, produces = "application/json")
