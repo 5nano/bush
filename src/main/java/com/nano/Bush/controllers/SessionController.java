@@ -30,7 +30,7 @@ public class SessionController {
 
     private static void addCookies(UserCredentials userCredentials, HttpServletRequest request, HttpServletResponse response) {
         manageSession(request);
-        Cookie cookieUser = new Cookie("user", encode(userCredentials.username));
+        Cookie cookieUser = new Cookie("user_encoded", encode(userCredentials.username));
         cookieUser.setMaxAge(60 * 60 * 24 * 365);
         cookieUser.setPath("/");
         cookieUser.setHttpOnly(false);

@@ -56,7 +56,7 @@ public class AssayController {
                 .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany,ste))
                 .getOrElse(assayService.getAllAssays(idCompany));
 
-        return new ResponseEntity<>(assays, HttpStatus.OK);
+         return new ResponseEntity<>(assays, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.DELETE, produces = "application/json")
