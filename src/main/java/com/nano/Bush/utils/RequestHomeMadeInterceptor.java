@@ -11,6 +11,11 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.CookieValue;
 
+import javax.swing.text.html.Option;
+
+import java.util.Optional;
+import java.util.function.Function;
+
 import static com.nano.Bush.utils.EncryptUtils.decode;
 @Service
 public class RequestHomeMadeInterceptor {
@@ -18,21 +23,24 @@ public class RequestHomeMadeInterceptor {
   @Autowired
   UsersService usersService;
 
-  public Integer extractIdUserCreator(String user) {
+  public Integer extractIdUserCreator(Optional<String> encoded_user, Optional<String> _user) {
+    String user = encoded_user.map(eu -> decode(eu)).orElseGet(()->_user.orElseThrow(() -> new RuntimeException("Missing user from cookie") ));
     logger.info("Incoming user {}", user);
     return usersService.getUserByUserName(user)
             .map(u ->u.getUserId().get())
             .getOrElseThrow(() -> new RuntimeException("User not found"));
   }
 
-  public Integer extractIdCompany(String user) {
+  public Integer extractIdCompany(Optional<String> encoded_user, Optional<String> _user) {
+    String user = encoded_user.map(eu -> decode(eu)).orElseGet(()->_user.orElseThrow(() -> new RuntimeException("Missing user from cookie") ));
     logger.info("Incoming user {}", user);
     return usersService.getUserByUserName(user)
             .map(u ->u.getCompanyId())
             .getOrElseThrow(() -> new RuntimeException("Company not found"));
   }
 
-  public Tuple2<Integer, Integer> extractUserCompany(String user) {
+  public Tuple2<Integer, Integer> extractUserCompany(Optional<String> encoded_user, Optional<String> _user) {
+    String user = encoded_user.map(eu -> decode(eu)).orElseGet(()->_user.orElseThrow(() -> new RuntimeException("Missing user from cookie") ));
     logger.info("Incoming user {}", user);
     return usersService.getUserByUserName(user)
             .map(u ->Tuple.of(u.getCompanyId(),u.getUserId().get()))
