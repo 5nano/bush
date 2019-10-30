@@ -49,7 +49,7 @@ public class AgrochemicalsDao {
     }
 
     public void delete(Agrochemical agrochemical) throws SQLException {
-        String query = "DELETE FROM agroquimico WHERE idAgroquimico = " + agrochemical.getIdAgrochemical();
+        String query = "DELETE FROM agroquimico WHERE idAgroquimico = " + agrochemical.getIdAgrochemical().get();
         preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }

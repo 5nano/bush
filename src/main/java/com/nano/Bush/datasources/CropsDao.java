@@ -49,7 +49,7 @@ public class CropsDao {
     }
 
     public void delete(Crop crop) throws SQLException {
-        String query = "DELETE FROM cultivo WHERE idCultivo = " + crop.getIdCrop();
+        String query = "DELETE FROM cultivo WHERE idCultivo = " + crop.getIdCrop().get();
         PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
