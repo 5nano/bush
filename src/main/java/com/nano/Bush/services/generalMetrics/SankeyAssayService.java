@@ -7,7 +7,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Service
 public class SankeyAssayService {
@@ -35,32 +39,48 @@ public class SankeyAssayService {
             " LEFT JOIN ensayoTerminado et ON e.idEnsayo = et.idEnsayo " +
             " WHERE e.estado = 'FINISHED' " +
             " GROUP BY estado,et.estrellas";
+    private List<Integer> source = new ArrayList<>();
+    private List<Integer> target = new ArrayList<>();
+    private List<Integer> values = new ArrayList<>();
 
     @Autowired
     private TreatmentsDao treatmentsDao;
 
-    public SankeyAssayService() throws SQLException {
+    public SankeyAssayService() {
     }
 
     public SankeyAssayDTO getSankeyAssays() throws SQLException {
-        return null;
+        List<Tuple3<String, String, String>> allRelations = new ArrayList<>();
+        allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(cropMixtureRelationQuery));
+        allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(mixtureAgrochemicalRelationQuery));
+        allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(agrochemicalStateRelationQuery));
+        allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(stateStarsRelationQuery));
+
+        List<String> labels = allRelations.stream().map(Tuple3::_1).distinct().collect(Collectors.toList());
+
+        labels.addAll(allRelations.stream().map(Tuple3::_2).distinct().collect(Collectors.toList()));
+
+        labels = labels.stream().distinct().collect(Collectors.toList());
+
+        Map<String, Integer> labelWithIndex = new HashMap<>();
+
+        List<String> finalLabels = labels;
+
+        labels.forEach(label -> labelWithIndex.put(label, finalLabels.indexOf(label)));
+
+        List<Tuple3<Integer, Integer, Integer>> finalRelations = new ArrayList<>();
+
+        allRelations.forEach(relation -> finalRelations.add(new Tuple3<>(labelWithIndex.get(relation._1()), labelWithIndex.get(relation._2()), Integer.parseInt(relation._3()))));
+
+        finalRelations.forEach(this::addTupleInLists);
+
+        return new SankeyAssayDTO(labels, source, target, values);
     }
 
-    private List<Tuple3<String, String, String>> getCropMixtureRelation() throws SQLException {
-        treatmentsDao.getRelationForSankeyGraphicTuple(cropMixtureRelationQuery);
-
-    }
-
-    private List<Tuple3<String, String, String>> getMixtureAgrochemicalRelation() throws SQLException {
-        treatmentsDao.getRelationForSankeyGraphicTuple(mixtureAgrochemicalRelationQuery);
-    }
-
-    private List<Tuple3<String, String, String>> getAgrochemicalStateRelation() throws SQLException {
-        treatmentsDao.getRelationForSankeyGraphicTuple(agrochemicalStateRelationQuery);
-    }
-
-    private List<Tuple3<String, String, String>> getStateStarsRelation() throws SQLException {
-        treatmentsDao.getRelationForSankeyGraphicTuple(stateStarsRelationQuery);
+    private void addTupleInLists(Tuple3<Integer, Integer, Integer> relation) {
+        source.add(relation._1());
+        target.add(relation._2());
+        values.add(relation._3());
     }
 
 }
