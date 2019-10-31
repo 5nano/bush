@@ -3,47 +3,47 @@ package com.nano.Bush.model.generalMetrics;
 import java.util.List;
 
 public class SankeyAssayDTO {
-    private List<String> labels;
-    private List<Integer> sources;
-    private List<Integer> targets;
-    private List<Integer> values;
+    private List<String> label;
+    private List<Integer> source;
+    private List<Integer> target;
+    private List<Integer> value;
 
-    public SankeyAssayDTO(List<String> labels, List<Integer> sources, List<Integer> targets, List<Integer> values) {
-        this.labels = labels;
-        this.sources = sources;
-        this.targets = targets;
-        this.values = values;
+    public SankeyAssayDTO(List<String> label, List<Integer> source, List<Integer> target, List<Integer> value) {
+        this.label = label;
+        this.source = source;
+        this.target = target;
+        this.value = value;
     }
 
-    public List<String> getLabels() {
-        return labels;
+    public List<String> getLabel() {
+        return label;
     }
 
-    public void setLabels(List<String> labels) {
-        this.labels = labels;
+    public void setLabel(List<String> label) {
+        this.label = label;
     }
 
-    public List<Integer> getSources() {
-        return sources;
+    public List<Integer> getSource() {
+        return source;
     }
 
-    public void setSources(List<Integer> sources) {
-        this.sources = sources;
+    public void setSource(List<Integer> source) {
+        this.source = source;
     }
 
-    public List<Integer> getTargets() {
-        return targets;
+    public List<Integer> getTarget() {
+        return target;
     }
 
-    public void setTargets(List<Integer> targets) {
-        this.targets = targets;
+    public void setTarget(List<Integer> target) {
+        this.target = target;
     }
 
-    public List<Integer> getValues() {
-        return values;
+    public List<Integer> getValue() {
+        return value;
     }
 
-    public void setValues(List<Integer> values) {
-        this.values = values;
+    public void setValue(List<Integer> value) {
+        this.value = value;
     }
 }

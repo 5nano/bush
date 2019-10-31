@@ -157,7 +157,7 @@ public class TreatmentsDao {
         List<Tuple3<String, String, String>> relation = new ArrayList<>();
         resultSet = statement.executeQuery(query);
         while (resultSet.next()) {
-            relation.add(new Tuple3<>(resultSet.getString(0), resultSet.getString(1), resultSet.getString(2)));
+            relation.add(new Tuple3<>(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3)));
         }
         return relation;
     }

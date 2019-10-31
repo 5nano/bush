@@ -23,7 +23,7 @@ public class GanttAssaysService {
         List<JobDTO> jobDTOS = new ArrayList<>();
 
         assays.forEach(assay -> jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(),
-                "2019-02-22", assay.getState().get().toString())));
+                "2019-02-22", assay.getState().get().toString())));//TODO: falta la fecha de finalización de cada ensayo
 
         return new GanttMetricDTO(jobDTOS);
     }
