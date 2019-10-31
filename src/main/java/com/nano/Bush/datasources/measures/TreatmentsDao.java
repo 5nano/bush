@@ -93,8 +93,8 @@ public class TreatmentsDao {
         List<Treatment> treatments = new ArrayList<>();
         while (resultSet.next()) {
             treatments.add(new Treatment(Optional.of(resultSet.getInt("idTratamiento")), Optional.empty(), resultSet.getInt("idEnsayo"),
-                    resultSet.getInt("idagroquimico"),
-                    resultSet.getInt("idmezcla"), resultSet.getString("nombre"), resultSet.getString("descripcion"), Optional.of(resultSet.getDouble("presion"))));
+                    resultSet.getInt("idmezcla"),resultSet.getInt("idagroquimico"),
+                     resultSet.getString("nombre"), resultSet.getString("descripcion"), Optional.of(resultSet.getDouble("presion"))));
         }
         return treatments;
     }
