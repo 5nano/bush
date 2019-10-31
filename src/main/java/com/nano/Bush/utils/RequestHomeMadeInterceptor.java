@@ -4,6 +4,7 @@ import com.nano.Bush.model.User;
 import com.nano.Bush.services.UsersService;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,11 +40,11 @@ public class RequestHomeMadeInterceptor {
             .getOrElseThrow(() -> new RuntimeException("Company not found"));
   }
 
-  public Tuple2<Integer, Integer> extractUserCompany(Optional<String> encoded_user, Optional<String> _user) {
+  public Tuple3<Integer, Integer, String> extractUserCompany(Optional<String> encoded_user, Optional<String> _user) {
     String user = encoded_user.map(eu -> decode(eu)).orElseGet(()->_user.orElseThrow(() -> new RuntimeException("Missing user from cookie") ));
     logger.info("Incoming user {}", user);
     return usersService.getUserByUserName(user)
-            .map(u ->Tuple.of(u.getCompanyId(),u.getUserId().get()))
+            .map(u ->Tuple.of(u.getCompanyId(),u.getUserId().get(),u.getUsername()))
             .getOrElseThrow(() -> new RuntimeException("User not found"));
   }
 
