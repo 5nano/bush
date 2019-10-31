@@ -59,18 +59,18 @@ public class AssaysDao {
         return Assays;
     }
 
-    public Optional<Assay> getAssay(Integer idAssay)  {
+    public Optional<Assay> getAssay(Integer idAssay) {
 
         try {
-            resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo where idEnsayo = " + idAssay);
+            resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo WHERE idEnsayo = " + idAssay);
             while (resultSet.next()) {
                 return Optional.of(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                         resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
                         Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
                         Optional.of(resultSet.getTimestamp("creado"))));
             }
-        } catch (SQLException sqe){
-            logger.error("Unexpected error with assay " + idAssay,sqe);
+        } catch (SQLException sqe) {
+            logger.error("Unexpected error with assay " + idAssay, sqe);
         }
 
         return Optional.empty();
@@ -135,10 +135,11 @@ public class AssaysDao {
         preparedStatement.executeUpdate();
 
         preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayoTerminado (idEnsayoTerminado,idEnsayo,conclusiones,estrellas) VALUES (default, ?, ?,?)");
+                .getPreparedStatementFor("INSERT INTO ensayoTerminado (idEnsayoTerminado,idEnsayo,conclusiones,estrellas,fechaTerminado) VALUES (default, ?, ?, ?, ?)");
         preparedStatement.setInt(1, idAssay);
         preparedStatement.setString(2, comments);
         preparedStatement.setInt(3, stars);
+        preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 
         preparedStatement.executeUpdate();
     }
