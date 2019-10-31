@@ -2,7 +2,10 @@ package com.nano.Bush.controllers.measures;
 
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.model.*;
-import com.nano.Bush.services.*;
+import com.nano.Bush.services.AssayService;
+import com.nano.Bush.services.ExperimentService;
+import com.nano.Bush.services.TreatmentsService;
+import com.nano.Bush.services.ValidationsService;
 import com.nano.Bush.utils.RequestHomeMadeInterceptor;
 import io.vavr.Tuple2;
 import io.vavr.control.Option;
@@ -19,8 +22,6 @@ import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Optional;
-
-import static com.nano.Bush.utils.EncryptUtils.decode;
 
 @Controller
 @RequestMapping("")
@@ -45,32 +46,32 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws SQLException {
-        final Tuple2<Integer,Integer> tuple = interceptor.extractUserCompany(user_encoded,user);
+    ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws SQLException {
+        final Tuple2<Integer, Integer> tuple = interceptor.extractUserCompany(user_encoded, user);
         assay.setIdCompany(tuple._1);
         assay.setIdUserCreator(tuple._2);
         return new ResponseEntity<>(assayService.insert(assay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayos", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state, HttpServletRequest request,@CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
+    public ResponseEntity<List<AssayResponse>> showAssays(Optional<String> state, HttpServletRequest request, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
         final Cookie[] cookies = request.getCookies();
 
         if (cookies != null) {
             for (Cookie cookie : cookies) {
-                logger.info("Received cookie {}:{}", cookie.getName(),cookie.getValue());
-        }}
-        else {
+                logger.info("Received cookie {}:{}", cookie.getName(), cookie.getValue());
+            }
+        } else {
             logger.info("Empty cookies");
         }
 
-        final Integer idCompany = interceptor.extractIdCompany(user_encoded,user);
+        final Integer idCompany = interceptor.extractIdCompany(user_encoded, user);
 
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste)? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany,ste))
+                .map(ste -> "ALL".equalsIgnoreCase(ste) ? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany, ste))
                 .getOrElse(assayService.getAllAssays(idCompany));
 
-         return new ResponseEntity<>(assays, HttpStatus.OK);
+        return new ResponseEntity<>(assays, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayo", method = RequestMethod.GET, produces = "application/json")
@@ -83,14 +84,14 @@ public class AssayController {
 
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.POST, produces = "application/json")
-    public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
+    public ResponseEntity<Response> deleteAssay(@RequestParam Integer assayId) throws SQLException {
 
-        if (!validationsService.isRepetead("nombre", "ensayo", assay.getName())) {
+        if (!validationsService.isRepetead("idEnsayo", "ensayo", assayId)) {
             return new ResponseEntity<>(new Response("El ensayo a eliminar no existe", HttpStatus.CONFLICT.value()),
                     HttpStatus.CONFLICT);
         } else {
-            assayService.deleteTestFromExperiments(assay.getIdAssay().get());
-            assaysDao.delete(assay.getIdAssay().get());
+            assayService.deleteTestFromExperiments(assayId);
+            assaysDao.delete(assayId);
             return new ResponseEntity<>(new Response("Ensayo Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
         }
     }

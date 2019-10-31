@@ -63,7 +63,7 @@ public class AssayService {
   }
 
   public Assay getAssay(Integer id) {
-   return assaysDao.getAssay(id).orElseThrow(() -> new RuntimeException("Assay " + id + " not found"));
+    return assaysDao.getAssay(id).orElseThrow(() -> new RuntimeException("Assay " + id + " not found"));
   }
 
   public void deleteTestFromExperiments(Integer assayId) throws SQLException {
@@ -110,10 +110,10 @@ public class AssayService {
   }
 
 
-  public AssayInsertResponse insert(Assay assay) throws SQLException {
-    Integer insertAndReturnIdAssay = assaysDao.insert(assay);
-    return new AssayInsertResponse(insertAndReturnIdAssay);
-  }
+    public AssayInsertResponse insert(Assay assay) throws SQLException {
+        Integer insertAndReturnIdAssay = assaysDao.insert(assay);
+        return new AssayInsertResponse(insertAndReturnIdAssay);
+    }
 
   public void archiveAssay(Integer idAssay) throws SQLException {
     assaysDao.archiveAssay(idAssay);
