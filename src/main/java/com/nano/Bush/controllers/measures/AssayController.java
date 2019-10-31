@@ -8,6 +8,7 @@ import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
 import com.nano.Bush.utils.RequestHomeMadeInterceptor;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,7 +48,7 @@ public class AssayController {
     @RequestMapping(value = "/ensayos/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<AssayInsertResponse> insertAssay(@RequestBody Assay assay, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws SQLException {
-        final Tuple2<Integer, Integer> tuple = interceptor.extractUserCompany(user_encoded, user);
+        final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
         assay.setIdCompany(tuple._1);
         assay.setIdUserCreator(tuple._2);
         return new ResponseEntity<>(assayService.insert(assay), HttpStatus.OK);

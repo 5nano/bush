@@ -4,7 +4,9 @@ package com.nano.Bush.services;
  * Created by Matias Zeitune oct. 2019
  **/
 
+import com.nano.Bush.datasources.UsersDao;
 import com.sun.mail.smtp.SMTPTransport;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
@@ -25,8 +27,11 @@ import java.util.Properties;
 @Service
 public class EmailSenderService {
 
-    public void sendEmail(String payload) throws AddressException {
-        final String EMAIL_TEXT = "<h1>Hello Java Mail \n ABC123</h1>";
+    @Autowired
+    private UsersDao usersDao;
+
+    public void sendEmail(String payload, String treatmentName, String assayName, String user) throws AddressException {
+        String EMAIL_TEXT = payload;
 
         final String username = "5nano.consultas@gmail.com";
         final String password = "ebxnjrpslhjtiobb";
@@ -51,9 +56,9 @@ public class EmailSenderService {
             message.setFrom(new InternetAddress("5nano.consultas@gmail.com"));
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse("matizeitune@gmail.com, matias.zeitune@despegar.com")
+                    InternetAddress.parse(usersDao.getUserByUsername(user).get().getEmail())
             );
-            message.setSubject("Testing Gmail SSL");
+            message.setSubject("QRs Tratamiento: "+ treatmentName + " , Ensayo: "+assayName);
             /*message.setText("Dear Mail Crawler,"
                     + "\n\n Please do not spam my email!");
 
