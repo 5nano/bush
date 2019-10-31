@@ -62,6 +62,10 @@ public class AssayService {
             .getOrElse(emptyList());
   }
 
+  public Assay getAssay(Integer id) {
+   return assaysDao.getAssay(id).orElseThrow(() -> new RuntimeException("Assay " + id + " not found"));
+  }
+
   public void deleteTestFromExperiments(Integer assayId) throws SQLException {
     assaysDao.getExperimentsFromAssay(assayId)
             .forEach(experiment -> measuresDao.deleteExperiment(assayId, experiment.getExperimentId().get()));

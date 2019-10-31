@@ -73,6 +73,15 @@ public class AssayController {
          return new ResponseEntity<>(assays, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/ensayo", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<Assay> getAssay(@RequestParam(value = "idAssay") Integer id, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
+
+        //final Integer idCompany = interceptor.extractIdCompany(user_encoded,user);
+
+        return new ResponseEntity<>(assayService.getAssay(id), HttpStatus.OK);
+    }
+
+
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestBody Assay assay) throws SQLException {
 
