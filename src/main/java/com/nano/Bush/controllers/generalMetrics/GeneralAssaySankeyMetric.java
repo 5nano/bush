@@ -31,6 +31,6 @@ public class GeneralAssaySankeyMetric {
     @RequestMapping(value = "/metricas/ensayos/sankey", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<SankeyAssayDTO> getMixturesAgrochemicals() throws SQLException {
-        return new ResponseEntity<>(SankeyAssayService.getSankeyAssays(), HttpStatus.OK);
+        return new ResponseEntity<>(sankeyAssayService.getSankeyAssays(), HttpStatus.OK);
     }
 }

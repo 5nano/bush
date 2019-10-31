@@ -1,63 +1,66 @@
 package com.nano.Bush.services.generalMetrics;
 
-import com.nano.Bush.datasources.AgrochemicalsDao;
-import com.nano.Bush.datasources.CropsDao;
-import com.nano.Bush.datasources.MixturesDao;
-import com.nano.Bush.datasources.measures.AssaysDao;
-import com.nano.Bush.model.Agrochemical;
-import com.nano.Bush.model.Crop;
-import com.nano.Bush.model.Mixture;
+import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.generalMetrics.SankeyAssayDTO;
+import io.vavr.Tuple3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @Service
 public class SankeyAssayService {
 
+
+    private final String cropMixtureRelationQuery = "SELECT c.nombre AS cultivo,m.nombre mezcla, COUNT(t.idTratamiento) AS cant" +
+            " FROM tratamiento t " +
+            " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +
+            " LEFT JOIN cultivo c ON e.idCultivo = c.idCultivo " +
+            " LEFT JOIN mezcla m ON t.idMezcla = m.idMezcla " +
+            " GROUP BY cultivo,mezcla ";
+    private final String mixtureAgrochemicalRelationQuery = " SELECT m.nombre AS mezcla,a.nombre AS agroquimico,COUNT(ma.idmezclaAgroquimico) AS cant" +
+            " FROM mezclaAgroquimico ma " +
+            " LEFT JOIN mezcla m ON ma.idMezcla = m.idMezcla " +
+            " LEFT JOIN agroquimico a ON ma.idAgroquimico = a.idAgroquimico " +
+            " GROUP BY mezcla,agroquimico ";
+    private final String agrochemicalStateRelationQuery = "SELECT e.estado AS estado,a.nombre AS agroquimico,COUNT(t.idTratamiento)" +
+            " FROM tratamiento t " +
+            " LEFT JOIN agroquimico a ON t.idAgroquimico = a.idAgroquimico " +
+            " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +
+            " GROUP BY estado,agroquimico ";
+    private final String stateStarsRelationQuery = "SELECT e.estado AS estado,et.estrellas,COUNT(t.idTratamiento)" +
+            " FROM tratamiento t " +
+            " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +
+            " LEFT JOIN ensayoTerminado et ON e.idEnsayo = et.idEnsayo " +
+            " WHERE e.estado = 'FINISHED' " +
+            " GROUP BY estado,et.estrellas";
+
     @Autowired
-    AgrochemicalsDao agrochemicalsDao;
-    @Autowired
-    MixturesDao mixturesDao;
-    @Autowired
-    CropsDao cropsDao;
-    @Autowired
-    AssaysDao assaysDao;
+    private TreatmentsDao treatmentsDao;
+
+    public SankeyAssayService() throws SQLException {
+    }
 
     public SankeyAssayDTO getSankeyAssays() throws SQLException {
-
-
-        return new SankeyAssayDTO(getlabels(), , , );
+        return null;
     }
 
-    private List<String> getlabels() throws SQLException {
-        List<String> labels = new ArrayList<>();
-        labels.addAll(cropsDao.getCrops().stream().map(Crop::getName).collect(Collectors.toList()));
-        labels.addAll(agrochemicalsDao.getAgrochemicals().stream().map(Agrochemical::getName).collect(Collectors.toList()));
-        labels.addAll(mixturesDao.getMixtures().stream().map(Mixture::getName).collect(Collectors.toList()));
-        labels.addAll(assaysDao.getAssays().stream().map(assay -> assay.getState().get().toString()).collect(Collectors.toList()))
+    private List<Tuple3<String, String, String>> getCropMixtureRelation() throws SQLException {
+        treatmentsDao.getRelationForSankeyGraphicTuple(cropMixtureRelationQuery);
 
     }
 
-    /**
-     * cultivos -> mezclas-> agroquimicos -> estado */
+    private List<Tuple3<String, String, String>> getMixtureAgrochemicalRelation() throws SQLException {
+        treatmentsDao.getRelationForSankeyGraphicTuple(mixtureAgrochemicalRelationQuery);
+    }
 
-    /**
-     *  select m.nombre, a.nombre,count(ma.idAgroquimico) as cant_agroquimicos_mezclas from mezclaAgroquimico ma
-     *  join mezcla m on m.idMezcla=ma.idMezcla
-     *  join agroquimico a on a.idAgroquimico=ma.idAgroquimico
-     *  group by m.nombre, a.nombre
-     *
-     *
-     *  select m.nombre, count(t.idTratamiento) as cant_tratamientos_mezcla from tratamiento t
-     *  join mezcla m on m.idMezcla=t.idMezcla
-     *  group by t.idMezcla,m.nombre
-     *
-     *  select c.nombre, count(e.nombre) as cant_ensayos_cultivos from ensayo e
-     *  join cultivo c on c.idCultivo=e.idCultivo
-     *  group by e.idCultivo,c.nombre*/
+    private List<Tuple3<String, String, String>> getAgrochemicalStateRelation() throws SQLException {
+        treatmentsDao.getRelationForSankeyGraphicTuple(agrochemicalStateRelationQuery);
+    }
+
+    private List<Tuple3<String, String, String>> getStateStarsRelation() throws SQLException {
+        treatmentsDao.getRelationForSankeyGraphicTuple(stateStarsRelationQuery);
+    }
+
 }
