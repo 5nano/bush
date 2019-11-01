@@ -28,11 +28,11 @@ public class SankeyAssayService {
             " LEFT JOIN mezcla m ON ma.idMezcla = m.idMezcla " +
             " LEFT JOIN agroquimico a ON ma.idAgroquimico = a.idAgroquimico " +
             " GROUP BY mezcla,agroquimico ";
-    private final String agrochemicalStateRelationQuery = "SELECT e.estado AS estado,a.nombre AS agroquimico,COUNT(t.idTratamiento)" +
+    private final String agrochemicalStateRelationQuery = "SELECT m.nombre AS mezcla,e.estado AS estado,COUNT(t.idTratamiento)" +
             " FROM tratamiento t " +
-            " LEFT JOIN agroquimico a ON t.idAgroquimico = a.idAgroquimico " +
-            " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +
-            " GROUP BY estado,agroquimico ";
+            " LEFT JOIN mezcla m ON m.idMezcla = t.idMezcla " +
+            " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +//TODO: ACA TIENE QUE SER AGROQUIMICO CON ESTADO
+            " GROUP BY mezcla,estado ";
     private final String stateStarsRelationQuery = "SELECT e.estado AS estado,et.estrellas,COUNT(t.idTratamiento)" +
             " FROM tratamiento t " +
             " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +
@@ -41,7 +41,7 @@ public class SankeyAssayService {
             " GROUP BY estado,et.estrellas";
     private List<Integer> source = new ArrayList<>();
     private List<Integer> target = new ArrayList<>();
-    private List<Integer> values = new ArrayList<>();
+    private List<Integer> value = new ArrayList<>();
 
     @Autowired
     private TreatmentsDao treatmentsDao;
@@ -52,7 +52,7 @@ public class SankeyAssayService {
     public SankeyAssayDTO getSankeyAssays() throws SQLException {
         List<Tuple3<String, String, String>> allRelations = new ArrayList<>();
         allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(cropMixtureRelationQuery));
-        allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(mixtureAgrochemicalRelationQuery));
+        //allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(mixtureAgrochemicalRelationQuery));//TODO: agregarlo cuando quede bien la base
         allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(agrochemicalStateRelationQuery));
         allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(stateStarsRelationQuery));
 
@@ -74,13 +74,13 @@ public class SankeyAssayService {
 
         finalRelations.forEach(this::addTupleInLists);
 
-        return new SankeyAssayDTO(labels, source, target, values);
+        return new SankeyAssayDTO(labels, source, target, value);
     }
 
     private void addTupleInLists(Tuple3<Integer, Integer, Integer> relation) {
         source.add(relation._1());
         target.add(relation._2());
-        values.add(relation._3());
+        value.add(relation._3());
     }
 
 }

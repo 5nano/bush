@@ -46,4 +46,5 @@ public class SankeyAssayDTO {
     public void setValue(List<Integer> value) {
         this.value = value;
     }
+
 }
