@@ -36,7 +36,7 @@ public class ExperimentController {
 
 
     @RequestMapping(value = "/experiment/point", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<ExperimentPoint> showExperimentPoint(@RequestParam Integer experimentId, LocalDate timestamp) throws SQLException {
+    public ResponseEntity<ExperimentPoint> showExperimentPoint(@RequestParam Integer experimentId, String timestamp) throws SQLException {
         return new ResponseEntity<>(experimentService.getExperimentPoint(experimentId, timestamp), HttpStatus.OK);
     }
 

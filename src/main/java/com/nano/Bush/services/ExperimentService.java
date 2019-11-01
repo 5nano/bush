@@ -28,9 +28,11 @@ public class ExperimentService {
     @Autowired
     AssaysDao assaysDao;
 
-    public ExperimentPoint getExperimentPoint(Integer experimentId, LocalDate timestamp) throws SQLException {
+    public ExperimentPoint getExperimentPoint(Integer experimentId, String timestamp) throws SQLException {
         List<ExperimentPoint> experimentPoints = this.getExperimentPoints(experimentId);
-        return experimentPoints.stream().filter(experimentPoint -> experimentPoint.getTimestamp().equals(timestamp)).collect(Collectors.toList()).get(0);
+
+        LocalDate localDate = LocalDate.parse(timestamp);
+        return experimentPoints.stream().filter(experimentPoint -> experimentPoint.getTimestamp().equals(localDate)).collect(Collectors.toList()).get(0);
     }
 
     public List<ExperimentPoint> getExperimentPoints(Integer experimentId) throws SQLException {
