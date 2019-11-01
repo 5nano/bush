@@ -11,9 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class AssaysDao {
@@ -142,5 +140,15 @@ public class AssaysDao {
         preparedStatement.setTimestamp(4, new Timestamp(System.currentTimeMillis()));
 
         preparedStatement.executeUpdate();
+    }
+
+    public Map<Integer, String> getAssayTerminateDate() throws SQLException {
+        resultSet = statement.executeQuery("SELECT idEnsayo,fechaTerminado FROM ensayoTerminado");
+        Map<Integer, String> terminatedAssays = new HashMap<>();
+        while (resultSet.next()) {
+            terminatedAssays.put(resultSet.getInt("idEnsayo"), resultSet.getString("fechaTerminado"));
+        }
+
+        return terminatedAssays;
     }
 }
