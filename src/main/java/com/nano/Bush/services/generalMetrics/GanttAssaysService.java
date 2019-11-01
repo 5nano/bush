@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class GanttAssaysService {
@@ -21,9 +22,10 @@ public class GanttAssaysService {
 
         List<Assay> assays = assaysDao.getAssays();
         List<JobDTO> jobDTOS = new ArrayList<>();
+        Map<Integer, String> assayWithFinishedDates = assaysDao.getAssayTerminateDate();
 
         assays.forEach(assay -> jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(),
-                "2019-02-22", assay.getState().get().toString())));//TODO: falta la fecha de finalización de cada ensayo
+                assayWithFinishedDates.get(assay.getIdAssay().get()), assay.getState().get().toString())));
 
         return new GanttMetricDTO(jobDTOS);
     }
