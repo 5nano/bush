@@ -3,6 +3,7 @@ package com.nano.Bush.datasources.measures;
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Experiment;
 import com.nano.Bush.model.Treatment;
+import io.vavr.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -135,10 +136,31 @@ public class TreatmentsDao {
         return null;
     }
 
+    public List<Integer> getMixturesUsedInAllTreatments() throws SQLException {
+        String query = "SELECT idmezcla FROM tratamiento WHERE idMezcla IS NOT NULL";
+        List<Integer> mixturesIds = new ArrayList<>();
+        resultSet = statement.executeQuery(query);
+        while (resultSet.next()) {
+            mixturesIds.add(resultSet.getInt("idmezcla"));
+        }
+        return mixturesIds;
+    }
+
     public void delete(Integer idTreatment) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("DELETE FROM tratamiento WHERE idTratamiento = " + idTreatment);
         preparedStatement.executeUpdate();
     }
+
+    public List<Tuple3<String, String, String>> getRelationForSankeyGraphicTuple(String query) throws SQLException {
+
+        List<Tuple3<String, String, String>> relation = new ArrayList<>();
+        resultSet = statement.executeQuery(query);
+        while (resultSet.next()) {
+            relation.add(new Tuple3<>(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3)));
+        }
+        return relation;
+    }
+
 
 }
