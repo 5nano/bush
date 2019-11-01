@@ -11,7 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.time.LocalDate;
+import java.time.Instant;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -31,8 +31,8 @@ public class ExperimentService {
     public ExperimentPoint getExperimentPoint(Integer experimentId, String timestamp) throws SQLException {
         List<ExperimentPoint> experimentPoints = this.getExperimentPoints(experimentId);
 
-        LocalDate localDate = LocalDate.parse(timestamp);
-        return experimentPoints.stream().filter(experimentPoint -> experimentPoint.getTimestamp().equals(localDate)).collect(Collectors.toList()).get(0);
+        Instant inst = Instant.parse(timestamp);
+        return experimentPoints.stream().filter(experimentPoint -> experimentPoint.getInstant().equals(inst)).collect(Collectors.toList()).get(0);
     }
 
     public List<ExperimentPoint> getExperimentPoints(Integer experimentId) throws SQLException {
@@ -47,6 +47,7 @@ public class ExperimentService {
                                 experimentId,
                                 measurePlant.getImage(),
                                 measurePlant.getDay(),
+                                measurePlant.getDayWithHour(),
                                 measurePlant.getWidth().getValue(),
                                 measurePlant.getHeight().getValue(),
                                 measurePlant.getArea().getValue()

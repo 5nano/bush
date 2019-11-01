@@ -1,5 +1,6 @@
 package com.nano.Bush.model.stadistic;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 /**
@@ -13,16 +14,18 @@ public class ExperimentPoint {
     private final Integer experimentId;
     private final String pathImage;
     private final LocalDate timestamp;
+    private final Instant instant;
     private final Double width;
     private final Double height;
     private final Double area;
 
-    public ExperimentPoint(Integer assayId, Integer treatmentId, Integer experimentId, String pathImage, LocalDate timestamp, Double width, Double height, Double area) {
+    public ExperimentPoint(Integer assayId, Integer treatmentId, Integer experimentId, String pathImage, LocalDate timestamp, Instant instant, Double width, Double height, Double area) {
         this.assayId = assayId;
         this.treatmentId = treatmentId;
         this.experimentId = experimentId;
         this.pathImage = pathImage;
         this.timestamp = timestamp;
+        this.instant = instant;
         this.width = width;
         this.height = height;
         this.area = area;
@@ -59,5 +62,9 @@ public class ExperimentPoint {
 
     public Double getArea() {
         return area;
+    }
+
+    public Instant getInstant() {
+        return instant;
     }
 }

@@ -81,7 +81,7 @@ public class GraphicsService {
         return measures
                 .stream()
                 .map(measurePlant ->
-                        new GraphicLineTime(measurePlant.getDay(), measurePlant.getArea().getValue(), measurePlant.getImage()))
+                        new GraphicLineTime(measurePlant.getDay(), measurePlant.getDayWithHour(), measurePlant.getArea().getValue(), measurePlant.getImage()))
                 .collect(Collectors.toList());
 
     }
@@ -96,7 +96,7 @@ public class GraphicsService {
         Map<LocalDate, Double> measuresAveraged = measuresAgruppedByDay.entrySet().stream().map(entry ->
                 Tuple.of(entry.getKey(),
                         averageMeasurePlants(entry.getValue()))).collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
-        return measuresAveraged.entrySet().stream().map(entry -> new GraphicLineTime(entry.getKey(), entry.getValue(), null)).collect(Collectors.toList());
+        return measuresAveraged.entrySet().stream().map(entry -> new GraphicLineTime(entry.getKey(), null, entry.getValue(), null)).collect(Collectors.toList());
     }
 
 

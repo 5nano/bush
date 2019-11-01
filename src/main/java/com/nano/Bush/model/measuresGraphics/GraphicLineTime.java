@@ -2,6 +2,7 @@ package com.nano.Bush.model.measuresGraphics;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 /**
@@ -13,11 +14,13 @@ import java.time.LocalDate;
 public class GraphicLineTime {
 
     private final LocalDate date;
+    private final Instant instant;
     private final Double value;
     private final String imagePath;
 
-    public GraphicLineTime(LocalDate date, Double value, String imagePath) {
+    public GraphicLineTime(LocalDate date, Instant instant, Double value, String imagePath) {
         this.date = date;
+        this.instant = instant;
         this.value = value;
         this.imagePath = imagePath;
     }
@@ -33,5 +36,9 @@ public class GraphicLineTime {
 
     public String getImagePath() {
         return imagePath;
+    }
+
+    public Instant getInstant() {
+        return instant;
     }
 }
