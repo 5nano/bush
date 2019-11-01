@@ -3,6 +3,7 @@ package com.nano.Bush.model.measuresGraphics;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.util.Date;
 
@@ -11,7 +12,7 @@ public class MeasurePlant {
 
     private LocalDate day;
 
-    private Date dayWithHour;
+    private Instant dayWithHour;
 
     @JsonProperty("area")
     private PlantCvValue area;
@@ -81,11 +82,11 @@ public class MeasurePlant {
         this.width = width;
     }
 
-    public Date getDayWithHour() {
+    public Instant getDayWithHour() {
         return dayWithHour;
     }
 
-    public void setDayWithHour(Date dayWithHour) {
+    public void setDayWithHour(Instant dayWithHour) {
         this.dayWithHour = dayWithHour;
     }
 }
