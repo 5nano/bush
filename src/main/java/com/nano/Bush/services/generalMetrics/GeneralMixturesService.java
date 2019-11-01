@@ -18,6 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class GeneralMixturesService {
+    //TODO: los ensayos tienen que ser la compania en la que estas parado
 
     @Autowired
     TreatmentsDao treatmentsDao;

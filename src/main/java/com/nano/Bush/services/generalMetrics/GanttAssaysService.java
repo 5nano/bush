@@ -18,9 +18,9 @@ public class GanttAssaysService {
     @Autowired
     AssaysDao assaysDao;
 
-    public GanttMetricDTO getAssaysGantt() throws SQLException {
+    public GanttMetricDTO getAssaysGantt(Integer idCompany) throws SQLException {
 
-        List<Assay> assays = assaysDao.getAssays();
+        List<Assay> assays = assaysDao.getAllAssays(idCompany);
         List<JobDTO> jobDTOS = new ArrayList<>();
         Map<Integer, String> assayWithFinishedDates = assaysDao.getAssayTerminateDate();
 

@@ -15,7 +15,7 @@ import java.util.stream.Collectors;
 
 @Service
 public class SankeyAssayService {
-
+//TODO: los ensayos tienen que ser la compania en la que estas parado
 
     private final String cropMixtureRelationQuery = "SELECT c.nombre AS cultivo,m.nombre mezcla, COUNT(t.idTratamiento) AS cant" +
             " FROM tratamiento t " +

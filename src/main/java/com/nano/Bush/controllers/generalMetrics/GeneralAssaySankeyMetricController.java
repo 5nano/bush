@@ -23,7 +23,7 @@ import java.sql.SQLException;
 @Controller
 @RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
-public class GeneralAssaySankeyMetric {
+public class GeneralAssaySankeyMetricController {
 
     @Autowired
     private SankeyAssayService sankeyAssayService;

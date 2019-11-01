@@ -1,7 +1,7 @@
 package com.nano.Bush.controllers.generalMetrics;
 
-import com.nano.Bush.model.generalMetrics.GanttMetricDTO;
-import com.nano.Bush.services.generalMetrics.GanttAssaysService;
+import com.nano.Bush.model.generalMetrics.HistogramDTO;
+import com.nano.Bush.services.generalMetrics.HistogramService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -11,19 +11,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.sql.SQLException;
-
 @Controller
 @RequestMapping("")
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
-public class GeneralGanttAssaysMetric {
-
+public class HistogramForPicturesByDayMetricController {
     @Autowired
-    private GanttAssaysService GanttAssaysService;
+    private HistogramService histogramService;
 
-    @RequestMapping(value = "/metricas/ensayos/gantt", method = RequestMethod.GET, produces = "application/json")
+    //TODO: los ensayos tienen que ser la compania en la que estas parado
+    @RequestMapping(value = "/metricas/histograma/pruebas", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<GanttMetricDTO> getMixturesAgrochemicals() throws SQLException {
-        return new ResponseEntity<>(GanttAssaysService.getAssaysGantt(), HttpStatus.OK);
+    ResponseEntity<HistogramDTO> getMixturesAgrochemicals() {
+        return new ResponseEntity<>(histogramService.getHistogramTest(), HttpStatus.OK);
     }
+
 }
