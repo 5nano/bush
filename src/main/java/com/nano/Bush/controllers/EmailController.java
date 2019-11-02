@@ -32,9 +32,9 @@ public class EmailController {
 
     @RequestMapping(value = "/mailSender", consumes = "application/json", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Response> mailSender(@RequestParam String treatmentName, @RequestParam String assayName, @RequestBody PayloadEmail payload, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws Exception {
+    ResponseEntity<Response> mailSender(@RequestParam String treatmentName, @RequestParam Integer assayId, @RequestBody PayloadEmail payload, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws Exception {
         final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
-        emailSenderService.sendEmail(payload.getPayload(), treatmentName, assayName, tuple._3);
+        emailSenderService.sendEmail(payload.getPayload(), treatmentName, assayId, tuple._3);
         return new ResponseEntity<>(new Response("Email enviado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
