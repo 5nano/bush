@@ -11,13 +11,9 @@ import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.mail.Message;
-import javax.mail.MessagingException;
-import javax.mail.PasswordAuthentication;
-import javax.mail.Session;
-import javax.mail.internet.AddressException;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import javax.activation.FileDataSource;
+import javax.mail.*;
+import javax.mail.internet.*;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -30,8 +26,16 @@ public class EmailSenderService {
     @Autowired
     private UsersDao usersDao;
 
-    public void sendEmail(String payload, String treatmentName, String assayName, String user) throws AddressException {
-        String EMAIL_TEXT = payload;
+    @Autowired
+    private AssayService assayService;
+
+    @Autowired
+    private Base64ToPdfDecoder base64ToPdfDecoder;
+
+    public void sendEmail(String base64pdf, String html, String treatmentName, Integer assayId, String user) throws AddressException {
+        String EMAIL_TEXT = html;
+
+        String assayName = assayService.getAssay(assayId).getName();
 
         final String username = "5nano.consultas@gmail.com";
         final String password = "ebxnjrpslhjtiobb";
@@ -59,17 +63,22 @@ public class EmailSenderService {
                     InternetAddress.parse(usersDao.getUserByUsername(user).get().getEmail())
             );
             message.setSubject("QRs Tratamiento: "+ treatmentName + " , Ensayo: "+assayName);
-            /*message.setText("Dear Mail Crawler,"
-                    + "\n\n Please do not spam my email!");
-
-            Transport.send(message);
-
-            System.out.println("Done");*/
 
 
             // HTML email
-            message.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
 
+            // file
+            MimeBodyPart attachment = new MimeBodyPart();
+            attachment.setDataHandler(base64ToPdfDecoder.decode(base64pdf));
+            attachment.setFileName("QRs "+treatmentName+" "+assayId);
+
+            Multipart mp = new MimeMultipart();
+            mp.addBodyPart(attachment);
+            mp.addBodyPart(htmlPart);
+
+            message.setContent(mp);
 
             SMTPTransport t = (SMTPTransport) session.getTransport("smtp");
 
