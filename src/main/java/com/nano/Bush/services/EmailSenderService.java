@@ -27,10 +27,15 @@ public class EmailSenderService {
     private UsersDao usersDao;
 
     @Autowired
+    private AssayService assayService;
+
+    @Autowired
     private Base64ToPdfDecoder base64ToPdfDecoder;
 
-    public void sendEmail(String payload, String treatmentName, Integer assayId, String user) throws AddressException {
-        String EMAIL_TEXT = payload;
+    public void sendEmail(String base64pdf, String html, String treatmentName, Integer assayId, String user) throws AddressException {
+        String EMAIL_TEXT = html;
+
+        String assayName = assayService.getAssay(assayId).getName();
 
         final String username = "5nano.consultas@gmail.com";
         final String password = "ebxnjrpslhjtiobb";
@@ -57,19 +62,21 @@ public class EmailSenderService {
                     Message.RecipientType.TO,
                     InternetAddress.parse(usersDao.getUserByUsername(user).get().getEmail())
             );
-            message.setSubject("QRs Tratamiento: "+ treatmentName + " , Ensayo: "+assayId);
+            message.setSubject("QRs Tratamiento: "+ treatmentName + " , Ensayo: "+assayName);
 
 
             // HTML email
-            //message.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
+            MimeBodyPart htmlPart = new MimeBodyPart();
+            htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
 
             // file
             MimeBodyPart attachment = new MimeBodyPart();
-            attachment.setDataHandler(base64ToPdfDecoder.decode(payload));
+            attachment.setDataHandler(base64ToPdfDecoder.decode(base64pdf));
             attachment.setFileName("QRs "+treatmentName+" "+assayId);
 
             Multipart mp = new MimeMultipart();
             mp.addBodyPart(attachment);
+            mp.addBodyPart(htmlPart);
 
             message.setContent(mp);
 
