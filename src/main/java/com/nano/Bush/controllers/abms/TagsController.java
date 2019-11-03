@@ -70,7 +70,7 @@ public class TagsController {
 
     }
 
-    @RequestMapping(value = "/tags/ensayos", method = RequestMethod.GET, produces = "application/json")
+    @RequestMapping(value = "/tags/ensayos", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state,
                                                           @CookieValue(value = "user", required = false) Optional<String> user,
