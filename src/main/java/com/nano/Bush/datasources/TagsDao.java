@@ -78,20 +78,20 @@ public class TagsDao {
         return tags;
     }
 
-    public Map<Integer, Set<Integer>> assayWithTags() throws SQLException{
+    public Map<Integer, Set<Integer>> assayWithTags() throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = Maps.newHashMap();
 
         resultSet = statement.executeQuery("SELECT idEnsayo, array_to_string(array_agg(idTag),',') AS tagsByAssay " +
                 "FROM tagEnsayo GROUP BY idEnsayo");
 
         while (resultSet.next()) {
-            assayWithTags.put(resultSet.getInt("idEnsayo"), Arrays.stream(resultSet.getString("tagsByAssay").split(",")).map(tagId->Integer.parseInt(tagId)).collect(Collectors.toSet()));
+            assayWithTags.put(resultSet.getInt("idEnsayo"), Arrays.stream(resultSet.getString("tagsByAssay").split(",")).map(tagId -> Integer.parseInt(tagId)).collect(Collectors.toSet()));
         }
 
         return assayWithTags;
     }
 
-    public List<Assay> getAllAssayFrom(Integer idCompany,List<String> tagsNames) throws SQLException {
+    public List<Assay> getAllAssayFrom(Integer idCompany, List<String> tagsNames) throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = assayWithTags();
 
         List<Integer> idTags = this.getTags().stream()
@@ -100,7 +100,7 @@ public class TagsDao {
 
 
         List<Integer> idAssays = assayWithTags.entrySet().stream()
-                .filter(assayWithTagsElem -> CollectionUtils.containsAny(assayWithTagsElem.getValue(),idTags))
+                .filter(assayWithTagsElem -> CollectionUtils.containsAny(assayWithTagsElem.getValue(), idTags))
                 .map(assayFiltered -> assayFiltered.getKey())
                 .collect(Collectors.toList());
 
@@ -108,7 +108,7 @@ public class TagsDao {
 
     }
 
-    public List<Assay> getAssaysFromByState(Integer idCompany,List<String> tagsNames, AssayStatesEnum state) throws SQLException {
+    public List<Assay> getAssaysFromByState(Integer idCompany, List<String> tagsNames, AssayStatesEnum state) throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = assayWithTags();
 
         List<Integer> idTags = this.getTags().stream()
@@ -117,7 +117,7 @@ public class TagsDao {
 
 
         List<Integer> idAssays = assayWithTags.entrySet().stream()
-                .filter(assayWithTagsElem -> CollectionUtils.containsAny(assayWithTagsElem.getValue(),idTags))
+                .filter(assayWithTagsElem -> CollectionUtils.containsAny(assayWithTagsElem.getValue(), idTags))
                 .map(assayFiltered -> assayFiltered.getKey())
                 .collect(Collectors.toList());
 
@@ -137,6 +137,13 @@ public class TagsDao {
     public void deleteIntoAssay(Integer idTag, Integer idEnsayo) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
                 .getPreparedStatementFor("delete from tagEnsayo where idTag ='" + idTag + "' and idEnsayo ='" + idEnsayo + "'");
+
+        preparedStatement.executeUpdate();
+    }
+
+    public void deleteTag(Integer idTag) throws SQLException {
+        PreparedStatement preparedStatement = postgresConnector
+                .getPreparedStatementFor("DELETE FROM tag WHERE idTag = " + idTag);
 
         preparedStatement.executeUpdate();
     }

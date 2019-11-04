@@ -46,6 +46,14 @@ public class TagsController {
 
     }
 
+    @RequestMapping(value = "/tags/eliminar", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> deleteTag(@RequestParam Integer idTag) throws SQLException {
+        tagsService.delete(idTag);
+        return new ResponseEntity<>(new Response("Tag eliminado exitosamente", HttpStatus.OK.value()), HttpStatus.OK);
+
+    }
+
     @RequestMapping(value = "/tags/ensayo/insertar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> insertTagToAssay(@RequestParam Integer idTag, Integer idAssay) throws SQLException {
@@ -77,8 +85,8 @@ public class TagsController {
                                                           @CookieValue(value = "user_encoded", required = false) Optional<String> encoded_user) {
         final Integer idCompany = interceptor.extractIdCompany(encoded_user, user);
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste)? tagsService.getAllAssaysFrom(idCompany,tags) : tagsService.getAssaysFromByState(idCompany,tags,ste))
-                .getOrElse(tagsService.getAllAssaysFrom(idCompany,tags));
+                .map(ste -> "ALL".equalsIgnoreCase(ste) ? tagsService.getAllAssaysFrom(idCompany, tags) : tagsService.getAssaysFromByState(idCompany, tags, ste))
+                .getOrElse(tagsService.getAllAssaysFrom(idCompany, tags));
         return new ResponseEntity<>(assays, HttpStatus.OK);
 
     }
