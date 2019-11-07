@@ -72,17 +72,26 @@ public class TagsService {
     }
 
     public List<AssayResponse> getAllAssaysFrom(Integer idCompany, List<String> tags) {
-        return Try.of(() -> tagsDao.getAllAssayFrom(idCompany, tags))
-                .onFailure(e -> logger.error("Unexpected error", e))
-                .map(assays -> assayService.enrichAssays(assays))
-                .getOrElse(emptyList());
+        if(tags.size()==0){
+            return assayService.getAllAssays(idCompany);
+        }else {
+            return Try.of(() -> tagsDao.getAllAssayFrom(idCompany, tags))
+                    .onFailure(e -> logger.error("Unexpected error", e))
+                    .map(assays -> assayService.enrichAssays(assays))
+                    .getOrElse(emptyList());
+        }
     }
 
     public List<AssayResponse> getAssaysFromByState(Integer idCompany, List<String> tags, String state) {
         AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
-        return Try.of(() -> tagsDao.getAssaysFromByState(idCompany, tags, assayState))
-                .onFailure(e -> logger.error("Unexpected error", e))
-                .map(assays -> assayService.enrichAssays(assays))
-                .getOrElse(emptyList());
+        if(tags.size()==0){
+           return assayService.getAssaysByState(idCompany,state);
+        }else{
+            return Try.of(() -> tagsDao.getAssaysFromByState(idCompany, tags, assayState))
+                    .onFailure(e -> logger.error("Unexpected error", e))
+                    .map(assays -> assayService.enrichAssays(assays))
+                    .getOrElse(emptyList());
+        }
+
     }
 }
