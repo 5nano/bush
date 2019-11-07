@@ -7,7 +7,6 @@ import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
 import com.nano.Bush.utils.RequestHomeMadeInterceptor;
-import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vavr.control.Option;
 import org.slf4j.Logger;
@@ -17,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
@@ -75,7 +75,7 @@ public class AssayController {
     }
 
     @RequestMapping(value = "/ensayo", method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity<Assay> getAssay(@RequestParam(value = "idAssay") Integer id, @CookieValue(value = "user", required = false) Optional<String> user,@CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
+    public ResponseEntity<Assay> getAssay(@RequestParam(value = "idAssay") Integer id, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
 
         //final Integer idCompany = interceptor.extractIdCompany(user_encoded,user);
 
@@ -112,28 +112,40 @@ public class AssayController {
 
     @RequestMapping(value = "/ensayo/tratamientos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<List<TreatmentResponse>> getTreatments(@RequestParam Integer idAssay) throws SQLException {
+    ResponseEntity<List<TreatmentResponse>> getTreatments(@RequestParam Integer idAssay) {
         return new ResponseEntity<>(treatmentsService.getTreatmentsFrom(idAssay), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayo/archivar", method = RequestMethod.PATCH, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> archiveAssay(@RequestParam Integer idAssay) throws SQLException {
-        assayService.archiveAssay(idAssay);
+        if (validationsService.isNotSameState(idAssay, "ARCHIVED")) {
+            assayService.archiveAssay(idAssay);
+        } else {
+            throw new RuntimeException("Error, el ensayo ya fue archivado");
+        }
         return new ResponseEntity<>(new Response("Ensayo Archivado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayo/activar", method = RequestMethod.PATCH, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> activeAssay(@RequestParam Integer idAssay) throws SQLException {
-        assayService.activeAssay(idAssay);
+        if (validationsService.isNotSameState(idAssay, "ACTIVE")) {
+            assayService.activeAssay(idAssay);
+        } else {
+            throw new RuntimeException("Error, el ensayo ya fue activado");
+        }
         return new ResponseEntity<>(new Response("Ensayo Activado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
     @RequestMapping(value = "/ensayo/terminar", method = RequestMethod.PATCH, produces = "application/json")
     public @ResponseBody
     ResponseEntity<Response> activeAssay(@RequestParam Integer idAssay, Integer stars, String comments) throws SQLException {
-        assayService.finishAssay(idAssay, stars, comments);
+        if (validationsService.isNotSameState(idAssay, "FINISHED")) {
+            assayService.finishAssay(idAssay, stars, comments);
+        } else {
+            throw new RuntimeException("Error, el ensayo ya fue finalizado");
+        }
         return new ResponseEntity<>(new Response("Ensayo Terminado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
