@@ -71,18 +71,18 @@ public class TagsService {
                 .getOrElse(Maps.newHashMap());
     }
 
-    public List<AssayResponse> getAllAssaysFrom(Integer idCompany, List<String> tags) {
+    public List<AssayResponse> getAllAssaysFrom(Integer idCompany, List<String> tags, String user) {
         return Try.of(() -> tagsDao.getAllAssayFrom(idCompany, tags))
                 .onFailure(e -> logger.error("Unexpected error", e))
-                .map(assays -> assayService.enrichAssays(assays))
+                .map(assays -> assayService.enrichAssays(assays, user))
                 .getOrElse(emptyList());
     }
 
-    public List<AssayResponse> getAssaysFromByState(Integer idCompany, List<String> tags, String state) {
+    public List<AssayResponse> getAssaysFromByState(Integer idCompany, List<String> tags, String state, String user) {
         AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
         return Try.of(() -> tagsDao.getAssaysFromByState(idCompany, tags, assayState))
                 .onFailure(e -> logger.error("Unexpected error", e))
-                .map(assays -> assayService.enrichAssays(assays))
+                .map(assays -> assayService.enrichAssays(assays, user))
                 .getOrElse(emptyList());
     }
 }
