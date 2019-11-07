@@ -6,6 +6,7 @@ package com.nano.Bush.services;
 
 import com.nano.Bush.datasources.UsersDao;
 import com.sun.mail.smtp.SMTPTransport;
+import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,10 +15,7 @@ import javax.activation.DataSource;
 import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 import java.util.Properties;
 
 @Service
@@ -67,7 +65,10 @@ public class EmailSenderService {
 
             // HTML email
             MimeBodyPart htmlPart = new MimeBodyPart();
-            htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
+            StringWriter writer = new StringWriter();
+            ClassLoader classLoader = this.getClass().getClassLoader();
+            IOUtils.copy(new FileInputStream(new File(classLoader.getResource("mailTemplate/index.html").getFile())), writer);
+            htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(writer.toString())));
 
             // file
             MimeBodyPart attachment = new MimeBodyPart();
@@ -92,7 +93,9 @@ public class EmailSenderService {
 
             t.close();
 
-        } catch (MessagingException e) {
+        } catch (MessagingException | FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
             e.printStackTrace();
         }
 

@@ -1,0 +1,134 @@
+<!DOCTYPE HTML>
+<html lang = "en">
+<head>
+  <!-- basic.html -->
+  <title>basic.html</title>
+  <meta charset = "UTF-8" />
+  <style>
+      body{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+      }
+      .email-template{
+          height: 600px;
+          width: 600px;
+          flex-direction: column;
+          align-items: center;
+          display: flex;
+          justify-content: center;
+      }
+      .email-header{
+          width: 560px;
+          height: 155px;
+      }
+
+      .email-header>img{
+          width: 560px;
+          height: 155px;
+      }
+
+      .email-content{
+          padding:50px;
+          margin: 0px 20px 20px 20px;
+
+          background-color: white;
+
+      }
+
+
+      .email-content-title{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+      }
+
+      .email-content-title>h3{
+          color:rgba(0, 0, 0,0.2);
+          margin-bottom:10px;
+      }
+      .email-content-title>h1{
+          color: #6AC1A9;
+          margin: 0;
+      }
+
+
+      .email-footer{
+          display:flex;
+          flex-direction: row;
+          justify-content: flex-start;
+      }
+
+      .email-footer-tag{
+          display: flex;
+          flex-direction: column;
+          justify-content: center;
+          align-items: center;
+      }
+      .email-footer-tag>h3{
+          color:rgba(0, 0, 0,0.2);
+          margin: 0;
+      }
+      .email-footer-tag> img{
+          width: 200px;
+      }
+
+      .footer{
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          background-color: #333333;
+          width: 100%;
+
+          color:white;
+
+          padding:50px;
+      }
+  </style>
+</head>
+<body>
+    <div class="email-template">
+        <div class="email-header">
+            <img src="https://i.ibb.co/ctmTj2S/email-header.png"/>
+        </div>
+        <div class="email-content">
+            <div class="email-content-title">
+                <h3>Tenemos algo para vos!</h3>
+                <h1>Códigos QR</h1>
+            </div>
+            <p style="text-align: left;">
+                <span style="font-family:helvetica neue,helvetica,arial,verdana,sans-serif">
+                    Te adjuntamos los c&oacute;digos QR del tratamiento solicitado. Record&aacute; que es una buena pr&aacute;cticas pegar cada 
+                    c&oacute;digo junto al recipienta de la planta que desea identificar.
+                    <br />
+                    &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;
+                </span>
+            </p>
+            <p style="text-align: center;">
+                <span style="color:#525151">
+                    <span style="font-size:18px">
+                        <span style="font-family:helvetica neue,helvetica,arial,verdana,sans-serif">
+                            <em>Los c&oacute;digos QR no deben asociarse a otro recipiente durante el ensayo!</em>
+                        </span>
+                    </span>
+                </span>
+            </p>
+          <hr/>
+          <div class="email-footer">
+              <div class="email-footer-tag">
+                  <h3>El equipo los saluda!</h3>
+                 <img src="https://i.ibb.co/NS8xXDS/nanivo-logo.png"/>
+              </div>
+          </div>
+        </div>
+    </div>
+    <div class="footer">
+        <em>Copyright &copy;2019-5NANO. Todos los derechos reservados.</em><br />
+        <br />
+        <strong>Nuestro correo electr&oacute;nico es:</strong><br />
+        5nano@consultas.com
+    </div>
+</body>
+</html>
