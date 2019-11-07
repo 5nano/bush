@@ -1,6 +1,7 @@
 package com.nano.Bush.services;
 
 import com.nano.Bush.conectors.PostgresConnector;
+import com.nano.Bush.datasources.measures.AssaysDao;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ public class ValidationsService {
     @Autowired
     PostgresConnector postgresConnector;
     private Statement statement;
+    @Autowired
+    AssaysDao assaysDao;
 
     @PostConstruct
     public void init() throws SQLException {
@@ -40,6 +43,10 @@ public class ValidationsService {
 
         return resultSet.next();
 
+    }
+
+    public Boolean isNotSameState(Integer assayId, String state) {
+        return !assaysDao.getAssay(assayId).get().getState().get().toString().equals(state);
     }
 
 
