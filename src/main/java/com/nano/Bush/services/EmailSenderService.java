@@ -60,20 +60,17 @@ public class EmailSenderService {
                     Message.RecipientType.TO,
                     InternetAddress.parse(usersDao.getUserByUsername(user).get().getEmail())
             );
-            message.setSubject("QRs Tratamiento: "+ treatmentName + " , Ensayo: "+assayName);
+            message.setSubject("QRs Tratamiento: " + treatmentName + " , Ensayo: " + assayName);
 
 
             // HTML email
             MimeBodyPart htmlPart = new MimeBodyPart();
-            StringWriter writer = new StringWriter();
-            ClassLoader classLoader = this.getClass().getClassLoader();
-            IOUtils.copy(new FileInputStream(new File(classLoader.getResource("mailTemplate/index.html").getFile())), writer);
-            htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(writer.toString())));
+            htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
 
             // file
             MimeBodyPart attachment = new MimeBodyPart();
             attachment.setDataHandler(base64ToPdfDecoder.decode(base64pdf));
-            attachment.setFileName("QRs "+treatmentName+" "+assayId);
+            attachment.setFileName("QRs " + treatmentName + " " + assayId);
 
             Multipart mp = new MimeMultipart();
             mp.addBodyPart(attachment);
@@ -93,16 +90,15 @@ public class EmailSenderService {
 
             t.close();
 
-        } catch (MessagingException | FileNotFoundException e) {
+        } catch (SendFailedException e) {
             e.printStackTrace();
-        } catch (IOException e) {
+        } catch (NoSuchProviderException e) {
+            e.printStackTrace();
+        } catch (MessagingException e) {
             e.printStackTrace();
         }
-
-
     }
-
-    static class HTMLDataSource implements DataSource {
+        static class HTMLDataSource implements DataSource {
 
         private String html;
 
