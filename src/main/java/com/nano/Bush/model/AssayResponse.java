@@ -11,7 +11,7 @@ public class AssayResponse {
   private final int idCrop;
   private final String name;
   private final String description;
-  private final int idUserCreator;
+  private final String user;
   private final List<Tag> tags;
   private final Crop crop;
   private final Set<Integer> idAgrochemicals;
@@ -20,14 +20,14 @@ public class AssayResponse {
   private final Integer experiments;
   private Optional<AssayStatesEnum> state;
 
-  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments) {
+  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user) {
     this.idAssay = assay.getIdAssay();
     this.created = assay.getCreated();
     this.idCrop = assay.getIdCrop();
     this.state = assay.getState();
     this.name = assay.getName();
     this.description = assay.getDescription();
-    this.idUserCreator = assay.getIdUserCreator();
+    this.user = user;
     this.tags = tags;
     this.crop = crop;
     this.idAgrochemicals = idAgrochemicals;
@@ -52,8 +52,8 @@ public class AssayResponse {
     return description;
   }
 
-  public int getIdUserCreator() {
-    return idUserCreator;
+  public String getUser() {
+    return user;
   }
 
   public List<Tag> getTags() {

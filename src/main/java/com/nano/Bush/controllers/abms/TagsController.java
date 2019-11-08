@@ -5,6 +5,7 @@ import com.nano.Bush.model.Response;
 import com.nano.Bush.model.Tag;
 import com.nano.Bush.services.TagsService;
 import com.nano.Bush.utils.RequestHomeMadeInterceptor;
+import io.vavr.Tuple3;
 import io.vavr.control.Option;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -82,11 +83,11 @@ public class TagsController {
     public @ResponseBody
     ResponseEntity<List<AssayResponse>> getAssaysWithTags(@RequestBody List<String> tags, Optional<String> state,
                                                           @CookieValue(value = "user", required = false) Optional<String> user,
-                                                          @CookieValue(value = "user_encoded", required = false) Optional<String> encoded_user) {
-        final Integer idCompany = interceptor.extractIdCompany(encoded_user, user);
+                                                          @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
+        final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste) ? tagsService.getAllAssaysFrom(idCompany, tags) : tagsService.getAssaysFromByState(idCompany, tags, ste))
-                .getOrElse(tagsService.getAllAssaysFrom(idCompany, tags));
+                .map(ste -> "ALL".equalsIgnoreCase(ste) ? tagsService.getAllAssaysFrom(tuple._1, tags,tuple._3) : tagsService.getAssaysFromByState(tuple._1, tags, ste,tuple._3))
+                .getOrElse(tagsService.getAllAssaysFrom(tuple._1, tags,tuple._3));
         return new ResponseEntity<>(assays, HttpStatus.OK);
 
     }
