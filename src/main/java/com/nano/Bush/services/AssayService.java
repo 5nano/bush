@@ -47,18 +47,18 @@ public class AssayService {
   TreatmentsService treatmentsService;
 
 
-  public List<AssayResponse> getAllAssays(Integer idCompany) {
+  public List<AssayResponse> getAllAssays(Integer idCompany, String user) {
     return Try.of(() -> assaysDao.getAllAssays(idCompany))
             .onFailure(e -> logger.error("Unexpected error", e))
-            .map(assays -> enrichAssays(assays))
+            .map(assays -> enrichAssays(assays, user))
             .getOrElse(emptyList());
   }
 
-  public List<AssayResponse> getAssaysByState(Integer idCompany,String state) {
+  public List<AssayResponse> getAssaysByState(Integer idCompany,String state, String user) {
     AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
     return Try.of(() -> assaysDao.getAssaysByState(idCompany,assayState))
             .onFailure(e -> logger.error("Unexpected error", e))
-            .map(assays -> enrichAssays(assays))
+            .map(assays -> enrichAssays(assays, user))
             .getOrElse(emptyList());
   }
 
@@ -71,7 +71,7 @@ public class AssayService {
             .forEach(experiment -> measuresDao.deleteExperiment(assayId, experiment.getExperimentId().get()));
   }
 
-  public List<AssayResponse> enrichAssays(List<Assay> assays) {
+  public List<AssayResponse> enrichAssays(List<Assay> assays, String user) {
     final Map<Integer, Set<Integer>> assayWithTags = tagsService.assayWithTags();
     //TODO conviene mucho mas tal vez consultar ahora directamente por assay en vez de buscarme toodo
     // por el tema de que ahora piden los ensayos por estado
@@ -104,7 +104,7 @@ public class AssayService {
                 associatedExperiments.add(treatmentDao.getExperimentsCount(treatment.getIdTreatment().get()));
               });
               final Integer associatedExperimentsValue = associatedExperiments.stream().mapToInt(Integer::intValue).sum();
-              return new AssayResponse(assay,assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue);
+              return new AssayResponse(assay,assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue, user);
             })
             .collect(Collectors.toList());
   }

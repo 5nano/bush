@@ -7,6 +7,7 @@ import com.nano.Bush.services.ExperimentService;
 import com.nano.Bush.services.TreatmentsService;
 import com.nano.Bush.services.ValidationsService;
 import com.nano.Bush.utils.RequestHomeMadeInterceptor;
+import io.vavr.Tuple2;
 import io.vavr.Tuple3;
 import io.vavr.control.Option;
 import org.slf4j.Logger;
@@ -64,12 +65,11 @@ public class AssayController {
         } else {
             logger.info("Empty cookies");
         }
-
-        final Integer idCompany = interceptor.extractIdCompany(user_encoded, user);
+        final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
 
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste) ? assayService.getAllAssays(idCompany) : assayService.getAssaysByState(idCompany, ste))
-                .getOrElse(assayService.getAllAssays(idCompany));
+                .map(ste -> "ALL".equalsIgnoreCase(ste) ? assayService.getAllAssays(tuple._1, tuple._3) : assayService.getAssaysByState(tuple._1, ste,tuple._3))
+                .getOrElse(assayService.getAllAssays(tuple._1, tuple._3));
 
         return new ResponseEntity<>(assays, HttpStatus.OK);
     }

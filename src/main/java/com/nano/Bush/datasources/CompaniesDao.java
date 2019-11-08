@@ -51,6 +51,17 @@ public class CompaniesDao {
         resultSet = statement.executeQuery(query);
     }
 
+    public Optional<Company> getCompany(Integer id) throws SQLException {
+        Optional<Company> company = Optional.empty();
+        String query = "SELECT idCompania,Nombre,Descripcion FROM compania WHERE idCompania = " + id;
+        resultSet = statement.executeQuery(query);
+        while (resultSet.next()) {
+            company = Optional.of(new Company(Optional.of(resultSet.getInt("idCompania")), resultSet.getString("nombre"),
+                    resultSet.getString("descripcion")));
+        }
+        return company;
+    }
+
     public void delete(Integer companyId) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("DELETE FROM compania WHERE idCompania = " + companyId);
         preparedStatement.executeUpdate();
