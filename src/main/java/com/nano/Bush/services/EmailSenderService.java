@@ -6,16 +6,18 @@ package com.nano.Bush.services;
 
 import com.nano.Bush.datasources.UsersDao;
 import com.sun.mail.smtp.SMTPTransport;
-import org.apache.commons.io.IOUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import javax.activation.FileDataSource;
 import javax.mail.*;
 import javax.mail.internet.*;
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Optional;
 import java.util.Properties;
 
 @Service
@@ -30,7 +32,7 @@ public class EmailSenderService {
     @Autowired
     private Base64ToPdfDecoder base64ToPdfDecoder;
 
-    public void sendEmail(String base64pdf, String html, String treatmentName, Integer assayId, String user) throws AddressException {
+    public void sendEmail(String subject, Optional<String> base64pdf, String html, String treatmentName, Integer assayId, String user) throws AddressException {
         String EMAIL_TEXT = html;
 
         String assayName = assayService.getAssay(assayId).getName();
@@ -60,20 +62,21 @@ public class EmailSenderService {
                     Message.RecipientType.TO,
                     InternetAddress.parse(usersDao.getUserByUsername(user).get().getEmail())
             );
-            message.setSubject("QRs Tratamiento: " + treatmentName + " , Ensayo: " + assayName);
+            message.setSubject(subject);
 
 
             // HTML email
             MimeBodyPart htmlPart = new MimeBodyPart();
             htmlPart.setDataHandler(new DataHandler(new HTMLDataSource(EMAIL_TEXT)));
-
-            // file
-            MimeBodyPart attachment = new MimeBodyPart();
-            attachment.setDataHandler(base64ToPdfDecoder.decode(base64pdf));
-            attachment.setFileName("QRs " + treatmentName + " " + assayId);
-
             Multipart mp = new MimeMultipart();
-            mp.addBodyPart(attachment);
+            // file
+            if(base64pdf.isPresent()){
+                MimeBodyPart attachment = new MimeBodyPart();
+                attachment.setDataHandler(base64ToPdfDecoder.decode(base64pdf.get()));
+                attachment.setFileName("QRs " + treatmentName + " " + assayId);
+                mp.addBodyPart(attachment);
+            }
+
             mp.addBodyPart(htmlPart);
 
             message.setContent(mp);
