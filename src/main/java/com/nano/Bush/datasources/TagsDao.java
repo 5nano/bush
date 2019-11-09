@@ -43,25 +43,27 @@ public class TagsDao {
 
     public Tag insert(Tag tag) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO tag (idTag,nombre,descripcion) VALUES (default, ?,?) RETURNING idTag,nombre,descripcion");
+                .getPreparedStatementFor("INSERT INTO tag (idTag,nombre,descripcion,color) VALUES (default, ?,?) RETURNING idTag,nombre,descripcion");
 
         preparedStatement.setString(1, tag.getName());
         preparedStatement.setString(2, tag.getDescription());
+        preparedStatement.setString(3, tag.getColor());
         resultSet = preparedStatement.executeQuery();
         resultSet.next();
-        return new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"));
+        return new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"), resultSet.getString("color"));
     }
 
     public void update(Tag tag) throws SQLException {
         postgresConnector.update("tag", "nombre", tag.getName(), "idTag", tag.getIdTag().get());
         postgresConnector.update("tag", "descripcion", tag.getDescription(), "idTag", tag.getIdTag().get());
+        postgresConnector.update("tag", "color", tag.getColor(), "idTag", tag.getIdTag().get());
     }
 
     public List<Tag> getTags() throws SQLException {
         resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion FROM tag");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
-            tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"), resultSet.getString("color")));
         }
         return tags;
     }
@@ -72,7 +74,7 @@ public class TagsDao {
                 "(SELECT idTag FROM tagEnsayo WHERE idEnsayo = '" + idAssay + "')");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
-            tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
+            tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"), resultSet.getString("color")));
         }
         logger.info("Finish from getting tags for {}", idAssay);
         return tags;
