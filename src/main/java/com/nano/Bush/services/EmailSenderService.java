@@ -27,15 +27,10 @@ public class EmailSenderService {
     private UsersDao usersDao;
 
     @Autowired
-    private AssayService assayService;
-
-    @Autowired
     private Base64ToPdfDecoder base64ToPdfDecoder;
 
-    public void sendEmail(String subject, Optional<String> base64pdf, String html, String treatmentName, Integer assayId, String user) throws AddressException {
+    public void sendEmail(String subject, Optional<String> base64pdf, String html, String user, Optional<String> mail) throws AddressException {
         String EMAIL_TEXT = html;
-
-        String assayName = assayService.getAssay(assayId).getName();
 
         final String username = "5nano.consultas@gmail.com";
         final String password = "ebxnjrpslhjtiobb";
@@ -56,11 +51,13 @@ public class EmailSenderService {
 
         try {
 
+            String personMail = mail.orElse(usersDao.getUserByUsername(user).get().getEmail());
+
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("5nano.consultas@gmail.com"));
             message.setRecipients(
                     Message.RecipientType.TO,
-                    InternetAddress.parse(usersDao.getUserByUsername(user).get().getEmail())
+                    InternetAddress.parse(personMail)
             );
             message.setSubject(subject);
 
@@ -73,7 +70,7 @@ public class EmailSenderService {
             if(base64pdf.isPresent()){
                 MimeBodyPart attachment = new MimeBodyPart();
                 attachment.setDataHandler(base64ToPdfDecoder.decode(base64pdf.get()));
-                attachment.setFileName("QRs " + treatmentName + " " + assayId);
+                attachment.setFileName(subject);
                 mp.addBodyPart(attachment);
             }
 

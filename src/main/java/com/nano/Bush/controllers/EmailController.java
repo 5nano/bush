@@ -31,9 +31,17 @@ public class EmailController {
 
     @RequestMapping(value = "/mailSender", consumes = "application/json", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Response> mailSender(@RequestParam String treatmentName, @RequestParam Integer assayId, @RequestBody PayloadEmail payload, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws Exception {
+    ResponseEntity<Response> mailSender(@RequestBody PayloadEmail payload, @CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws Exception {
         final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
-        emailSenderService.sendEmail(payload.getSubject(), payload.getBase64pdf(), payload.getHtml(), treatmentName, assayId, tuple._3);
+        emailSenderService.sendEmail(payload.getSubject(), payload.getBase64pdf(), payload.getHtml(), tuple._3, Optional.empty());
+        return new ResponseEntity<>(new Response("Email enviado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+
+    @RequestMapping(value = "/mailSender/unregisteredUser", consumes = "application/json", method = RequestMethod.POST, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Response> mailSenderUnregisteredUser(@RequestParam String mail, @RequestBody PayloadEmail payload) throws Exception {
+        emailSenderService.sendEmail(payload.getSubject(), payload.getBase64pdf(), payload.getHtml(), "bla", Optional.of(mail));
         return new ResponseEntity<>(new Response("Email enviado", HttpStatus.OK.value()), HttpStatus.OK);
     }
 
