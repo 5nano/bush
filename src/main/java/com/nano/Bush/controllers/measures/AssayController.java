@@ -68,8 +68,8 @@ public class AssayController {
         final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
 
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste) ? assayService.getAllAssays(tuple._1, tuple._3) : assayService.getAssaysByState(tuple._1, ste,tuple._3))
-                .getOrElse(assayService.getAllAssays(tuple._1, tuple._3));
+                .map(ste -> "ALL".equalsIgnoreCase(ste) ? assayService.getAllAssays(tuple._1) : assayService.getAssaysByState(tuple._1, ste))
+                .getOrElse(assayService.getAllAssays(tuple._1));
 
         return new ResponseEntity<>(assays, HttpStatus.OK);
     }

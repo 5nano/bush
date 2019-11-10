@@ -86,8 +86,8 @@ public class TagsController {
                                                           @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) {
         final Tuple3<Integer, Integer, String> tuple = interceptor.extractUserCompany(user_encoded, user);
         List<AssayResponse> assays = Option.ofOptional(state)
-                .map(ste -> "ALL".equalsIgnoreCase(ste) ? tagsService.getAllAssaysFrom(tuple._1, tags,tuple._3) : tagsService.getAssaysFromByState(tuple._1, tags, ste,tuple._3))
-                .getOrElse(tagsService.getAllAssaysFrom(tuple._1, tags,tuple._3));
+                .map(ste -> "ALL".equalsIgnoreCase(ste) ? tagsService.getAllAssaysFrom(tuple._1, tags) : tagsService.getAssaysFromByState(tuple._1, tags, ste))
+                .getOrElse(tagsService.getAllAssaysFrom(tuple._1, tags));
         return new ResponseEntity<>(assays, HttpStatus.OK);
 
     }
