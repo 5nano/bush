@@ -51,7 +51,12 @@ public class EmailSenderService {
 
         try {
 
-            String personMail = mail.orElse(usersDao.getUserByUsername(user).get().getEmail());
+            String personMail;
+            if(mail.isPresent()){
+               personMail = mail.get();
+            }else{
+                personMail = usersDao.getUserByUsername(user).get().getEmail();
+            }
 
             Message message = new MimeMessage(session);
             message.setFrom(new InternetAddress("5nano.consultas@gmail.com"));
