@@ -43,7 +43,7 @@ public class TagsDao {
 
     public Tag insert(Tag tag) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO tag (idTag,nombre,descripcion,color) VALUES (default, ?,?) RETURNING idTag,nombre,descripcion");
+                .getPreparedStatementFor("INSERT INTO tag (idTag,nombre,descripcion,color) VALUES (default, ?,?,?) RETURNING idTag,nombre,descripcion,color");
 
         preparedStatement.setString(1, tag.getName());
         preparedStatement.setString(2, tag.getDescription());
