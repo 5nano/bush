@@ -70,6 +70,23 @@ public class UsersDao {
         return Option.none();
     }
 
+    public Option<User> getUserById(Integer id) {
+        try {
+            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario WHERE idUsuario =" + id);
+            while (resultSet.next()) {
+                return Option.of(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
+                        resultSet.getString("Apellido"), resultSet.getString("Password"),
+                        resultSet.getString("Email"), resultSet.getInt("IdCompania"), Optional.of(resultSet.getInt("idUsuario"))));
+            }
+            resultSet.close();
+        } catch (Exception e) {
+            logger.error("Unexpected error executing query", e);
+        }
+
+        return Option.none();
+    }
+
+
     public void delete(Integer userId) throws SQLException {
         String query = "DELETE FROM usuario WHERE idUsuario = " + userId;
         PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);

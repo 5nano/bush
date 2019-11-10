@@ -3,6 +3,7 @@ package com.nano.Bush.services;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.nano.Bush.datasources.CropsDao;
+import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.datasources.measures.AssaysDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
@@ -45,20 +46,22 @@ public class AssayService {
   CropsDao cropsDao;
   @Autowired
   TreatmentsService treatmentsService;
+  @Autowired
+  UsersDao usersDao;
 
 
-  public List<AssayResponse> getAllAssays(Integer idCompany, String user) {
+  public List<AssayResponse> getAllAssays(Integer idCompany) {
     return Try.of(() -> assaysDao.getAllAssays(idCompany))
             .onFailure(e -> logger.error("Unexpected error", e))
-            .map(assays -> enrichAssays(assays, user))
+            .map(assays -> enrichAssays(assays))
             .getOrElse(emptyList());
   }
 
-  public List<AssayResponse> getAssaysByState(Integer idCompany,String state, String user) {
+  public List<AssayResponse> getAssaysByState(Integer idCompany,String state) {
     AssayStatesEnum assayState = AssayStatesEnum.valueOf(state);
     return Try.of(() -> assaysDao.getAssaysByState(idCompany,assayState))
             .onFailure(e -> logger.error("Unexpected error", e))
-            .map(assays -> enrichAssays(assays, user))
+            .map(assays -> enrichAssays(assays))
             .getOrElse(emptyList());
   }
 
@@ -71,7 +74,7 @@ public class AssayService {
             .forEach(experiment -> measuresDao.deleteExperiment(assayId, experiment.getExperimentId().get()));
   }
 
-  public List<AssayResponse> enrichAssays(List<Assay> assays, String user) {
+  public List<AssayResponse> enrichAssays(List<Assay> assays ) {
     final Map<Integer, Set<Integer>> assayWithTags = tagsService.assayWithTags();
     //TODO conviene mucho mas tal vez consultar ahora directamente por assay en vez de buscarme toodo
     // por el tema de que ahora piden los ensayos por estado
@@ -104,16 +107,17 @@ public class AssayService {
                 associatedExperiments.add(treatmentDao.getExperimentsCount(treatment.getIdTreatment().get()));
               });
               final Integer associatedExperimentsValue = associatedExperiments.stream().mapToInt(Integer::intValue).sum();
-              return new AssayResponse(assay,assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue, user);
+              final String userCreator =  usersDao.getUserById(assay.getIdUserCreator()).map(u-> u.getUsername()).getOrElseThrow(()-> new RuntimeException("User creator not found"));
+              return new AssayResponse(assay,assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator);
             })
             .collect(Collectors.toList());
   }
 
 
-    public AssayInsertResponse insert(Assay assay) throws SQLException {
-        Integer insertAndReturnIdAssay = assaysDao.insert(assay);
-        return new AssayInsertResponse(insertAndReturnIdAssay);
-    }
+  public AssayInsertResponse insert(Assay assay) throws SQLException {
+    Integer insertAndReturnIdAssay = assaysDao.insert(assay);
+    return new AssayInsertResponse(insertAndReturnIdAssay);
+  }
 
   public void archiveAssay(Integer idAssay) throws SQLException {
     assaysDao.archiveAssay(idAssay);
