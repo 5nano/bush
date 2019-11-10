@@ -60,7 +60,7 @@ public class TagsDao {
     }
 
     public List<Tag> getTags() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion FROM tag");
+        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion,color FROM tag");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
             tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"), resultSet.getString("color")));
@@ -70,7 +70,7 @@ public class TagsDao {
 
     public List<Tag> getTagsFrom(Integer idAssay) throws SQLException {
         logger.info("Getting tags for assay {}", idAssay);
-        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion FROM tag WHERE idTag IN\n" +
+        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion,color FROM tag WHERE idTag IN\n" +
                 "(SELECT idTag FROM tagEnsayo WHERE idEnsayo = '" + idAssay + "')");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
