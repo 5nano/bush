@@ -17,17 +17,27 @@ public class GanttAssaysService {
 
     @Autowired
     AssaysDao assaysDao;
+    private List<JobDTO> jobDTOS = new ArrayList<>();
 
     public GanttMetricDTO getAssaysGantt(Integer idCompany) throws SQLException {
 
-        List<Assay> assays = assaysDao.getAllAssays(idCompany);
-        List<JobDTO> jobDTOS = new ArrayList<>();
         Map<Integer, String> assayWithFinishedDates = assaysDao.getAssayTerminateDate();
+        List<Assay> assays = assaysDao.getAllAssays(idCompany);
 
-        assays.forEach(assay -> jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(),
-                assayWithFinishedDates.get(assay.getIdAssay().get()), assay.getState().get().toString())));
+        assays.forEach(assay -> addAssayInGantt(assay, assayWithFinishedDates));
 
         return new GanttMetricDTO(jobDTOS);
+    }
+
+    private void addAssayInGantt(Assay assay, Map<Integer, String> assayWithFinishedDates) {
+
+        if (assay.getState().get().equals("FINISHED")) {
+            jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(),
+                    assayWithFinishedDates.get(assay.getIdAssay().get()), assay.getState().get().toString()));
+        } else {
+            jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(), assay.getEstimatedFinished().toString(),
+                    assay.getState().get().toString()));
+        }
     }
 
 }

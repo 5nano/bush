@@ -10,6 +10,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -45,6 +47,22 @@ public class ExperimentsDao {
                     resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(experimentId));
         }
         return null;
+    }
+
+    public List<Experiment> getExperimentsByCompany(Integer companyId) throws SQLException {
+        String query = "SELECT ex.nombre,ex.descripcion,ex.idEnsayo,ex.idTratamiento,ex.idExperimento " +
+                " FROM experimento ex " +
+                " JOIN ensayo en " +
+                " ON ex.idEnsayo = en.idEnsayo " +
+                " WHERE en.idcompania = " + companyId;
+        ResultSet resultSet = statement.executeQuery(query);
+        List<Experiment> experiments = new ArrayList<>();
+        while (resultSet.next()) {
+            experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
+                    resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"),
+                    Optional.of(resultSet.getInt("idExperimento"))));
+        }
+        return experiments;
     }
 
     public void delete(Experiment experiment) throws SQLException {

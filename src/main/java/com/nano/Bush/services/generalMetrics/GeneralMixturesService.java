@@ -18,8 +18,6 @@ import java.util.stream.Collectors;
 
 @Service
 public class GeneralMixturesService {
-    //TODO: los ensayos tienen que ser la compania en la que estas parado
-
     @Autowired
     TreatmentsDao treatmentsDao;
     @Autowired
@@ -28,11 +26,11 @@ public class GeneralMixturesService {
     AgrochemicalsDao agrochemicalsDao;
 
 
-    public GeneralMixturesDTO getGeneralMixturesMetric() throws SQLException {
+    public GeneralMixturesDTO getGeneralMixturesMetric(Integer companyId) throws SQLException {
 
         List<Mixture> usedMixtures = mixturesDao.getMixtures();
 
-        List<Integer> usedMixturesIds = treatmentsDao.getMixturesUsedInAllTreatments();
+        List<Integer> usedMixturesIds = treatmentsDao.getMixturesUsedInAllTreatments(companyId);
 
         List<String> usedMixturesNames = usedMixtures
                 .stream()

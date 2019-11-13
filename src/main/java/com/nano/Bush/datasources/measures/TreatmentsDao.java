@@ -94,8 +94,8 @@ public class TreatmentsDao {
         List<Treatment> treatments = new ArrayList<>();
         while (resultSet.next()) {
             treatments.add(new Treatment(Optional.of(resultSet.getInt("idTratamiento")), Optional.empty(), resultSet.getInt("idEnsayo"),
-                    resultSet.getInt("idmezcla"),resultSet.getInt("idagroquimico"),
-                     resultSet.getString("nombre"), resultSet.getString("descripcion"), Optional.of(resultSet.getDouble("presion"))));
+                    resultSet.getInt("idmezcla"), resultSet.getInt("idagroquimico"),
+                    resultSet.getString("nombre"), resultSet.getString("descripcion"), Optional.of(resultSet.getDouble("presion"))));
         }
         return treatments;
     }
@@ -113,12 +113,11 @@ public class TreatmentsDao {
     public Integer getExperimentsCount(Integer idTreatment) {
         Integer experiments = 0;
         try {
-            resultSet = statement.executeQuery("SELECT count(*) as amount FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
+            resultSet = statement.executeQuery("SELECT COUNT(*) AS amount FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
             while (resultSet.next()) {
                 experiments = resultSet.getInt("amount");
             }
-        }
-        catch (SQLException ex){
+        } catch (SQLException ex) {
             logger.error("Unexpected error", ex);
         }
         return experiments;
@@ -136,8 +135,8 @@ public class TreatmentsDao {
         return null;
     }
 
-    public List<Integer> getMixturesUsedInAllTreatments() throws SQLException {
-        String query = "SELECT idmezcla FROM tratamiento WHERE idMezcla IS NOT NULL";
+    public List<Integer> getMixturesUsedInAllTreatments(Integer companyId) throws SQLException {
+        String query = "SELECT idmezcla FROM tratamiento WHERE idMezcla IS NOT NULL AND idCompania = " + companyId;
         List<Integer> mixturesIds = new ArrayList<>();
         resultSet = statement.executeQuery(query);
         while (resultSet.next()) {
