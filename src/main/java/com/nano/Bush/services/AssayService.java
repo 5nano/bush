@@ -18,7 +18,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -108,7 +107,7 @@ public class AssayService {
               });
               final Integer associatedExperimentsValue = associatedExperiments.stream().mapToInt(Integer::intValue).sum();
               final String userCreator =  usersDao.getUserById(assay.getIdUserCreator()).map(u-> u.getUsername()).getOrElseThrow(()-> new RuntimeException("User creator not found"));
-              return new AssayResponse(assay,assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator);
+              return new AssayResponse(assay, assay.getEstimatedFinished(), assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator);
             })
             .collect(Collectors.toList());
   }

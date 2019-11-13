@@ -8,6 +8,7 @@ import java.util.Set;
 public class AssayResponse {
   private final Optional<Integer> idAssay;
   private final Optional<Timestamp> created;
+  private  Optional<Timestamp> estimatedFinished;
   private final int idCrop;
   private final String name;
   private final String description;
@@ -20,13 +21,14 @@ public class AssayResponse {
   private final Integer experiments;
   private Optional<AssayStatesEnum> state;
 
-  public AssayResponse(Assay assay, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user) {
+  public AssayResponse(Assay assay, Optional<Timestamp> estimatedFinished, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user) {
     this.idAssay = assay.getIdAssay();
     this.created = assay.getCreated();
     this.idCrop = assay.getIdCrop();
     this.state = assay.getState();
     this.name = assay.getName();
     this.description = assay.getDescription();
+    this.estimatedFinished = estimatedFinished;
     this.user = user;
     this.tags = tags;
     this.crop = crop;
@@ -88,4 +90,7 @@ public class AssayResponse {
     return state;
   }
 
+  public Optional<Timestamp> getEstimatedFinished() {
+    return estimatedFinished;
+  }
 }
