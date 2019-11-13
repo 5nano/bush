@@ -16,9 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class SankeyAssayService {
 
-    private List<Integer> source = new ArrayList<>();
-    private List<Integer> target = new ArrayList<>();
-    private List<Integer> value = new ArrayList<>();
 
     @Autowired
     private TreatmentsDao treatmentsDao;
@@ -27,7 +24,14 @@ public class SankeyAssayService {
     }
 
     public SankeyAssayDTO getSankeyAssays(Integer companyId) throws SQLException {
+        List<Integer> source = new ArrayList<>();
+
+        List<Integer> target = new ArrayList<>();
+
+        List<Integer> value = new ArrayList<>();
+
         List<Tuple3<String, String, String>> allRelations = new ArrayList<>();
+
         allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(cropMixtureRelationQuery(companyId)));
         //allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(mixtureAgrochemicalRelationQuery));//TODO: agregarlo cuando quede bien la base
         allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(agrochemicalStateRelationQuery(companyId)));
@@ -49,15 +53,13 @@ public class SankeyAssayService {
 
         allRelations.forEach(relation -> finalRelations.add(new Tuple3<>(labelWithIndex.get(relation._1()), labelWithIndex.get(relation._2()), Integer.parseInt(relation._3()))));
 
-        finalRelations.forEach(this::addTupleInLists);
+        finalRelations.forEach(relation -> {
+            source.add(relation._1());
+            target.add(relation._2());
+            value.add(relation._3());
+        });
 
         return new SankeyAssayDTO(labels, source, target, value);
-    }
-
-    private void addTupleInLists(Tuple3<Integer, Integer, Integer> relation) {
-        source.add(relation._1());
-        target.add(relation._2());
-        value.add(relation._3());
     }
 
     private String cropMixtureRelationQuery(Integer companyId) {

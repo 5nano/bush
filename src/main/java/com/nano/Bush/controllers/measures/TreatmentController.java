@@ -45,7 +45,7 @@ public class TreatmentController {
 
     @RequestMapping(value = "/tratamientos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<Response> deleteTreatment(@RequestBody Integer idTreatment) throws SQLException {
+    ResponseEntity<Response> deleteTreatment(@RequestParam Integer idTreatment) throws SQLException {
         treatmentsService.delete(idTreatment);
         return new ResponseEntity<>(new Response("Experimento Eliminado", HttpStatus.OK.value()), HttpStatus.OK);
     }
