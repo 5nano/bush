@@ -10,14 +10,7 @@ public class HistogramDTO {
         return dates;
     }
 
-    public List<String> getCount() {
-        return count;
-    }
-
-    private List<String> count;
-
-    public HistogramDTO(List<String> dates, List<String> count) {
+    public HistogramDTO(List<String> dates) {
         this.dates = dates;
-        this.count = count;
     }
 }

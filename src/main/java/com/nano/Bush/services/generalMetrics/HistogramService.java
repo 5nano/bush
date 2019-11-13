@@ -10,10 +10,6 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class HistogramService {
@@ -26,25 +22,24 @@ public class HistogramService {
     public HistogramDTO getHistogramTest(Integer companyId) throws SQLException {
 
         List<Experiment> experiments = experimentsDao.getExperimentsByCompany(companyId);
+
         List<String> dateForPictures = new ArrayList<>();
+
         experiments.forEach(experiment -> {
-                    if (!measuresDao.getDatePicturesByAssayAndExperiment(experiment.getAssayId(), experiment.getExperimentId().get()).equals("")) {
-                        dateForPictures.add(measuresDao.getDatePicturesByAssayAndExperiment(experiment.getAssayId(), experiment.getExperimentId().get()));
+                    if (isEmptyDate(experiment)) {
+                        dateForPictures.add(getDatePicturesByAssayAndExperiment(experiment));
                     }
                 }
         );
 
-        Map<String, Long> countPicturesByDay = dateForPictures
-                .stream()
-                .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
+        return new HistogramDTO(dateForPictures);
+    }
 
-        Map<String, Long> countPicturesByDaySorted = new TreeMap<>(countPicturesByDay);
+    private boolean isEmptyDate(Experiment experiment) {
+        return !getDatePicturesByAssayAndExperiment(experiment).equals("");
+    }
 
-        List<String> count = countPicturesByDaySorted.values()
-                .stream()
-                .map(Object::toString)
-                .collect(Collectors.toList());
-
-        return new HistogramDTO(new ArrayList<>(countPicturesByDaySorted.keySet()), count);
+    private String getDatePicturesByAssayAndExperiment(Experiment experiment) {
+        return measuresDao.getDatePicturesByAssayAndExperiment(experiment.getAssayId(), experiment.getExperimentId().get());
     }
 }
