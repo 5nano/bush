@@ -30,7 +30,7 @@ public class GeneralMixturesService {
 
         List<Mixture> usedMixtures = mixturesDao.getMixtures();
 
-        List<Integer> usedMixturesIds = treatmentsDao.getMixturesUsedInAllTreatments(companyId);
+        List<Integer> usedMixturesIds = treatmentsDao.getMixturesUsedInAllTreatmentsByCompany(companyId);
 
         List<String> usedMixturesNames = usedMixtures
                 .stream()

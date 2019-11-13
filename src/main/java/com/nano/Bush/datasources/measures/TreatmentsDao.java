@@ -135,8 +135,10 @@ public class TreatmentsDao {
         return null;
     }
 
-    public List<Integer> getMixturesUsedInAllTreatments(Integer companyId) throws SQLException {
-        String query = "SELECT idmezcla FROM tratamiento WHERE idMezcla IS NOT NULL AND idCompania = " + companyId;
+    public List<Integer> getMixturesUsedInAllTreatmentsByCompany(Integer companyId) throws SQLException {
+        String query = "SELECT idmezcla FROM tratamiento t " +
+                " JOIN ensayo e ON t.idEnsayo=e.idEnsayo " +
+                " WHERE t.idMezcla IS NOT NULL AND e.idCompania = " + companyId;
         List<Integer> mixturesIds = new ArrayList<>();
         resultSet = statement.executeQuery(query);
         while (resultSet.next()) {
