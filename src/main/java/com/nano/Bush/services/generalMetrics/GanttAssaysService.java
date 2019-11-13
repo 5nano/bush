@@ -35,7 +35,7 @@ public class GanttAssaysService {
             jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(),
                     assayWithFinishedDates.get(assay.getIdAssay().get()), assay.getState().get().toString()));
         } else {
-            jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(), assay.getEstimatedFinished().toString(),
+            jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(), assay.getEstimatedFinished().get().toString(),
                     assay.getState().get().toString()));
         }
     }

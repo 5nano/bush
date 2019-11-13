@@ -94,7 +94,7 @@ public class SankeyAssayService {
                 " LEFT JOIN ensayo e ON e.idEnsayo = t.idEnsayo " +
                 " LEFT JOIN ensayoTerminado et ON e.idEnsayo = et.idEnsayo " +
                 " WHERE e.estado = 'FINISHED' " +
-                " WHERE e.idCompania = " + companyId +
+                " AND e.idCompania = " + companyId +
                 " GROUP BY estado,et.estrellas";
     }
 
