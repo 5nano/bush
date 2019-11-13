@@ -58,8 +58,8 @@ public class MeasuresDao {
         return measuresPlants;
     }
 
-    public String getDatePicturesByAssayAndExperiment(Integer experimentId, Integer assayId) {
-        String query = "SELECT time FROM measures WHERE id_assay = " + assayId + " AND id_experiment = " + experimentId;
+    public String getDatePicturesByAssayAndExperiment(Integer assayId, Integer experimentId) {
+        String query = "SELECT time FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId;
 
         ResultSet rs = CassandraConnector.getConnection().execute(query);
 

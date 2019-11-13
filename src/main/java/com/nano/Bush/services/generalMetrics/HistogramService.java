@@ -34,7 +34,6 @@ public class HistogramService {
                 }
         );
 
-        //TODO: ver porque trae vacío siempre
         Map<String, Long> countPicturesByDay = dateForPictures
                 .stream()
                 .collect(Collectors.groupingBy(Function.identity(), Collectors.counting()));
