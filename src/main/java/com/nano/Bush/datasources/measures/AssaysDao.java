@@ -29,8 +29,8 @@ public class AssaysDao {
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
-                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado,idcompania) " +
-                        "VALUES (default, ?, ?,?,?,?,?,?) RETURNING idEnsayo");
+                .getPreparedStatementFor("INSERT INTO ensayo (idEnsayo,idCultivo,nombre,descripcion,idUserCreador,estado,creado,idcompania,fechaEstimadaFinalizacion) " +
+                        "VALUES (default, ?, ?,?,?,?,?,?,?) RETURNING idEnsayo");
         preparedStatement.setInt(1, Assay.getIdCrop());
         preparedStatement.setString(2, Assay.getName());
         preparedStatement.setString(3, Assay.getDescription());
@@ -38,6 +38,7 @@ public class AssaysDao {
         preparedStatement.setString(5, AssayStatesEnum.ACTIVE.toString());
         preparedStatement.setTimestamp(6, new Timestamp(System.currentTimeMillis()));
         preparedStatement.setInt(7, Assay.getIdCompany());
+        preparedStatement.setTimestamp(8, Assay.getEstimatedFinished().get());
 
         resultSet = preparedStatement.executeQuery();
         resultSet.next();
@@ -46,13 +47,13 @@ public class AssaysDao {
     }
 
     public List<Assay> getAllAssays(Integer idCompany) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo WHERE idcompania=" + idCompany);
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                     resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
                     Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
-                    Optional.of(resultSet.getTimestamp("creado"))));
+                    Optional.of(resultSet.getTimestamp("creado")), Optional.of(resultSet.getTimestamp("fechaEstimadaFinalizacion"))));
         }
         return Assays;
     }
@@ -60,12 +61,12 @@ public class AssaysDao {
     public Optional<Assay> getAssay(Integer idAssay) {
 
         try {
-            resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo WHERE idEnsayo = " + idAssay);
+            resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE idEnsayo = " + idAssay);
             while (resultSet.next()) {
                 return Optional.of(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                         resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
                         Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
-                        Optional.of(resultSet.getTimestamp("creado"))));
+                        Optional.of(resultSet.getTimestamp("creado")), Optional.of(resultSet.getTimestamp("fechaEstimadaFinalizacion"))));
             }
         } catch (SQLException sqe) {
             logger.error("Unexpected error with assay " + idAssay, sqe);
@@ -75,12 +76,12 @@ public class AssaysDao {
     }
 
     public List<Assay> getAssaysByState(Integer idCompany, AssayStatesEnum assayStatesEnum) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado FROM ensayo WHERE estado = '" + assayStatesEnum.toString() + "' AND idcompania=" + idCompany);
+        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE estado = '" + assayStatesEnum.toString() + "' AND idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                     resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"), Optional.of(AssayStatesEnum.valueOf(resultSet.getString("estado"))),
-                    Optional.of(resultSet.getTimestamp("creado"))));
+                    Optional.of(resultSet.getTimestamp("creado")), Optional.of(resultSet.getTimestamp("fechaEstimadaFinalizacion"))));
         }
         return Assays;
     }

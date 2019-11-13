@@ -11,10 +11,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.io.IOException;
-import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 @Repository
@@ -60,20 +58,21 @@ public class MeasuresDao {
         return measuresPlants;
     }
 
-    public List<LocalDate> getDateForPictures() {
-        String query = "SELECT time FROM measures";
-        ResultSet rs = CassandraConnector.getConnection().execute(query);
-        List<LocalDate> pictureDates = new ArrayList<>();
-        for (Row row : rs) {
-            pictureDates.add(row.getTimestamp("time").toInstant().atZone(ZoneId.systemDefault()).toLocalDate());
-        }
-        Collections.sort(pictureDates);
+    public String getDatePicturesByAssayAndExperiment(Integer experimentId, Integer assayId) {
+        String query = "SELECT time FROM measures WHERE id_assay = " + assayId + " AND id_experiment = " + experimentId;
 
-        return pictureDates;
+        ResultSet rs = CassandraConnector.getConnection().execute(query);
+
+        Row r = rs.one();
+        if (r != null) {
+            return r.getTimestamp("time").toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString();
+        } else {
+            return "";
+        }
     }
 
     public void deleteExperiment(Integer assayId, Integer experimentId) {
-        String query = "delete FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
+        String query = "delete FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId;
         CassandraConnector.getConnection().execute(query);
     }
 

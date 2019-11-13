@@ -2,7 +2,6 @@ package com.nano.Bush.datasources;
 
 import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Mixture;
-import io.vavr.control.Option;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,15 +38,15 @@ public class MixturesDao {
         preparedStatement.executeUpdate();
     }
 
-    public Optional<Mixture> getMixture(Integer mixtureId)  {
+    public Optional<Mixture> getMixture(Integer mixtureId) {
         try {
             resultSet = statement.executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla WHERE idmezcla = " + mixtureId);
             while (resultSet.next()) {
-                return Optional.of( new Mixture(Optional.of(resultSet.getInt("idmezcla")),
+                return Optional.of(new Mixture(Optional.of(resultSet.getInt("idmezcla")),
                         resultSet.getString("nombre"), resultSet.getString("descripcion")));
             }
-        } catch (SQLException sqe){
-            logger.error("Unexpected  error with mixture " + mixtureId ,sqe);
+        } catch (SQLException sqe) {
+            logger.error("Unexpected  error with mixture " + mixtureId, sqe);
         }
         return Optional.empty();
     }
