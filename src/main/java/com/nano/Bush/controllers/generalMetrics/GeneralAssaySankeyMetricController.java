@@ -34,7 +34,7 @@ public class GeneralAssaySankeyMetricController {
     @RequestMapping(value = "/metricas/ensayos/sankey", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
     ResponseEntity<SankeyAssayDTO> getMixturesAgrochemicals(@CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws SQLException {
-        final Tuple3<Integer, Integer, String> tuple = requestHomeMadeInterceptor.extractUserCompany(user, user_encoded);
+        final Tuple3<Integer, Integer, String> tuple = requestHomeMadeInterceptor.extractUserCompany(user_encoded, user);
         return new ResponseEntity<>(sankeyAssayService.getSankeyAssays(tuple._1), HttpStatus.OK);
     }
 }
