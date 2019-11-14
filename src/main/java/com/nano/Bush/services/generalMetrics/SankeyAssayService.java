@@ -25,9 +25,7 @@ public class SankeyAssayService {
 
     public SankeyAssayDTO getSankeyAssays(Integer companyId) throws SQLException {
         List<Integer> source = new ArrayList<>();
-
         List<Integer> target = new ArrayList<>();
-
         List<Integer> value = new ArrayList<>();
 
         List<Tuple3<String, String, String>> allRelations = new ArrayList<>();
