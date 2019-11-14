@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -25,9 +28,9 @@ public class HistogramForPicturesByDayMetricController {
 
     @RequestMapping(value = "/metricas/histograma/pruebas", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<HistogramDTO> getMixturesAgrochemicals(@CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded)
+    ResponseEntity<HistogramDTO> getMixturesAgrochemicals(/*@CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded*/)
             throws SQLException {
-        final Tuple3<Integer, Integer, String> tuple = requestHomeMadeInterceptor.extractUserCompany(user_encoded, user);
+        final Tuple3<Integer, Integer, String> tuple = requestHomeMadeInterceptor.extractUserCompany(Optional.empty(), Optional.of("admin"));
         return new ResponseEntity<>(histogramService.getHistogramTest(tuple._1), HttpStatus.OK);
     }
 

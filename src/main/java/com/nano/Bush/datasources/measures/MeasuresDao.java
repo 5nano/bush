@@ -58,17 +58,18 @@ public class MeasuresDao {
         return measuresPlants;
     }
 
-    public String getDatePicturesByAssayAndExperiment(Integer assayId, Integer experimentId) {
+    public List<String> getDatePicturesByAssayAndExperiment(Integer assayId, Integer experimentId) {
         String query = "SELECT time FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId;
 
         ResultSet rs = CassandraConnector.getConnection().execute(query);
 
-        Row r = rs.one();
-        if (r != null) {
-            return r.getTimestamp("time").toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString();
-        } else {
-            return "";
+        List<String> dates = new ArrayList<>();
+        for (Row r : rs) {
+            if (r != null) {
+                dates.add(r.getTimestamp("time").toInstant().atZone(ZoneId.systemDefault()).toLocalDate().toString());
+            }
         }
+        return dates;
     }
 
     public void deleteExperiment(Integer assayId, Integer experimentId) {

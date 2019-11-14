@@ -89,7 +89,8 @@ public class StadisticsService {
                         .map(groupMedian ->
                                 new BoxDiagramDto(groupMedian.treatmentId,
                                         this.makeByOperation(groupMedian, typeValue)
-                                                .stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList()))).collect(Collectors.toList())))
+                                                .stream().filter(frequencie -> frequencie != 0).collect(Collectors.toList())))
+                        .collect(Collectors.toList())))
                 .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
     }
 
