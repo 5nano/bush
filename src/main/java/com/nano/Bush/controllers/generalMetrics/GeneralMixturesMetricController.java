@@ -8,7 +8,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.sql.SQLException;
 import java.util.Optional;
@@ -27,8 +30,8 @@ public class GeneralMixturesMetricController {
 
     @RequestMapping(value = "/metricas/mezclasAgroquimicos", method = RequestMethod.GET, produces = "application/json")
     public @ResponseBody
-    ResponseEntity<GeneralMixturesDTO> getMixturesAgrochemicals(@CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded) throws SQLException {
-        final Tuple3<Integer, Integer, String> tuple = requestHomeMadeInterceptor.extractUserCompany(user_encoded, user);
+    ResponseEntity<GeneralMixturesDTO> getMixturesAgrochemicals(/*@CookieValue(value = "user", required = false) Optional<String> user, @CookieValue(value = "user_encoded", required = false) Optional<String> user_encoded*/) throws SQLException {
+        final Tuple3<Integer, Integer, String> tuple = requestHomeMadeInterceptor.extractUserCompany(Optional.empty(), Optional.of("admin"));
         return new ResponseEntity<>(generalMixturesService.getGeneralMixturesMetric(tuple._1), HttpStatus.OK);
     }
 }
