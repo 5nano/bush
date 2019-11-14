@@ -113,7 +113,7 @@ public class StadisticsService {
                                             .collect(Collectors.toList());
                                     Collections.sort(values, Comparator.comparingDouble(Double::doubleValue));
                                     Integer listSize = values.size();
-                                    values.subList((int)(listSize * 0.8),listSize).clear(); //TODO: sacar estas dos ultimas lineas en caso de no querer sacar valores
+                                    values.subList((int)(listSize * 0.6),listSize).clear(); //TODO: sacar estas dos ultimas lineas en caso de no querer sacar valores
                                     return Tuple.of(entry2.getKey(), values);
                                         })
                                 .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2))
