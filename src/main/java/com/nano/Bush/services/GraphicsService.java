@@ -80,12 +80,7 @@ public class GraphicsService {
                 .map(measurePlant ->
                         new GraphicLineTime(measurePlant.getDay(), measurePlant.getDayWithHour(), measurePlant.getArea().getValue(), measurePlant.getImage()))
                 .collect(Collectors.toList());
-        Collections.sort(measuresToSort, new Comparator<GraphicLineTime>() {
-            @Override
-            public int compare(GraphicLineTime o1, GraphicLineTime o2) {
-                return o1.getInstant().compareTo(o2.getInstant());
-            }
-        });
+        Collections.sort(measuresToSort, Comparator.comparing(GraphicLineTime::getInstant));
         return measuresToSort;
     }
 
@@ -100,12 +95,7 @@ public class GraphicsService {
                 Tuple.of(entry.getKey(),
                         averageMeasurePlants(entry.getValue()))).collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
         List<GraphicLineTime> measuresCollect = measuresAveraged.entrySet().stream().map(entry -> new GraphicLineTime(entry.getKey(), null, entry.getValue(), null)).collect(Collectors.toList());
-       Collections.sort(measuresCollect, new Comparator<GraphicLineTime>() {
-            @Override
-            public int compare(GraphicLineTime o1, GraphicLineTime o2) {
-                return o1.getDate().compareTo(o2.getDate());
-            }
-        });
+       Collections.sort(measuresCollect, Comparator.comparing(GraphicLineTime::getDate));
        return measuresCollect;
     }
 
