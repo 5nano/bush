@@ -75,12 +75,18 @@ public class GraphicsService {
 
     public List<GraphicLineTime> getExperimentData(Integer assayId, Integer experimentId) {
         List<MeasurePlant> measures = measuresDao.selectMeasuresFrom(Integer.valueOf(assayId), Integer.valueOf(experimentId));
-        return measures
+        List<GraphicLineTime> measuresToSort = measures
                 .stream()
                 .map(measurePlant ->
                         new GraphicLineTime(measurePlant.getDay(), measurePlant.getDayWithHour(), measurePlant.getArea().getValue(), measurePlant.getImage()))
                 .collect(Collectors.toList());
-
+        Collections.sort(measuresToSort, new Comparator<GraphicLineTime>() {
+            @Override
+            public int compare(GraphicLineTime o1, GraphicLineTime o2) {
+                return o1.getInstant().compareTo(o2.getInstant());
+            }
+        });
+        return measuresToSort;
     }
 
     public List<GraphicLineTime> getComparativeTreatmentAveragedData(Integer treatmentId) {
