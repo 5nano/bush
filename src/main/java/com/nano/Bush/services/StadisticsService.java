@@ -15,9 +15,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.LocalDate;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -108,16 +106,23 @@ public class StadisticsService {
                 Tuple.of(entry.getKey(),
                         entry.getValue().entrySet()
                                 .stream()
-                                .map(entry2 ->
-                                        Tuple.of(entry2.getKey(), entry2.getValue().stream()
-                                                .map(dto -> dto.getValues())
-                                                .flatMap(List::stream)
-                                                .collect(Collectors.toList())))
+                                .map(entry2 -> {
+                                    List<Double> values = entry2.getValue().stream()
+                                            .map(dto -> dto.getValues())
+                                            .flatMap(List::stream)
+                                            .collect(Collectors.toList());
+                                    Collections.sort(values, Comparator.comparingDouble(Double::doubleValue));
+                                    Integer listSize = values.size();
+                                    values.subList((int)(listSize * 0.6),listSize).clear(); //TODO: sacar estas dos ultimas lineas en caso de no querer sacar valores
+                                    return Tuple.of(entry2.getKey(), values);
+                                        })
                                 .collect(Collectors.toMap(Tuple2::_1, Tuple2::_2))
                 ))
                 .collect(Collectors.toList());
 
-        return collect1.stream().collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
+        Map<LocalDate, Map<Integer, List<Double>>> collect = collect1.stream().collect(Collectors.toMap(Tuple2::_1, Tuple2::_2));
+        return new TreeMap<LocalDate, Map<Integer, List<Double>>>(collect);
+
     }
 
     private static class GroupMedian {
