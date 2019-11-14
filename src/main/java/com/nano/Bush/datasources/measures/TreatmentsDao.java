@@ -43,7 +43,7 @@ public class TreatmentsDao {
         } else {
             preparedStatement.setInt(2, treatment.getIdAgrochemical());
         }
-        if (treatment.getIdAgrochemical() == null) {
+        if (treatment.getIdMixture() == null) {
             preparedStatement.setNull(3, java.sql.Types.INTEGER);
         } else {
             preparedStatement.setInt(3, treatment.getIdMixture());
@@ -54,7 +54,7 @@ public class TreatmentsDao {
         } else {
             preparedStatement.setString(5, treatment.getDescription());
         }
-        if (treatment.getPressure() == null) {
+        if (!treatment.getPressure().isPresent()) {
             preparedStatement.setNull(6, Types.FLOAT);
         } else {
             preparedStatement.setDouble(6, treatment.getPressure().get());
