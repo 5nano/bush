@@ -22,6 +22,7 @@ import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import java.sql.SQLException;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 @Controller
@@ -147,6 +148,12 @@ public class AssayController {
             throw new RuntimeException("Error, el ensayo ya fue finalizado");
         }
         return new ResponseEntity<>(new Response("Ensayo Terminado", HttpStatus.OK.value()), HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/ensayo/nombresTratamientos", method = RequestMethod.GET, produces = "application/json")
+    public @ResponseBody
+    ResponseEntity<Map<Integer,String>> treatmentsNames(@RequestParam Integer idAssay) {
+        return new ResponseEntity<>(assayService.getTreatmentsNames(idAssay), HttpStatus.OK);
     }
 
 }

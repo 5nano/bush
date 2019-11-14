@@ -25,6 +25,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 import static java.util.Collections.emptyList;
+import static java.util.Collections.emptyMap;
 
 @Service
 public class AssayService {
@@ -48,6 +49,13 @@ public class AssayService {
   @Autowired
   UsersDao usersDao;
 
+
+  public Map<Integer,String> getTreatmentsNames(Integer idAssay){
+    return Try.of(() -> treatmentDao.getTreatments(idAssay))
+            .onFailure(e -> logger.error("Unexpected error", e))
+            .map(treatments -> treatments.stream().collect(Collectors.toMap(treatment -> treatment.getIdTreatment().get(),Treatment::getName)))
+            .getOrElse(emptyMap());
+  }
 
   public List<AssayResponse> getAllAssays(Integer idCompany) {
     return Try.of(() -> assaysDao.getAllAssays(idCompany))
