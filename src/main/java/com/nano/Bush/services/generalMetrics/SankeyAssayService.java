@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 @Service
 public class SankeyAssayService {
 
-
     @Autowired
     private TreatmentsDao treatmentsDao;
 
@@ -40,6 +39,7 @@ public class SankeyAssayService {
         labels.addAll(allRelations.stream().map(Tuple3::_2).distinct().collect(Collectors.toList()));
 
         labels = labels.stream().distinct().collect(Collectors.toList());
+        labels.add("SIN FEEDBACK");
 
         Map<String, Integer> labelWithIndex = new HashMap<>();
 
@@ -49,7 +49,11 @@ public class SankeyAssayService {
 
         List<Tuple3<Integer, Integer, Integer>> finalRelations = new ArrayList<>();
 
-        allRelations.forEach(relation -> finalRelations.add(new Tuple3<>(labelWithIndex.get(relation._1()), labelWithIndex.get(relation._2()), Integer.parseInt(relation._3()))));
+        allRelations.forEach(relation -> finalRelations
+                .add(new Tuple3<>(labelWithIndex.get(relation._1()), labelWithIndex.get(relation._2()), Integer.parseInt(relation._3()))));
+
+        finalRelations.add(new Tuple3<>(labelWithIndex.get("ACTIVE"), labelWithIndex.get("SIN FEEDBACK"),
+                finalRelations.stream().filter(t -> t._2.equals(labelWithIndex.get("ACTIVE"))).mapToInt(t -> t._3).sum()));
 
         finalRelations.forEach(relation -> {
             source.add(relation._1());
