@@ -4,6 +4,8 @@ import com.nano.Bush.conectors.PostgresConnector;
 import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.AssayStatesEnum;
 import com.nano.Bush.model.Experiment;
+import io.vavr.Tuple;
+import io.vavr.Tuple2;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -105,6 +107,18 @@ public class AssaysDao {
         }
         return experiments;
     }
+
+    public Tuple2<Integer,String> getInfoAssayFinished(Integer assayId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT conclusiones,estrellas FROM ensayoTerminado WHERE idEnsayo = '" + assayId + "'");
+        List<Tuple2<Integer,String>> info = new ArrayList<>();
+        while (resultSet.next()) {
+            info.add(Tuple.of(resultSet.getInt("estrellas"), resultSet.getString("conclusiones")));
+        }
+        return info.get(0);
+    }
+
+
+
 
     public void delete(Integer assayId) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("DELETE FROM ensayo WHERE idEnsayo = " + assayId);

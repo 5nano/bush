@@ -20,6 +20,7 @@ import org.springframework.stereotype.Service;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
@@ -102,6 +103,12 @@ public class AssayService {
             .map(assay -> {
               //crop = cultivo
               final Crop crop = cropsMap.get(assay.getIdCrop());
+              Optional<Tuple2<Integer,String>> infoAssayFinished = Optional.empty();
+              try {
+                infoAssayFinished = assay.getState().get().equals(AssayStatesEnum.FINISHED) ? Optional.of(assaysDao.getInfoAssayFinished(assay.getIdAssay().get())) : Optional.empty();
+              } catch (SQLException e) {
+                e.printStackTrace();
+              }
               final List<Tag> assayTags = Option.of(assayWithTags.get(assay.getIdAssay().get()))
                       .map(idTags -> idTags.stream().map(idTag -> tagsMap.get(idTag)).collect(Collectors.toList()))
                       .getOrElse(emptyList());
@@ -115,7 +122,7 @@ public class AssayService {
               });
               final Integer associatedExperimentsValue = associatedExperiments.stream().mapToInt(Integer::intValue).sum();
               final String userCreator =  usersDao.getUserById(assay.getIdUserCreator()).map(u-> u.getUsername()).getOrElseThrow(()-> new RuntimeException("User creator not found"));
-              return new AssayResponse(assay, assay.getEstimatedFinished(), assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator);
+              return new AssayResponse(assay, assay.getEstimatedFinished(), assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator, infoAssayFinished.map(inf -> inf._1), infoAssayFinished.map(inf -> inf._2));
             })
             .collect(Collectors.toList());
   }

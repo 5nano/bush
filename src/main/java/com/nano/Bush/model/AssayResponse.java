@@ -20,8 +20,10 @@ public class AssayResponse {
   private final Integer treatments;
   private final Integer experiments;
   private Optional<AssayStatesEnum> state;
+  private  Optional<Integer> stars; //if assay finished
+  private  Optional<String> comments; //if assay finished
 
-  public AssayResponse(Assay assay, Optional<Timestamp> estimatedFinished, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user) {
+  public AssayResponse(Assay assay, Optional<Timestamp> estimatedFinished, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user, Optional<Integer> stars, Optional<String> comments) {
     this.idAssay = assay.getIdAssay();
     this.created = assay.getCreated();
     this.idCrop = assay.getIdCrop();
@@ -36,6 +38,8 @@ public class AssayResponse {
     this.idMixtures = idMixtures;
     this.treatments = treatments;
     this.experiments = experiments;
+    this.stars = stars;
+    this.comments = comments;
   }
 
   public Optional<Integer> getIdAssay() {
@@ -92,5 +96,13 @@ public class AssayResponse {
 
   public Optional<Timestamp> getEstimatedFinished() {
     return estimatedFinished;
+  }
+
+  public Optional<Integer> getStars() {
+    return stars;
+  }
+
+  public Optional<String> getComments() {
+    return comments;
   }
 }
