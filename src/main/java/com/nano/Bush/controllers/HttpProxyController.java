@@ -24,6 +24,7 @@ public class HttpProxyController {
     public @ResponseBody
     ResponseEntity<String> handleRequest(@RequestBody BulmapsaurPayload payload) throws Exception {
         logger.info("Received image with idAssay {} and idExperiment {}", payload.idAssay, payload.idExperiment);
+        logger.info(payload.base64);
         return new ResponseEntity<>(bmsService.doPost(payload), HttpStatus.OK);
     }
 
