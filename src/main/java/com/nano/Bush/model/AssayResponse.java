@@ -1,6 +1,7 @@
 package com.nano.Bush.model;
 
 import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -22,8 +23,9 @@ public class AssayResponse {
   private Optional<AssayStatesEnum> state;
   private  Optional<Integer> stars; //if assay finished
   private  Optional<String> comments; //if assay finished
+  private Optional<Instant> finishedDate;
 
-  public AssayResponse(Assay assay, Optional<Timestamp> estimatedFinished, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user, Optional<Integer> stars, Optional<String> comments) {
+  public AssayResponse(Assay assay, Optional<Timestamp> estimatedFinished, List<Tag> tags, Crop crop, Set<Integer> idAgrochemicals, Set<Integer> idMixtures, Integer treatments, Integer experiments, String user, Optional<Integer> stars, Optional<String> comments, Optional<Instant> finishedDate) {
     this.idAssay = assay.getIdAssay();
     this.created = assay.getCreated();
     this.idCrop = assay.getIdCrop();
@@ -40,6 +42,7 @@ public class AssayResponse {
     this.experiments = experiments;
     this.stars = stars;
     this.comments = comments;
+    this.finishedDate = finishedDate;
   }
 
   public Optional<Integer> getIdAssay() {
@@ -104,5 +107,9 @@ public class AssayResponse {
 
   public Optional<String> getComments() {
     return comments;
+  }
+
+  public Optional<Instant> getFinishedDate() {
+    return finishedDate;
   }
 }
