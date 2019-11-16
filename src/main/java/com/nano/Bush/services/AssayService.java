@@ -10,6 +10,7 @@ import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.*;
 import io.vavr.Tuple;
 import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import io.vavr.control.Option;
 import io.vavr.control.Try;
 import org.slf4j.Logger;
@@ -18,6 +19,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
+import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -103,7 +105,7 @@ public class AssayService {
             .map(assay -> {
               //crop = cultivo
               final Crop crop = cropsMap.get(assay.getIdCrop());
-              Optional<Tuple2<Integer,String>> infoAssayFinished = Optional.empty();
+              Optional<Tuple3<Integer,String, Instant>> infoAssayFinished = Optional.empty();
               try {
                 infoAssayFinished = assay.getState().get().equals(AssayStatesEnum.FINISHED) ? Optional.of(assaysDao.getInfoAssayFinished(assay.getIdAssay().get())) : Optional.empty();
               } catch (SQLException e) {
@@ -122,7 +124,7 @@ public class AssayService {
               });
               final Integer associatedExperimentsValue = associatedExperiments.stream().mapToInt(Integer::intValue).sum();
               final String userCreator =  usersDao.getUserById(assay.getIdUserCreator()).map(u-> u.getUsername()).getOrElseThrow(()-> new RuntimeException("User creator not found"));
-              return new AssayResponse(assay, assay.getEstimatedFinished(), assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator, infoAssayFinished.map(inf -> inf._1), infoAssayFinished.map(inf -> inf._2));
+              return new AssayResponse(assay, assay.getEstimatedFinished(), assayTags, crop, agrochemicalMixtures._1, agrochemicalMixtures._2,treatments.size(),associatedExperimentsValue,userCreator, infoAssayFinished.map(inf -> inf._1), infoAssayFinished.map(inf -> inf._2), infoAssayFinished.map(inf -> inf._3));
             })
             .collect(Collectors.toList());
   }

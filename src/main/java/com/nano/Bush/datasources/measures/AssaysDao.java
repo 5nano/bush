@@ -5,12 +5,14 @@ import com.nano.Bush.model.Assay;
 import com.nano.Bush.model.AssayStatesEnum;
 import com.nano.Bush.model.Experiment;
 import io.vavr.Tuple;
-import io.vavr.Tuple2;
+import io.vavr.Tuple3;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.time.Instant;
+import java.time.LocalDate;
 import javax.annotation.PostConstruct;
 import java.sql.*;
 import java.util.*;
@@ -108,11 +110,11 @@ public class AssaysDao {
         return experiments;
     }
 
-    public Tuple2<Integer,String> getInfoAssayFinished(Integer assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT conclusiones,estrellas FROM ensayoTerminado WHERE idEnsayo = '" + assayId + "'");
-        List<Tuple2<Integer,String>> info = new ArrayList<>();
+    public Tuple3<Integer,String,Instant> getInfoAssayFinished(Integer assayId) throws SQLException {
+        resultSet = statement.executeQuery("SELECT conclusiones,estrellas,fechaterminado FROM ensayoTerminado WHERE idEnsayo = '" + assayId + "'");
+        List<Tuple3<Integer,String, Instant>> info = new ArrayList<>();
         while (resultSet.next()) {
-            info.add(Tuple.of(resultSet.getInt("estrellas"), resultSet.getString("conclusiones")));
+            info.add(Tuple.of(resultSet.getInt("estrellas"), resultSet.getString("conclusiones"), resultSet.getTimestamp("fechaterminado").toInstant()));
         }
         return info.get(0);
     }
