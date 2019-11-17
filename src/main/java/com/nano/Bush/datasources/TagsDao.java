@@ -33,13 +33,6 @@ public class TagsDao {
     PostgresConnector postgresConnector;
     @Autowired
     AssaysDao assaysDao;
-    private Statement statement;
-    private ResultSet resultSet;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public Tag insert(Tag tag) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
@@ -48,7 +41,7 @@ public class TagsDao {
         preparedStatement.setString(1, tag.getName());
         preparedStatement.setString(2, tag.getDescription());
         preparedStatement.setString(3, tag.getColor());
-        resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
         return new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"), resultSet.getString("color"));
     }
@@ -60,7 +53,7 @@ public class TagsDao {
     }
 
     public List<Tag> getTags() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion,color FROM tag");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idTag,nombre,descripcion,color FROM tag");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
             tags.add(new Tag(Optional.of(resultSet.getInt("idTag")), resultSet.getString("nombre"), resultSet.getString("descripcion"), resultSet.getString("color")));
@@ -70,7 +63,7 @@ public class TagsDao {
 
     public List<Tag> getTagsFrom(Integer idAssay) throws SQLException {
         logger.info("Getting tags for assay {}", idAssay);
-        resultSet = statement.executeQuery("SELECT idTag,nombre,descripcion,color FROM tag WHERE idTag IN\n" +
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idTag,nombre,descripcion,color FROM tag WHERE idTag IN\n" +
                 "(SELECT idTag FROM tagEnsayo WHERE idEnsayo = '" + idAssay + "')");
         List<Tag> tags = new ArrayList<>();
         while (resultSet.next()) {
@@ -83,7 +76,7 @@ public class TagsDao {
     public Map<Integer, Set<Integer>> assayWithTags() throws SQLException {
         Map<Integer, Set<Integer>> assayWithTags = Maps.newHashMap();
 
-        resultSet = statement.executeQuery("SELECT idEnsayo, array_to_string(array_agg(idTag),',') AS tagsByAssay " +
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idEnsayo, array_to_string(array_agg(idTag),',') AS tagsByAssay " +
                 "FROM tagEnsayo GROUP BY idEnsayo");
 
         while (resultSet.next()) {

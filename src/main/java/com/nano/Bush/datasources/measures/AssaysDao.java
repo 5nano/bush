@@ -23,13 +23,6 @@ public class AssaysDao {
     private static final Logger logger = LoggerFactory.getLogger(AssaysDao.class);
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private ResultSet resultSet;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public Integer insert(Assay Assay) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
@@ -44,14 +37,14 @@ public class AssaysDao {
         preparedStatement.setInt(7, Assay.getIdCompany());
         preparedStatement.setTimestamp(8, Assay.getEstimatedFinished().get());
 
-        resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
         return resultSet.getInt("idEnsayo");
 
     }
 
     public List<Assay> getAllAssays(Integer idCompany) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE idcompania=" + idCompany);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
@@ -65,7 +58,7 @@ public class AssaysDao {
     public Optional<Assay> getAssay(Integer idAssay) {
 
         try {
-            resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE idEnsayo = " + idAssay);
+            ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE idEnsayo = " + idAssay);
             while (resultSet.next()) {
                 return Optional.of(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
                         resultSet.getString("descripcion"), resultSet.getInt("idUserCreador"),
@@ -80,7 +73,7 @@ public class AssaysDao {
     }
 
     public List<Assay> getAssaysByState(Integer idCompany, AssayStatesEnum assayStatesEnum) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE estado = '" + assayStatesEnum.toString() + "' AND idcompania=" + idCompany);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idEnsayo,nombre,descripcion,idCultivo,idUserCreador,estado,creado,fechaEstimadaFinalizacion FROM ensayo WHERE estado = '" + assayStatesEnum.toString() + "' AND idcompania=" + idCompany);
         List<Assay> Assays = new ArrayList<>();
         while (resultSet.next()) {
             Assays.add(new Assay(Optional.of(resultSet.getInt("idEnsayo")), resultSet.getInt("idCultivo"), resultSet.getString("nombre"),
@@ -91,7 +84,7 @@ public class AssaysDao {
     }
 
     public List<Experiment> getExperimentsFromAssay(Integer assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idEnsayo = '" + assayId + "'");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idEnsayo = '" + assayId + "'");
         List<Experiment> experiments = new ArrayList<>();
         while (resultSet.next()) {
             experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
@@ -101,7 +94,7 @@ public class AssaysDao {
     }
 
     public List<Experiment> getExperimentsFromTreatment(String treatmentId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idTratamiento = '" + treatmentId + "'");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idTratamiento = '" + treatmentId + "'");
         List<Experiment> experiments = new ArrayList<>();
         while (resultSet.next()) {
             experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
@@ -111,7 +104,7 @@ public class AssaysDao {
     }
 
     public Tuple3<Integer,String,Instant> getInfoAssayFinished(Integer assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT conclusiones,estrellas,fechaterminado FROM ensayoTerminado WHERE idEnsayo = '" + assayId + "'");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT conclusiones,estrellas,fechaterminado FROM ensayoTerminado WHERE idEnsayo = '" + assayId + "'");
         List<Tuple3<Integer,String, Instant>> info = new ArrayList<>();
         while (resultSet.next()) {
             info.add(Tuple.of(resultSet.getInt("estrellas"), resultSet.getString("conclusiones"), resultSet.getTimestamp("fechaterminado").toInstant()));
@@ -160,7 +153,7 @@ public class AssaysDao {
     }
 
     public Map<Integer, String> getAssayTerminateDate() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idEnsayo,fechaTerminado FROM ensayoTerminado");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idEnsayo,fechaTerminado FROM ensayoTerminado");
         Map<Integer, String> terminatedAssays = new HashMap<>();
         while (resultSet.next()) {
             terminatedAssays.put(resultSet.getInt("idEnsayo"), resultSet.getString("fechaTerminado"));

@@ -19,13 +19,6 @@ public class CompaniesDao {
 
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private ResultSet resultSet;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public void insert(Company company) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
@@ -38,7 +31,7 @@ public class CompaniesDao {
     }
 
     public List<Company> getCompanies() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idCompania,nombre,descripcion FROM compania");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idCompania,nombre,descripcion FROM compania");
         List<Company> companies = new ArrayList<>();
         while (resultSet.next()) {
             companies.add(new Company(Optional.of(resultSet.getInt("idCompania")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
@@ -48,13 +41,13 @@ public class CompaniesDao {
 
     public void getCompany(Company Company) throws SQLException {
         String query = "SELECT Nombre,Descripcion FROM compania WHERE nombre = '" + Company.getName() + "'";
-        resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
     }
 
     public Optional<Company> getCompany(Integer id) throws SQLException {
         Optional<Company> company = Optional.empty();
         String query = "SELECT idCompania,Nombre,Descripcion FROM compania WHERE idCompania = " + id;
-        resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
         while (resultSet.next()) {
             company = Optional.of(new Company(Optional.of(resultSet.getInt("idCompania")), resultSet.getString("nombre"),
                     resultSet.getString("descripcion")));
