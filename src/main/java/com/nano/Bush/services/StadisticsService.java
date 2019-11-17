@@ -93,7 +93,7 @@ public class StadisticsService {
     }
 
     private Map<LocalDate, Map<Integer, List<Double>>> getFrequenciesValuesAssay(Integer assayId, String typeValue) throws SQLException {
-
+        logger.info("Getting frequencies values assay {}, type {}",assayId, typeValue);
         List<GroupMedian> collectMedians = this.allMediansResults(assayId);
         Map<LocalDate, List<GroupMedian>> medians = collectMedians.stream().collect(Collectors.groupingBy(GroupMedian::getDate));
         Map<LocalDate, List<BoxDiagramDto>> collectedByday = this.getValues(medians, typeValue);

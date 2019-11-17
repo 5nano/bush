@@ -22,7 +22,7 @@ public class MeasuresDao {
     private static final ObjectMapper mapper = new ObjectMapper();
 
     public List<MeasurePlant> selectMeasuresFrom(Integer assayId, Integer experimentId) {
-
+        logger.info("Selecting measures assay {}, experiment {}", assayId, experimentId);
         String query = "SELECT time,measures,image FROM measures WHERE id_experiment = " + experimentId + " AND id_assay = " + assayId + "";
         ResultSet rs = CassandraConnector.getConnection().execute(query);
 

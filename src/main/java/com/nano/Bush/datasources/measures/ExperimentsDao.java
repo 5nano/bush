@@ -19,17 +19,10 @@ public class ExperimentsDao {
 
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private PreparedStatement preparedStatement;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
 
     public Integer insert(Experiment experiment) throws SQLException {
-        preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento (idExperimento,idEnsayo,idTratamiento,nombre,descripcion) VALUES (default,?, ?, ?, ?) RETURNING idExperimento");
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor("INSERT INTO experimento (idExperimento,idEnsayo,idTratamiento,nombre,descripcion) VALUES (default,?, ?, ?, ?) RETURNING idExperimento");
         preparedStatement.setInt(1, experiment.getAssayId());
         preparedStatement.setInt(2, experiment.getTreatmentId());
         preparedStatement.setString(3, experiment.getName());
@@ -41,7 +34,7 @@ public class ExperimentsDao {
 
     public Experiment getExperiment(Integer experimentId) throws SQLException {
         String query = "SELECT nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idExperimento = '" + experimentId + "'";
-        ResultSet resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
         if (resultSet.next()) {
             return new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
                     resultSet.getInt("idEnsayo"), resultSet.getInt("idTratamiento"), Optional.of(experimentId));
@@ -55,7 +48,7 @@ public class ExperimentsDao {
                 " JOIN ensayo en " +
                 " ON ex.idEnsayo = en.idEnsayo " +
                 " WHERE en.idcompania = " + companyId;
-        ResultSet resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
         List<Experiment> experiments = new ArrayList<>();
         while (resultSet.next()) {
             experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
@@ -67,7 +60,7 @@ public class ExperimentsDao {
 
     public void delete(Experiment experiment) throws SQLException {
         String query = "DELETE FROM experimento WHERE idExperimento = " + experiment.getExperimentId();
-        preparedStatement = postgresConnector.getPreparedStatementFor(query);
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 

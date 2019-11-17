@@ -26,13 +26,6 @@ public class TreatmentsDao {
     PostgresConnector postgresConnector;
     @Autowired
     ExperimentsDao experimentsDao;
-    private Statement statement;
-    private ResultSet resultSet;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public List<Integer> insert(Treatment treatment) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
@@ -61,7 +54,7 @@ public class TreatmentsDao {
         }
 
 
-        resultSet = preparedStatement.executeQuery();
+        ResultSet resultSet = preparedStatement.executeQuery();
         resultSet.next();
         Integer idTreatment = resultSet.getInt("idTratamiento");
 
@@ -90,7 +83,8 @@ public class TreatmentsDao {
     }
 
     public List<Treatment> getTreatments(Integer assayId) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion FROM tratamiento WHERE idEnsayo = '" + assayId + "'");
+        logger.info("Getting treatments for assay {}", assayId);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion FROM tratamiento WHERE idEnsayo = '" + assayId + "'");
         List<Treatment> treatments = new ArrayList<>();
         while (resultSet.next()) {
             treatments.add(new Treatment(Optional.of(resultSet.getInt("idTratamiento")), Optional.empty(), resultSet.getInt("idEnsayo"),
@@ -101,7 +95,8 @@ public class TreatmentsDao {
     }
 
     public List<Experiment> getExperiments(Integer idTreatment) throws SQLException {
-        resultSet = statement.executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
+        logger.info("Getting experiments for treatment {}", idTreatment);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idExperimento,nombre,descripcion,idEnsayo,idTratamiento FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
         List<Experiment> experiments = new ArrayList<>();
         while (resultSet.next()) {
             experiments.add(new Experiment(resultSet.getString("nombre"), resultSet.getString("descripcion"),
@@ -113,7 +108,7 @@ public class TreatmentsDao {
     public Integer getExperimentsCount(Integer idTreatment) {
         Integer experiments = 0;
         try {
-            resultSet = statement.executeQuery("SELECT COUNT(*) AS amount FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
+            ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT COUNT(*) AS amount FROM experimento WHERE idTratamiento = '" + idTreatment + "'");
             while (resultSet.next()) {
                 experiments = resultSet.getInt("amount");
             }
@@ -126,7 +121,7 @@ public class TreatmentsDao {
 
     public Treatment getTreatment(Integer idTreatment) throws SQLException {
         String query = "SELECT idTratamiento, idEnsayo, idagroquimico, idmezcla,nombre,descripcion,presion FROM tratamiento WHERE idTratamiento = '" + idTreatment + "'";
-        resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
         if (resultSet.next()) {
             return new Treatment(Optional.of(resultSet.getInt("idTratamiento")), Optional.empty(), resultSet.getInt("idEnsayo"),
                     resultSet.getInt("idagroquimico"),
@@ -140,7 +135,7 @@ public class TreatmentsDao {
                 " JOIN ensayo e ON t.idEnsayo=e.idEnsayo " +
                 " WHERE t.idMezcla IS NOT NULL AND e.idCompania = " + companyId;
         List<Integer> mixturesIds = new ArrayList<>();
-        resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
         while (resultSet.next()) {
             mixturesIds.add(resultSet.getInt("idmezcla"));
         }
@@ -156,7 +151,7 @@ public class TreatmentsDao {
     public List<Tuple3<String, String, String>> getRelationForSankeyGraphicTuple(String query) throws SQLException {
 
         List<Tuple3<String, String, String>> relation = new ArrayList<>();
-        resultSet = statement.executeQuery(query);
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery(query);
         while (resultSet.next()) {
             relation.add(new Tuple3<>(resultSet.getString(1), resultSet.getString(2), resultSet.getString(3)));
         }

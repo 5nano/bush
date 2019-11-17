@@ -19,13 +19,6 @@ public class CropsDao {
 
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private ResultSet resultSet;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public void insert(Crop crop) throws SQLException {
         String query = "INSERT INTO  cultivo VALUES (default, ?, ?)";
@@ -36,7 +29,7 @@ public class CropsDao {
     }
 
     public List<Crop> getCrops() throws SQLException {
-        resultSet = statement.executeQuery("SELECT * FROM cultivo");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT * FROM cultivo");
         List<Crop> crops = new ArrayList<>();
         while (resultSet.next()) {
             crops.add(new Crop(Optional.of(resultSet.getInt("idCultivo")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
@@ -45,7 +38,7 @@ public class CropsDao {
     }
 
     public void getCrop(Crop crop) throws SQLException {
-        resultSet = statement.executeQuery("SELECT Nombre,Descripcion FROM cultivo WHERE nombre = '" + crop.getName() + "'");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT Nombre,Descripcion FROM cultivo WHERE nombre = '" + crop.getName() + "'");
     }
 
     public void delete(Integer idCrop) throws SQLException {
