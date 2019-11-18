@@ -18,7 +18,6 @@ import java.util.Optional;
 @CrossOrigin(origins = "*", methods = {RequestMethod.GET})
 public class GeneralMixturesMetricController {
 
-
     @Autowired
     private GeneralMixturesService generalMixturesService;
 
@@ -32,11 +31,3 @@ public class GeneralMixturesMetricController {
         return new ResponseEntity<>(generalMixturesService.getGeneralMixturesMetric(tuple._1), HttpStatus.OK);
     }
 }
-
-
-/**
- * labels=[ "Eve", "Cain", "Seth", "Enos", "Noam", "Abel", "Awan", "Enoch", "Azura"],
- * parents=["",    "Eve",  "Eve",  "Seth", "Seth", "Eve",  "Eve",  "Awan",  "Eve" ],
- * values=[  65,    14,     12,     10,     2,      6,      6,      4,       4],
- * ]
- */
