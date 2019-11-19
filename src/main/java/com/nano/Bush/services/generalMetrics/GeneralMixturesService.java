@@ -21,13 +21,14 @@ public class GeneralMixturesService {
     AgrochemicalsDao agrochemicalsDao;
 
     public GeneralMixturesDTO getGeneralMixturesMetric(Integer companyId) {
-        List<String> ids = Arrays.asList("Mezclas", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra",
+        List<String> ids = Arrays.asList("Mezclas y agroquímicos", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra",
                 "Amicor", "Galant", "Unimark", "Hussar", "Solomon", "Mospilan", "Assail");
 
-        List<String> labels = Arrays.asList("Mezclas", "A", "B", "C", "Galant", "Starkle", "Diurex", "Starane Xtra", "Adengo",
+        List<String> labels = Arrays.asList("Mezclas y agroquímicos", "A", "B", "C", "Galant", "Diurex", "Starane Xtra", "Adengo",
                 "Starane", "Mospilan", "Assail", "Galant", "Galant", "Hussar");
 
-        List<String> parents = Arrays.asList("", "Mezclas", "Mezclas", "Mezclas", "Mezclas", "Mezclas", "A", "A", "B", "B", "C", "C", "A", "C");
+        List<String> parents = Arrays.asList("", "Mezclas y agroquímicos", "Mezclas y agroquímicos", "Mezclas y agroquímicos", "Mezclas y agroquímicos",
+                "A", "A", "B", "B", "C", "C", "A", "C");
 
         return new GeneralMixturesDTO(ids, labels, parents);
     }
