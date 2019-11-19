@@ -2,16 +2,12 @@ package com.nano.Bush.services.generalMetrics;
 
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.generalMetrics.SankeyAssayDTO;
-import io.vavr.Tuple3;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
 
 @Service
 public class SankeyAssayService {
@@ -23,10 +19,14 @@ public class SankeyAssayService {
     }
 
     public SankeyAssayDTO getSankeyAssays(Integer companyId) throws SQLException {
-        List<Integer> source = new ArrayList<>();
-        List<Integer> target = new ArrayList<>();
-        List<Integer> value = new ArrayList<>();
 
+        List<String> labels = Arrays.asList("Ray Grass", "Mostaza", "Soja", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra", "Amicor", "Galant", "Unimark", "Hussar", "Solomon",
+                "Mospilan", "Assail", "4 Estrellas", "3 Estrellas", "5 Estrellas", "1 estrella");
+        List<Integer> source = Arrays.asList(0, 0, 0, 1, 1, 2, 3, 4, 5, 5, 4, 6, 7, 10, 10, 8, 15, 14);
+        List<Integer> target = Arrays.asList(10, 4, 5, 3, 10, 5, 6, 8, 7, 14, 15, 16, 17, 16, 18, 19, 19, 18);
+        List<Integer> value = Arrays.asList(3, 3, 2, 1, 2, 1, 1, 2, 2, 2, 1, 1, 3, 2, 1, 1, 2, 1, 1, 1, 1);
+
+        /*
         List<Tuple3<String, String, String>> allRelations = new ArrayList<>();
 
         allRelations.addAll(treatmentsDao.getRelationForSankeyGraphicTuple(cropMixtureRelationQuery(companyId)));
@@ -60,6 +60,7 @@ public class SankeyAssayService {
             target.add(relation._2());
             value.add(relation._3());
         });
+         */
 
         return new SankeyAssayDTO(labels, source, target, value);
     }
