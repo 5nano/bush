@@ -24,7 +24,7 @@ public class GeneralMixturesService {
         List<String> ids = Arrays.asList("Mezclas", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra",
                 "Amicor", "Galant", "Unimark", "Hussar", "Solomon", "Mospilan", "Assail");
 
-        List<String> labels = Arrays.asList("Mezclas", "A", "B", "C", "Galant", "Starkle", "Diurex", "Diurex", "Adengo",
+        List<String> labels = Arrays.asList("Mezclas", "A", "B", "C", "Galant", "Starkle", "Diurex", "Starane Xtra", "Adengo",
                 "Starane", "Mospilan", "Assail", "Galant", "Galant", "Hussar");
 
         List<String> parents = Arrays.asList("", "Mezclas", "Mezclas", "Mezclas", "Mezclas", "Mezclas", "A", "A", "B", "B", "C", "C", "A", "C");
