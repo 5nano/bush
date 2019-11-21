@@ -83,6 +83,14 @@ public class AssayController {
         return new ResponseEntity<>(assayService.getAssay(id), HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/ensayo/minimalInfo", method = RequestMethod.GET, produces = "application/json")
+    public ResponseEntity<AssayMinimalInfo> getMinimalInfo(@RequestParam(value = "idAssay") Integer id) throws SQLException {
+
+        //final Integer idCompany = interceptor.extractIdCompany(user_encoded,user);
+
+        return new ResponseEntity<>(assayService.getMinimalInfo(id), HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/ensayos/eliminar", method = RequestMethod.POST, produces = "application/json")
     public ResponseEntity<Response> deleteAssay(@RequestParam Integer assayId) throws SQLException {
