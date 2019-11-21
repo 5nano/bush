@@ -22,13 +22,6 @@ public class MixturesDao {
     private static final Logger logger = LoggerFactory.getLogger(MixturesDao.class);
     @Autowired
     PostgresConnector postgresConnector;
-    private Statement statement;
-    private ResultSet resultSet;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public void insert(Mixture Mixture) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
@@ -40,7 +33,7 @@ public class MixturesDao {
 
     public Optional<Mixture> getMixture(Integer mixtureId) {
         try {
-            resultSet = statement.executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla WHERE idmezcla = " + mixtureId);
+            ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla WHERE idmezcla = " + mixtureId);
             while (resultSet.next()) {
                 return Optional.of(new Mixture(Optional.of(resultSet.getInt("idmezcla")),
                         resultSet.getString("nombre"), resultSet.getString("descripcion")));
@@ -52,7 +45,7 @@ public class MixturesDao {
     }
 
     public List<Mixture> getMixtures() throws SQLException {
-        resultSet = statement.executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT idmezcla,nombre,descripcion FROM mezcla");
         List<Mixture> mixtures = new ArrayList<>();
         while (resultSet.next()) {
             mixtures.add(new Mixture(Optional.of(resultSet.getInt("idmezcla")), resultSet.getString("nombre"), resultSet.getString("descripcion")));

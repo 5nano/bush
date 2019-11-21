@@ -25,23 +25,16 @@ public class AgrochemicalsDao {
     private static final Logger logger = LoggerFactory.getLogger(AgrochemicalsDao.class);
     @Autowired
     PostgresConnector postgresConnector;
-    private PreparedStatement preparedStatement;
-    private Statement statement;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public void insert(Agrochemical agrochemical) throws SQLException {
-        preparedStatement = postgresConnector.getPreparedStatementFor(("INSERT INTO  agroquimico VALUES (default, ?, ?)"));
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(("INSERT INTO  agroquimico VALUES (default, ?, ?)"));
         preparedStatement.setString(1, agrochemical.getName());
         preparedStatement.setString(2, agrochemical.getDescription());
         preparedStatement.executeUpdate();
     }
 
     public List<Agrochemical> getAgrochemicals() throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT * FROM agroquimico");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT * FROM agroquimico");
         List<Agrochemical> agrochemicals = new ArrayList<>();
         while (resultSet.next()) {
             agrochemicals.add(new Agrochemical(Optional.of(resultSet.getInt("idAgroquimico")), resultSet.getString("nombre"), resultSet.getString("descripcion")));
@@ -51,7 +44,7 @@ public class AgrochemicalsDao {
 
     public Optional<Agrochemical> getAgrochemical(Integer id) {
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT * FROM agroquimico where idagroquimico=" + id);
+            ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT * FROM agroquimico where idagroquimico=" + id);
             while (resultSet.next()) {
                 return Optional.of(new Agrochemical(Optional.of(resultSet.getInt("idagroquimico")), resultSet.getString("nombre"),
                         resultSet.getString("descripcion")));
@@ -65,13 +58,13 @@ public class AgrochemicalsDao {
 
     public void delete(Integer agrochemicalId) throws SQLException {
         String query = "DELETE FROM agroquimico WHERE idAgroquimico = " + agrochemicalId;
-        preparedStatement = postgresConnector.getPreparedStatementFor(query);
+        PreparedStatement preparedStatement = postgresConnector.getPreparedStatementFor(query);
         preparedStatement.executeUpdate();
     }
 
     public List<PressureIndicator> getAgrochemicalWithPressureFrom(Integer treatmentId) throws SQLException {
 
-        ResultSet resultSet = statement.executeQuery("SELECT t.idMezcla, a.nombre, t.presion FROM tratamiento AS t " +
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT t.idMezcla, a.nombre, t.presion FROM tratamiento AS t " +
                 "JOIN mezclaAgroquimico AS ma ON t.idMezcla = ma.idMezcla " +
                 "JOIN agroquimico AS a ON ma.idAgroquimico = a.idAgroquimico WHERE t.idTratamiento = " + treatmentId);
 
@@ -87,7 +80,7 @@ public class AgrochemicalsDao {
 
     public List<Tuple3<String, String, Long>> getAllAgrochemicalsUsed() throws SQLException {
 
-        ResultSet resultSet = statement.executeQuery("SELECT mezclaAgro.nombreMezcla,mezclaAgro.nombreAgroquimico,COUNT(*) AS cantUsada" +
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT mezclaAgro.nombreMezcla,mezclaAgro.nombreAgroquimico,COUNT(*) AS cantUsada" +
                 " FROM ( SELECT ma.idAgroquimico, ma.idMezcla,m.nombre AS nombreMezcla,a.nombre AS nombreAgroquimico " +
                 " FROM mezclaAgroquimico AS ma " +
                 " JOIN agroquimico AS a ON ma.idAgroquimico = a.idAgroquimico " +

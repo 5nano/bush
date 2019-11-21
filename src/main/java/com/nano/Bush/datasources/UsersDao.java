@@ -20,12 +20,6 @@ public class UsersDao {
     private static final Logger logger = LoggerFactory.getLogger(UsersDao.class);
     @Autowired
     private PostgresConnector postgresConnector;
-    private Statement statement;
-
-    @PostConstruct
-    public void init() throws SQLException {
-        statement = postgresConnector.getConnection().createStatement();
-    }
 
     public void insert(User user) throws SQLException {
         PreparedStatement preparedStatement = postgresConnector
@@ -44,7 +38,7 @@ public class UsersDao {
     }
 
     public List<User> getUsers() throws SQLException {
-        ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario");
+        ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario");
         List<User> users = new ArrayList<>();
         while (resultSet.next()) {
             users.add(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
@@ -56,7 +50,7 @@ public class UsersDao {
 
     public Option<User> getUserByUsername(String username) {
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario WHERE Usuario ='" + username + "'");
+            ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario WHERE Usuario ='" + username + "'");
             while (resultSet.next()) {
                 return Option.of(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
                         resultSet.getString("Apellido"), resultSet.getString("Password"),
@@ -72,7 +66,7 @@ public class UsersDao {
 
     public Option<User> getUserById(Integer id) {
         try {
-            ResultSet resultSet = statement.executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario WHERE idUsuario =" + id);
+            ResultSet resultSet = postgresConnector.getConnection().createStatement().executeQuery("SELECT IdCompania,Usuario,Nombre,Apellido,Password,Email,idUsuario FROM Usuario WHERE idUsuario =" + id);
             while (resultSet.next()) {
                 return Option.of(new User(resultSet.getString("Usuario"), resultSet.getString("Nombre"),
                         resultSet.getString("Apellido"), resultSet.getString("Password"),

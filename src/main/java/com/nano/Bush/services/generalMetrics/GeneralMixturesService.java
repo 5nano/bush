@@ -3,17 +3,13 @@ package com.nano.Bush.services.generalMetrics;
 import com.nano.Bush.datasources.AgrochemicalsDao;
 import com.nano.Bush.datasources.MixturesDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
-import com.nano.Bush.model.Mixture;
 import com.nano.Bush.model.generalMetrics.GeneralMixturesDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 @Service
 public class GeneralMixturesService {
@@ -24,7 +20,20 @@ public class GeneralMixturesService {
     @Autowired
     AgrochemicalsDao agrochemicalsDao;
 
-    public GeneralMixturesDTO getGeneralMixturesMetric(Integer companyId) throws SQLException {
+    public GeneralMixturesDTO getGeneralMixturesMetric(Integer companyId) {
+        List<String> ids = Arrays.asList("Componentes", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra",
+                "Amicor", "Galant", "Unimark", "Hussar", "Solomon", "Mospilan", "Assail");
+
+        List<String> labels = Arrays.asList("Componentes", "A", "B", "C", "Galant", "Diurex", "Starane Xtra", "Adengo",
+                "Starane", "Mospilan", "Assail", "Galant", "Galant", "Hussar");
+
+        List<String> parents = Arrays.asList("", "Componentes", "Componentes", "Componentes", "Componentes",
+                "A", "A", "B", "B", "C", "C", "A", "C");
+
+        return new GeneralMixturesDTO(ids, labels, parents);
+    }
+
+    /*public GeneralMixturesDTO getGeneralMixturesMetric(Integer companyId) throws SQLException {
 
         List<Mixture> allMixtures = mixturesDao.getMixtures();
 
@@ -55,10 +64,10 @@ public class GeneralMixturesService {
 
         parents.addAll(agrochemicalsUsed.stream().map(agrochemicalUsed -> agrochemicalUsed._1).collect(Collectors.toList()));
         labels.addAll(agrochemicalsUsed.stream().map(agrochemicalUsed -> agrochemicalUsed._2).collect(Collectors.toList()));
-        values.addAll(agrochemicalsUsed.stream().map(agrochemicalUsed -> agrochemicalUsed._3).collect(Collectors.toList()));*/
+        values.addAll(agrochemicalsUsed.stream().map(agrochemicalUsed -> agrochemicalUsed._3).collect(Collectors.toList()));
 
-        return new GeneralMixturesDTO(values, labels, parents);
-    }
+        return new GeneralMixturesDTO(values, labels, parents);*/
+
 
     private List<String> generateEmptyListFrom(List<String> mixturesUsed) {
         List<String> emptyList = new ArrayList<>();
