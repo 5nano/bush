@@ -20,7 +20,7 @@ public class SankeyAssayService {
 
     public SankeyAssayDTO getSankeyAssays(Integer companyId) throws SQLException {
 
-        List<String> labels = Arrays.asList("Ray Grass", "Mostaza", "Soja", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra", "Amicor", "Galant", "Unimark", "Hussar", "Solomon",
+        List<String> labels = Arrays.asList("Ray Grass", "Mostaza", "Trigo", "A", "B", "C", "Diurex", "Adengo", "Starane Xtra", "Amicor", "Galant", "Unimark", "Hussar", "Solomon",
                 "Mospilan", "Assail", "4 Estrellas", "3 Estrellas", "5 Estrellas", "1 estrella");
         List<Integer> source = Arrays.asList(0, 0, 0, 1, 1, 2, 3, 4, 5, 5, 4, 6, 7, 10, 10, 8, 15, 14);
         List<Integer> target = Arrays.asList(10, 4, 5, 3, 10, 5, 6, 8, 7, 14, 15, 16, 17, 16, 18, 19, 19, 18);
