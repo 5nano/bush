@@ -5,6 +5,7 @@ import com.google.common.collect.Sets;
 import com.nano.Bush.datasources.CropsDao;
 import com.nano.Bush.datasources.UsersDao;
 import com.nano.Bush.datasources.measures.AssaysDao;
+import com.nano.Bush.datasources.measures.ExperimentsDao;
 import com.nano.Bush.datasources.measures.MeasuresDao;
 import com.nano.Bush.datasources.measures.TreatmentsDao;
 import com.nano.Bush.model.*;
@@ -20,10 +21,7 @@ import org.springframework.stereotype.Service;
 
 import java.sql.SQLException;
 import java.time.Instant;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
@@ -58,6 +56,16 @@ public class AssayService {
             .onFailure(e -> logger.error("Unexpected error", e))
             .map(treatments -> treatments.stream().collect(Collectors.toMap(treatment -> treatment.getIdTreatment().get(),Treatment::getName)))
             .getOrElse(emptyMap());
+  }
+
+  public AssayMinimalInfo getMinimalInfo(Integer idAssay) throws SQLException {
+      List<Experiment> experiments = assaysDao.getExperimentsFromAssay(idAssay);
+      List<Treatment> treatments = treatmentDao.getTreatments(idAssay);
+      List<List<String>> dates = new ArrayList<>();
+
+      experiments.forEach(experiment -> dates.add(measuresDao.getDatePicturesByAssayAndExperiment(idAssay,experiment.getExperimentId().get())));
+
+      return new AssayMinimalInfo(dates.stream().flatMap(List::stream).collect(Collectors.toList()).size(),experiments.size(),treatments.size());
   }
 
   public List<AssayResponse> getAllAssays(Integer idCompany) {
