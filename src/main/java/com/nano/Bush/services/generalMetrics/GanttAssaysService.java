@@ -27,7 +27,7 @@ public class GanttAssaysService {
         List<Assay> assays = assaysDao.getAllAssays(idCompany);
 
         assays.forEach(assay -> {
-            if (assay.getState().get().equals("FINISHED")) {
+            if (assay.getState().get().toString().equals("FINISHED")) {
                 jobDTOS.add(new JobDTO(assay.getName(), assay.getCreated().get().toString(),
                         assayWithFinishedDates.get(assay.getIdAssay().get()), assay.getState().get().toString()));
             } else {
